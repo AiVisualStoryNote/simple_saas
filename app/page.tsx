@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Shield, Globe, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Zap, Shield, Globe, CheckCircle2, BookOpen } from "lucide-react";
 import { PricingSection } from "@/components/pricing-section";
 
 export default function Home() {
@@ -47,6 +47,12 @@ export default function Home() {
               <Link href="#features">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg">
                   View Demo
+                </Button>
+              </Link>
+              <Link href="/reading-room">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  阅览室
                 </Button>
               </Link>
             </motion.div>
