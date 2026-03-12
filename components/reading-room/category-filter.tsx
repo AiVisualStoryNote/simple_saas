@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface Category {
@@ -11,38 +11,13 @@ interface Category {
   is_pub: boolean;
 }
 
-interface CategoriesResponse {
-  categories: Category[];
-  error?: string;
-}
-
 interface CategoryFilterProps {
+  categories: Category[];
   selectedIds: number[];
   onChange: (ids: number[]) => void;
 }
 
-export function CategoryFilter({ selectedIds, onChange }: CategoryFilterProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch("/api/categories");
-        const data: CategoriesResponse = await res.json();
-        if (!data.error && data.categories) {
-          setCategories(data.categories);
-        }
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
+export function CategoryFilter({ categories, selectedIds, onChange }: CategoryFilterProps) {
   const handleToggle = (id: number) => {
     if (selectedIds.includes(id)) {
       onChange(selectedIds.filter((selectedId) => selectedId !== id));
@@ -51,17 +26,8 @@ export function CategoryFilter({ selectedIds, onChange }: CategoryFilterProps) {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex gap-2 flex-wrap">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-8 w-20 rounded-full bg-muted animate-pulse"
-          />
-        ))}
-      </div>
-    );
+  if (categories.length === 0) {
+    return null;
   }
 
   return (

@@ -35,6 +35,9 @@ interface NovelsResponse {
 interface Category {
   id: number;
   name: string;
+  category: string;
+  is_default: boolean;
+  is_pub: boolean;
 }
 
 const PAGE_SIZE = 12;
@@ -67,6 +70,10 @@ export default function ReadingRoom() {
   }, []);
 
   const fetchNovels = useCallback(async () => {
+    if (categories.length === 0) {
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -145,6 +152,7 @@ export default function ReadingRoom() {
         </div>
 
         <CategoryFilter
+          categories={categories}
           selectedIds={selectedCategoryIds}
           onChange={(ids) => {
             setSelectedCategoryIds(ids);
