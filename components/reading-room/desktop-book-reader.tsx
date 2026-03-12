@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
-import { AudioController } from "@/components/reading-room/audio-controller";
+import { AudioController, AudioControllerRef } from "@/components/reading-room/audio-controller";
 import { TableOfContentsDrawer } from "@/components/reading-room/table-of-contents-drawer";
+import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
 import { List } from "lucide-react";
@@ -18,6 +19,8 @@ interface DesktopBookReaderProps {
 
 export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
+  const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
+  const audioRef = useRef<AudioControllerRef>(null);
   const page = pages[currentPage - 1];
 
   if (!page) {
@@ -37,6 +40,12 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
     }
   };
 
+  const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
+
+  const handleAudioTimeUpdate = (currentTime: number, duration: number, isPlaying: boolean) => {
+    setAudioState({ currentTime, duration, isPlaying });
+  };
+
   const renderRightContent = () => {
     switch (page.type) {
       case "cover":
@@ -47,9 +56,15 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
         );
 
       case "introduction":
+      case "paragraph":
         return (
-          <div className="flex items-center justify-center h-full p-8 overflow-auto">
-            <p className="text-lg leading-relaxed text-center">{page.textContent}</p>
+          <div className="flex items-center justify-center h-full p-8 overflow-hidden">
+            <TextHighlighter
+              text={page.textContent || ""}
+              currentTime={audioState.currentTime}
+              duration={audioState.duration}
+              isPlaying={audioState.isPlaying}
+            />
           </div>
         );
 
@@ -65,13 +80,6 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
                 </span>
               )}
             </h2>
-          </div>
-        );
-
-      case "paragraph":
-        return (
-          <div className="flex items-center justify-center h-full p-8 overflow-auto">
-            <p className="text-xl leading-loose">{page.textContent}</p>
           </div>
         );
 
@@ -134,7 +142,11 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
         />
         <div className="flex items-center gap-4 px-8 pb-4">
           <div className="flex-1">
-            <AudioController audioUrl={page.audioUrl} />
+            <AudioController 
+              ref={audioRef}
+              audioUrl={page.audioUrl} 
+              onTimeUpdate={needsHighlighting ? handleAudioTimeUpdate : undefined}
+            />
           </div>
           <Button
             variant="outline"

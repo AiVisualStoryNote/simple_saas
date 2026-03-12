@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
-import { AudioController } from "@/components/reading-room/audio-controller";
+import { AudioController, AudioControllerRef } from "@/components/reading-room/audio-controller";
 import { TableOfContentsDrawer } from "@/components/reading-room/table-of-contents-drawer";
+import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
 import { List } from "lucide-react";
@@ -18,6 +19,8 @@ interface MobileBookReaderProps {
 
 export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
+  const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
+  const audioRef = useRef<AudioControllerRef>(null);
   const page = pages[currentPage - 1];
 
   if (!page) {
@@ -37,6 +40,12 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
     }
   };
 
+  const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
+
+  const handleAudioTimeUpdate = (currentTime: number, duration: number, isPlaying: boolean) => {
+    setAudioState({ currentTime, duration, isPlaying });
+  };
+
   const renderOverlayContent = () => {
     switch (page.type) {
       case "cover":
@@ -49,13 +58,24 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
         );
 
       case "introduction":
-      case "chapter-title":
-      case "ending-chapter":
       case "paragraph":
         return (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent pt-20 pb-4 px-4">
+          <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pb-4 px-4" style={{ height: '10vh' }}>
+            <TextHighlighter
+              text={page.textContent || ""}
+              currentTime={audioState.currentTime}
+              duration={audioState.duration}
+              isPlaying={audioState.isPlaying}
+            />
+          </div>
+        );
+
+      case "chapter-title":
+      case "ending-chapter":
+        return (
+          <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pt-16 pb-4 px-4">
             <div className="max-h-[20vh] overflow-y-auto scrollbar-hide">
-              <p className="text-white text-lg font-medium text-center drop-shadow-md">
+              <p className="text-white text-lg font-medium text-center">
                 {page.textContent}
                 {page.endingType && (
                   <span className="block text-sm font-normal opacity-80 mt-1">
@@ -122,7 +142,11 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
         />
         <div className="flex items-center gap-4 px-4 pb-4">
           <div className="flex-1">
-            <AudioController audioUrl={page.audioUrl} />
+            <AudioController 
+              ref={audioRef}
+              audioUrl={page.audioUrl}
+              onTimeUpdate={needsHighlighting ? handleAudioTimeUpdate : undefined}
+            />
           </div>
           <Button
             variant="outline"
