@@ -52,7 +52,7 @@ export default function Home() {
               <Link href="/reading-room">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
-                  阅览室
+                  Reading room
                 </Button>
               </Link>
             </motion.div>
