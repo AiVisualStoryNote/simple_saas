@@ -85,7 +85,7 @@ export function TextHighlighter({ text, currentTime, duration, isPlaying }: Text
         msOverflowStyle: "none",
       }}
     >
-      <div className="leading-relaxed whitespace-pre-wrap">
+      <div className="leading-relaxed whitespace-pre-wrap text-xl">
         <span className="text-yellow-400">{highlightedText}</span>
         <span ref={markerRef} className="text-gray-400">{remainingText}</span>
       </div>

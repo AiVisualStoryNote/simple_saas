@@ -58,6 +58,24 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
         );
 
       case "introduction":
+        return (
+          <>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <h1 className="text-3xl font-bold text-center px-6 py-3 text-white bg-black/50 backdrop-blur-sm rounded-full">
+                Story Introduction
+              </h1>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pb-4 px-4" style={{ height: '10vh' }}>
+              <TextHighlighter
+                text={page.textContent || ""}
+                currentTime={audioState.currentTime}
+                duration={audioState.duration}
+                isPlaying={audioState.isPlaying}
+              />
+            </div>
+          </>
+        );
+
       case "paragraph":
         return (
           <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pb-4 px-4" style={{ height: '10vh' }}>
