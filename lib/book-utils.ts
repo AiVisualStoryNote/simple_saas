@@ -16,7 +16,15 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     (f) => f.file_type === "audio" && f.file_name.startsWith("intro_audio")
   )?.file_url;
 
-  // Page 1: Cover page
+  const chapterList = novel.chapter_list || [];
+  const endingChapterList = novel.ending_chapter_list || [];
+  const totalChapters = chapterList.length + endingChapterList.length;
+  const isShortStory = chapterList.length + endingChapterList.length === 1;
+
+  const chapterMap = new Map<number, ChapterDetail>();
+  chapterDetails.forEach((ch) => chapterMap.set(ch.id, ch));
+
+  // Page 1: Cover page (always show)
   pages.push({
     type: "cover",
     pageNumber: pageNumber++,
@@ -25,36 +33,37 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     audioUrl: nameAudio,
   });
 
-  // Page 2: Introduction page
-  pages.push({
-    type: "introduction",
-    pageNumber: pageNumber++,
-    imageUrl: coverImage,
-    textContent: novel.overall_introduction || "",
-    audioUrl: introAudio,
-  });
+  // Page 2: Introduction page (skip in short story mode)
+  if (!isShortStory) {
+    pages.push({
+      type: "introduction",
+      pageNumber: pageNumber++,
+      imageUrl: coverImage,
+      textContent: novel.overall_introduction || "",
+      audioUrl: introAudio,
+    });
+  }
 
   // Process regular chapters
-  const chapterMap = new Map<number, ChapterDetail>();
-  chapterDetails.forEach((ch) => chapterMap.set(ch.id, ch));
-
-  for (const chapter of novel.chapter_list || []) {
+  for (const chapter of chapterList) {
     const detail = chapterMap.get(chapter.id);
     
     if (!detail) continue;
 
-    // Chapter title page
-    pages.push({
-      type: "chapter-title",
-      pageNumber: pageNumber++,
-      imageUrl: detail.image_file?.file_url,
-      textContent: detail.title,
-      chapterId: detail.id,
-      chapterIndex: detail.chapter_index,
-      audioUrl: detail.title_audio_file?.file_url,
-    });
+    // Chapter title page (skip in short story mode)
+    if (!isShortStory) {
+      pages.push({
+        type: "chapter-title",
+        pageNumber: pageNumber++,
+        imageUrl: detail.image_file?.file_url,
+        textContent: detail.title,
+        chapterId: detail.id,
+        chapterIndex: detail.chapter_index,
+        audioUrl: detail.title_audio_file?.file_url,
+      });
+    }
 
-    // Paragraph pages
+    // Paragraph pages (always show)
     for (let i = 0; i < (detail.paragraph_list || []).length; i++) {
       const paragraph = detail.paragraph_list[i];
       pages.push({
@@ -70,11 +79,10 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     }
   }
 
-  // Ending choice page (if there are ending chapters)
-  const endingList = novel.ending_chapter_list || [];
-  if (endingList.length > 0) {
-    // Get the last paragraph image for the choice page background
-    const lastChapter = novel.chapter_list?.[novel.chapter_list.length - 1];
+  // Ending choice page (skip in short story mode)
+  const endingList = endingChapterList;
+  if (!isShortStory && endingList.length > 0) {
+    const lastChapter = chapterList[chapterList.length - 1];
     const lastDetail = lastChapter ? chapterMap.get(lastChapter.id) : null;
     const lastParagraph = lastDetail?.paragraph_list?.[lastDetail.paragraph_list.length - 1];
     
@@ -86,23 +94,25 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     });
   }
 
-  // Process ending chapters
+  // Process ending chapters (skip in short story mode)
   for (const chapter of endingList) {
     const detail = chapterMap.get(chapter.id);
-    
+
     if (!detail) continue;
 
-    // Ending chapter title page
-    pages.push({
-      type: "ending-chapter",
-      pageNumber: pageNumber++,
-      imageUrl: detail.image_file?.file_url,
-      textContent: detail.title,
-      chapterId: detail.id,
-      chapterIndex: detail.chapter_index,
-      endingType: detail.ending_type,
-      audioUrl: detail.title_audio_file?.file_url,
-    });
+    if (!isShortStory) {
+      // Ending chapter title page
+      pages.push({
+        type: "ending-chapter",
+        pageNumber: pageNumber++,
+        imageUrl: detail.image_file?.file_url,
+        textContent: detail.title,
+        chapterId: detail.id,
+        chapterIndex: detail.chapter_index,
+        endingType: detail.ending_type,
+        audioUrl: detail.title_audio_file?.file_url,
+      });
+    }
 
     // Ending paragraph pages
     for (let i = 0; i < (detail.paragraph_list || []).length; i++) {

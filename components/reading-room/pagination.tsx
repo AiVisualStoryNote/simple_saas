@@ -10,7 +10,7 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  if (totalPages <= 1) return null;
+  if (totalPages < 1) return null;
 
   const getVisiblePages = () => {
     const pages: (number | "ellipsis")[] = [];
