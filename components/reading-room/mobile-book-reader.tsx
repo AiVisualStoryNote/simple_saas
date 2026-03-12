@@ -1,0 +1,129 @@
+"use client";
+
+import Image from "next/image";
+import { BookPage } from "@/types/book";
+import { Pagination } from "@/components/reading-room/pagination";
+import { AudioController } from "@/components/reading-room/audio-controller";
+import { Button } from "@/components/ui/button";
+import { getEndingTypeLabel } from "@/lib/book-utils";
+
+interface MobileBookReaderProps {
+  pages: BookPage[];
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
+export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBookReaderProps) {
+  const page = pages[currentPage - 1];
+
+  if (!page) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">No content available</p>
+      </div>
+    );
+  }
+
+  const handleEndingChoice = (chapterId: number) => {
+    const chapterPageIndex = pages.findIndex(
+      (p) => p.chapterId === chapterId && p.type === "ending-chapter"
+    );
+    if (chapterPageIndex !== -1) {
+      onPageChange(chapterPageIndex + 1);
+    }
+  };
+
+  const renderOverlayContent = () => {
+    switch (page.type) {
+      case "cover":
+        return (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h1 className="text-3xl font-bold text-center px-8 text-white drop-shadow-lg">
+              {page.textContent}
+            </h1>
+          </div>
+        );
+
+      case "introduction":
+      case "chapter-title":
+      case "ending-chapter":
+      case "paragraph":
+        return (
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent pt-20 pb-4 px-4">
+            <div className="max-h-[20vh] overflow-y-auto scrollbar-hide">
+              <p className="text-white text-lg font-medium text-center drop-shadow-md">
+                {page.textContent}
+                {page.endingType && (
+                  <span className="block text-sm font-normal opacity-80 mt-1">
+                    ({getEndingTypeLabel(page.endingType)})
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+        );
+
+      case "ending-choice":
+        return (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            <div className="flex flex-col gap-4 p-8 w-full max-w-xs">
+              <h2 className="text-2xl font-semibold text-center text-white">Choose Your Ending</h2>
+              <div className="flex flex-col gap-3">
+                {page.endingList?.map((ending) => (
+                  <Button
+                    key={ending.id}
+                    variant="secondary"
+                    size="lg"
+                    onClick={() => handleEndingChoice(ending.id)}
+                    className="w-full h-14 text-lg"
+                  >
+                    {getEndingTypeLabel(ending.ending_type)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Main content area */}
+      <div className="flex-1 relative overflow-hidden">
+        {/* Background image */}
+        {page.imageUrl ? (
+          <Image
+            src={page.imageUrl}
+            alt="Book image"
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+            <p className="text-muted-foreground">No image</p>
+          </div>
+        )}
+
+        {/* Overlay content */}
+        {renderOverlayContent()}
+      </div>
+
+      {/* Bottom controls */}
+      <div className="bg-background border-t">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pages.length}
+          onPageChange={onPageChange}
+        />
+        <div className="px-4 pb-4">
+          <AudioController audioUrl={page.audioUrl} />
+        </div>
+      </div>
+    </div>
+  );
+}

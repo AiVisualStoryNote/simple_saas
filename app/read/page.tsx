@@ -1,65 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoadingProgress } from "@/components/reading-room/loading-progress";
+import { ResponsiveBookReader } from "@/components/reading-room/responsive-book-reader";
 import { Button } from "@/components/ui/button";
-
-interface NovelFile {
-  id: number;
-  file_type: string;
-  file_url: string;
-  file_name: string;
-}
-
-interface Novel {
-  id: number;
-  name: string;
-  category_id: number;
-  status: string;
-  rating: number;
-  word_count: number;
-  created_at: string;
-  updated_at: string;
-  files: NovelFile[];
-  chapter_list: ChapterSummary[];
-  ending_chapter_list: ChapterSummary[];
-}
-
-interface ChapterSummary {
-  id: number;
-  novel_id: number;
-  title: string;
-  outline: string;
-  introduction: string;
-  chapter_index: number;
-  ending_type: number;
-}
-
-interface ChapterDetail {
-  id: number;
-  novel_id: number;
-  title: string;
-  outline: string;
-  introduction: string;
-  chapter_index: number;
-  ending_type: number;
-  word_count: number;
-  title_audio_file: NovelFile;
-  image_file: NovelFile;
-  paragraph_count: number;
-  paragraph_list: Paragraph[];
-}
-
-interface Paragraph {
-  id: number;
-  chapter_id: number;
-  paragraph_index: number;
-  content: string;
-  image_file: NovelFile;
-  content_audio_file: NovelFile;
-  video_large_file: NovelFile;
-}
+import { Novel, ChapterDetail } from "@/types/book";
+import { buildBookPages } from "@/lib/book-utils";
 
 export default function ReadPage() {
   const router = useRouter();
@@ -73,6 +20,12 @@ export default function ReadPage() {
   const [progress, setProgress] = useState(0);
   const [completedRequests, setCompletedRequests] = useState(0);
   const [totalChapters, setTotalChapters] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pages = useMemo(() => {
+    if (!novel) return [];
+    return buildBookPages(novel, chapters);
+  }, [novel, chapters]);
 
   useEffect(() => {
     if (!novelId) {
@@ -90,7 +43,7 @@ export default function ReadPage() {
           throw new Error(novelData.error);
         }
 
-        const novelInfo = novelData.novel;
+        const novelInfo: Novel = novelData.novel;
         setNovel(novelInfo);
 
         const chapterList = novelInfo.chapter_list || [];
@@ -119,7 +72,7 @@ export default function ReadPage() {
             updateProgress();
             
             if (!chapterData.error) {
-              return chapterData.chapter;
+              return chapterData.chapter as ChapterDetail;
             }
             return null;
           } catch (err) {
@@ -171,15 +124,27 @@ export default function ReadPage() {
     );
   }
 
+  if (pages.length === 0) {
+    return (
+      <div className="container py-20">
+        <div className="text-center space-y-4">
+          <h2 className="text-xl font-semibold">No Content</h2>
+          <p className="text-muted-foreground">This book has no chapters yet.</p>
+          <Button variant="outline" onClick={() => router.back()}>
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold">{novel?.name}</h1>
-      <p className="text-muted-foreground mt-4">
-        Loaded {chapters.length} chapters
-      </p>
-      <p className="text-muted-foreground mt-2">
-        Coming soon...
-      </p>
+    <div className="h-[calc(100vh-4rem)]">
+      <ResponsiveBookReader
+        pages={pages}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }
