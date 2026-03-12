@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
 import { AudioController } from "@/components/reading-room/audio-controller";
+import { TableOfContentsDrawer } from "@/components/reading-room/table-of-contents-drawer";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { useRouter } from "next/navigation";
+import { List } from "lucide-react";
 
 interface DesktopBookReaderProps {
   pages: BookPage[];
@@ -15,7 +17,7 @@ interface DesktopBookReaderProps {
 }
 
 export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopBookReaderProps) {
-  const router = useRouter();
+  const [tocOpen, setTocOpen] = useState(false);
   const page = pages[currentPage - 1];
 
   if (!page) {
@@ -101,7 +103,6 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex min-h-0">
-        {/* Left page - Image */}
         <div className="w-1/2 flex items-center justify-center bg-muted/20 p-4">
           {page.imageUrl ? (
             <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
@@ -120,23 +121,38 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
           )}
         </div>
 
-        {/* Right page - Content */}
         <div className="w-1/2 flex items-center justify-center bg-background border-l">
           {renderRightContent()}
         </div>
       </div>
 
-      {/* Bottom controls */}
       <div className="border-t bg-background">
         <Pagination
           currentPage={currentPage}
           totalPages={pages.length}
           onPageChange={onPageChange}
         />
-        <div className="px-8 pb-4">
-          <AudioController audioUrl={page.audioUrl} />
+        <div className="flex items-center gap-4 px-8 pb-4">
+          <div className="flex-1">
+            <AudioController audioUrl={page.audioUrl} />
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTocOpen(true)}
+            className="h-10 w-10 shrink-0"
+          >
+            <List className="h-5 w-5" />
+          </Button>
         </div>
       </div>
+
+      <TableOfContentsDrawer
+        pages={pages}
+        isOpen={tocOpen}
+        onClose={() => setTocOpen(false)}
+        onNavigate={onPageChange}
+      />
     </div>
   );
 }

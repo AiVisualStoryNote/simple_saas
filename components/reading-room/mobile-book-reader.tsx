@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
 import { AudioController } from "@/components/reading-room/audio-controller";
+import { TableOfContentsDrawer } from "@/components/reading-room/table-of-contents-drawer";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
+import { List } from "lucide-react";
 
 interface MobileBookReaderProps {
   pages: BookPage[];
@@ -14,6 +17,7 @@ interface MobileBookReaderProps {
 }
 
 export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBookReaderProps) {
+  const [tocOpen, setTocOpen] = useState(false);
   const page = pages[currentPage - 1];
 
   if (!page) {
@@ -92,9 +96,7 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
 
   return (
     <div className="flex flex-col h-full">
-      {/* Main content area */}
       <div className="flex-1 relative overflow-hidden">
-        {/* Background image */}
         {page.imageUrl ? (
           <Image
             src={page.imageUrl}
@@ -109,21 +111,36 @@ export function MobileBookReader({ pages, currentPage, onPageChange }: MobileBoo
           </div>
         )}
 
-        {/* Overlay content */}
         {renderOverlayContent()}
       </div>
 
-      {/* Bottom controls */}
       <div className="bg-background border-t">
         <Pagination
           currentPage={currentPage}
           totalPages={pages.length}
           onPageChange={onPageChange}
         />
-        <div className="px-4 pb-4">
-          <AudioController audioUrl={page.audioUrl} />
+        <div className="flex items-center gap-4 px-4 pb-4">
+          <div className="flex-1">
+            <AudioController audioUrl={page.audioUrl} />
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTocOpen(true)}
+            className="h-10 w-10 shrink-0"
+          >
+            <List className="h-5 w-5" />
+          </Button>
         </div>
       </div>
+
+      <TableOfContentsDrawer
+        pages={pages}
+        isOpen={tocOpen}
+        onClose={() => setTocOpen(false)}
+        onNavigate={onPageChange}
+      />
     </div>
   );
 }
