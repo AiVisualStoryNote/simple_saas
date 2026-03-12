@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookCard } from "@/components/reading-room/book-card";
 import { CategoryFilter } from "@/components/reading-room/category-filter";
 import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
@@ -51,7 +50,6 @@ export default function ReadingRoom() {
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
-  const [status, setStatus] = useState<string>("all");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -81,9 +79,6 @@ export default function ReadingRoom() {
     if (keyword) {
       params.set("keyword", keyword);
     }
-    if (status && status !== "all") {
-      params.set("status", status);
-    }
 
     const categoryIds = selectedCategoryIds.length > 0
       ? selectedCategoryIds.join(",")
@@ -105,7 +100,7 @@ export default function ReadingRoom() {
     } finally {
       setLoading(false);
     }
-  }, [page, keyword, status, selectedCategoryIds, categories]);
+  }, [page, keyword, selectedCategoryIds, categories]);
 
   useEffect(() => {
     fetchNovels();
@@ -120,6 +115,11 @@ export default function ReadingRoom() {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const getCategoryName = (categoryId: number) => {
+    const category = categories.find((c) => c.id === categoryId);
+    return category?.name || "";
   };
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -140,24 +140,6 @@ export default function ReadingRoom() {
               className="pl-10"
             />
           </div>
-
-          <Select
-            value={status}
-            onValueChange={(value) => {
-              setStatus(value);
-              setPage(1);
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="选择状态" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全部状态</SelectItem>
-              <SelectItem value="writing">写作中</SelectItem>
-              <SelectItem value="completed">已完成</SelectItem>
-              <SelectItem value="hiatus">休载中</SelectItem>
-            </SelectContent>
-          </Select>
 
           <Button onClick={handleSearch}>搜索</Button>
         </div>
@@ -190,7 +172,11 @@ export default function ReadingRoom() {
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-8">
             {novels.map((novel) => (
-              <BookCard key={novel.id} novel={novel} />
+              <BookCard 
+                key={novel.id} 
+                novel={novel} 
+                categoryName={getCategoryName(novel.category_id)} 
+              />
             ))}
           </div>
 
