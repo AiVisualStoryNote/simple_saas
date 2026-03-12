@@ -60,7 +60,7 @@ export default function ReadingRoom() {
           setCategories(data.categories);
         }
       } catch (err) {
-        console.error("获取分类失败:", err);
+        console.error("Failed to fetch categories:", err);
       }
     };
     fetchCategories();
@@ -96,7 +96,7 @@ export default function ReadingRoom() {
         setTotal(data.total || 0);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "获取书籍列表失败");
+      setError(err instanceof Error ? err.message : "Failed to fetch books");
     } finally {
       setLoading(false);
     }
@@ -126,14 +126,14 @@ export default function ReadingRoom() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">阅览室</h1>
+      <h1 className="text-3xl font-bold mb-6">Reading Room</h1>
 
       <div className="space-y-4 mb-8">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="搜索书名..."
+              placeholder="Search by title..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -141,7 +141,7 @@ export default function ReadingRoom() {
             />
           </div>
 
-          <Button onClick={handleSearch}>搜索</Button>
+          <Button onClick={handleSearch}>Search</Button>
         </div>
 
         <CategoryFilter
@@ -159,14 +159,14 @@ export default function ReadingRoom() {
         </div>
       ) : error ? (
         <div className="text-center py-20 text-red-500">
-          <p>加载失败: {error}</p>
+          <p>Failed to load: {error}</p>
           <Button variant="outline" className="mt-4" onClick={fetchNovels}>
-            重试
+            Retry
           </Button>
         </div>
       ) : novels.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground">
-          <p>暂无书籍</p>
+          <p>No books found</p>
         </div>
       ) : (
         <>
@@ -191,7 +191,7 @@ export default function ReadingRoom() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <span className="text-sm text-muted-foreground">
-                第 {page} / {totalPages} 页 (共 {total} 本)
+                Page {page} of {totalPages} ({total} books)
               </span>
               <Button
                 variant="outline"

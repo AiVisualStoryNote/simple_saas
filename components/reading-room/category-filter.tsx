@@ -34,7 +34,7 @@ export function CategoryFilter({ selectedIds, onChange }: CategoryFilterProps) {
           setCategories(data.categories);
         }
       } catch (err) {
-        console.error("获取分类失败:", err);
+        console.error("Failed to fetch categories:", err);
       } finally {
         setLoading(false);
       }

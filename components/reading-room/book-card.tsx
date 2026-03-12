@@ -40,7 +40,7 @@ export function BookCard({ novel, categoryName }: BookCardProps) {
           />
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground">
-            暂无封面
+            No Cover
           </div>
         )}
         {categoryName && (
