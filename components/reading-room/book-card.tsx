@@ -23,13 +23,17 @@ interface Novel {
 interface BookCardProps {
   novel: Novel;
   categoryName?: string;
+  onClick?: () => void;
 }
 
-export function BookCard({ novel, categoryName }: BookCardProps) {
+export function BookCard({ novel, categoryName, onClick }: BookCardProps) {
   const coverImage = novel.files?.find((f) => f.file_type === "image")?.file_url;
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+    <Card 
+      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group" 
+      onClick={onClick}
+    >
       <div className="aspect-[3/4] relative bg-muted overflow-hidden">
         {coverImage ? (
           <Image

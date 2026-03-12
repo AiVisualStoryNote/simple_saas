@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BookCard } from "@/components/reading-room/book-card";
 import { CategoryFilter } from "@/components/reading-room/category-filter";
+import { BookActionDialog } from "@/components/reading-room/book-action-dialog";
 import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 interface NovelFile {
@@ -53,6 +54,9 @@ export default function ReadingRoom() {
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
+
+  const [selectedNovel, setSelectedNovel] = useState<Novel | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -129,6 +133,16 @@ export default function ReadingRoom() {
     return category?.name || "";
   };
 
+  const handleBookClick = (novel: Novel) => {
+    setSelectedNovel(novel);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setTimeout(() => setSelectedNovel(null), 200);
+  };
+
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
@@ -183,7 +197,8 @@ export default function ReadingRoom() {
               <BookCard 
                 key={novel.id} 
                 novel={novel} 
-                categoryName={getCategoryName(novel.category_id)} 
+                categoryName={getCategoryName(novel.category_id)}
+                onClick={() => handleBookClick(novel)}
               />
             ))}
           </div>
@@ -213,6 +228,12 @@ export default function ReadingRoom() {
           )}
         </>
       )}
+
+      <BookActionDialog 
+        novel={selectedNovel} 
+        open={dialogOpen} 
+        onClose={handleDialogClose}
+      />
     </div>
   );
 }
