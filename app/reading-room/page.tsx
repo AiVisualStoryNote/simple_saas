@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookCard } from "@/components/reading-room/book-card";
+import { CategoryFilter } from "@/components/reading-room/category-filter";
 import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 interface NovelFile {
@@ -32,6 +33,11 @@ interface NovelsResponse {
   error?: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 const PAGE_SIZE = 12;
 
 export default function ReadingRoom() {
@@ -40,10 +46,27 @@ export default function ReadingRoom() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
   const [status, setStatus] = useState<string>("all");
-  const [categoryId, setCategoryId] = useState<string>("");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        if (!data.error && data.categories) {
+          setCategories(data.categories);
+        }
+      } catch (err) {
+        console.error("获取分类失败:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const fetchNovels = useCallback(async () => {
     setLoading(true);
@@ -61,15 +84,15 @@ export default function ReadingRoom() {
     if (status && status !== "all") {
       params.set("status", status);
     }
-    if (categoryId) {
-      params.set("category_id", categoryId);
-    }
+
+    const categoryIds = selectedCategoryIds.length > 0
+      ? selectedCategoryIds.join(",")
+      : categories.map((c) => c.id).join(",");
+    params.set("category_id", categoryIds);
 
     try {
       const res = await fetch(`/api/novels?${params.toString()}`);
       const data: NovelsResponse = await res.json();
-
-      console.log(data);
 
       if (data.error) {
         setError(data.error);
@@ -82,7 +105,7 @@ export default function ReadingRoom() {
     } finally {
       setLoading(false);
     }
-  }, [page, keyword, status, categoryId]);
+  }, [page, keyword, status, selectedCategoryIds, categories]);
 
   useEffect(() => {
     fetchNovels();
@@ -103,50 +126,49 @@ export default function ReadingRoom() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-8">阅览室</h1>
+      <h1 className="text-3xl font-bold mb-6">阅览室</h1>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="搜索书名..."
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="pl-10"
-          />
+      <div className="space-y-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜索书名..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="pl-10"
+            />
+          </div>
+
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="选择状态" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部状态</SelectItem>
+              <SelectItem value="writing">写作中</SelectItem>
+              <SelectItem value="completed">已完成</SelectItem>
+              <SelectItem value="hiatus">休载中</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Button onClick={handleSearch}>搜索</Button>
         </div>
 
-        <Select
-          value={status}
-          onValueChange={(value) => {
-            setStatus(value);
+        <CategoryFilter
+          selectedIds={selectedCategoryIds}
+          onChange={(ids) => {
+            setSelectedCategoryIds(ids);
             setPage(1);
           }}
-        >
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="选择状态" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部状态</SelectItem>
-            <SelectItem value="writing">写作中</SelectItem>
-            <SelectItem value="completed">已完成</SelectItem>
-            <SelectItem value="hiatus">休载中</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Input
-          placeholder="分类ID"
-          type="number"
-          value={categoryId}
-          onChange={(e) => {
-            setCategoryId(e.target.value);
-            setPage(1);
-          }}
-          className="w-full sm:w-[120px]"
         />
-
-        <Button onClick={handleSearch}>搜索</Button>
       </div>
 
       {loading ? (
