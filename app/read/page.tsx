@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoadingProgress } from "@/components/reading-room/loading-progress";
 import { ResponsiveBookReader } from "@/components/reading-room/responsive-book-reader";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Novel, ChapterDetail } from "@/types/book";
 import { buildBookPages } from "@/lib/book-utils";
 
-export default function ReadPage() {
+function ReadPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const novelId = searchParams.get("novelId");
@@ -22,20 +22,13 @@ export default function ReadPage() {
   const [totalChapters, setTotalChapters] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const isCancelledRef = useRef(false);
-
   const pages = useMemo(() => {
     if (!novel) return [];
     return buildBookPages(novel, chapters);
   }, [novel, chapters]);
 
-  const loadData = useCallback(async () => {
-    if (!novelId) {
-      setError("Novel ID is required");
-      setLoading(false);
-      return;
-    }
+  useEffect(() => {
+    if (!novelId) return;
 
     setLoading(true);
     setError(null);
@@ -43,109 +36,73 @@ export default function ReadPage() {
     setChapters([]);
     setProgress(0);
     setCompletedRequests(0);
-    isCancelledRef.current = false;
 
-    abortControllerRef.current = new AbortController();
-
-    try {
-      const novelRes = await fetch(`/api/novels/${novelId}`, {
-        signal: abortControllerRef.current.signal,
-      });
-
-      if (isCancelledRef.current) return;
-
-      const novelData = await novelRes.json();
-
-      if (novelData.error) {
-        throw new Error(novelData.error);
-      }
-
-      const novelInfo: Novel = novelData.novel;
-      setNovel(novelInfo);
-
-      const chapterList = novelInfo.chapter_list || [];
-      const endingChapterList = novelInfo.ending_chapter_list || [];
-      const allChapters = [...chapterList, ...endingChapterList];
-      const total = allChapters.length;
-      setTotalChapters(total);
-
-      if (total === 0) {
-        setLoading(false);
-        return;
-      }
-
-      let completedCount = 0;
-
-      const updateProgress = () => {
-        completedCount++;
-        setCompletedRequests(completedCount);
-        setProgress((completedCount / total) * 100);
-      };
-
-      const chapterPromises = allChapters.map(async (chapter) => {
-        if (isCancelledRef.current) return null;
-
-        try {
-          const chapterRes = await fetch(`/api/chapters/${chapter.id}`, {
-            signal: abortControllerRef.current?.signal,
-          });
-
-          if (isCancelledRef.current) return null;
-
-          const chapterData = await chapterRes.json();
-          updateProgress();
-
-          if (chapterData.error) {
-            throw new Error(chapterData.error);
-          }
-
-          return chapterData.chapter as ChapterDetail;
-        } catch (err) {
-          if (err instanceof Error && err.name === "AbortError") {
-            return null;
-          }
-          console.error(`Failed to load chapter ${chapter.id}:`, err);
-          throw err;
+    const fetchNovel = async () => {
+      try {
+        const novelRes = await fetch(`/api/novels/${novelId}`);
+        
+        if (!novelRes.ok) {
+          throw new Error(`Failed to fetch novel: ${novelRes.status}`);
         }
-      });
+        
+        const novelData = await novelRes.json();
 
-      const loadedChapters = await Promise.all(chapterPromises);
-
-      if (isCancelledRef.current) return;
-
-      const validChapters = loadedChapters.filter((c): c is ChapterDetail => c !== null);
-
-      setChapters(validChapters);
-      setProgress(100);
-      setCompletedRequests(total);
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") {
-        return;
-      }
-
-      if (!isCancelledRef.current) {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
+        if (novelData.error) {
+          throw new Error(novelData.error);
         }
+
+        const novelInfo: Novel = novelData.novel;
+        setNovel(novelInfo);
+
+        const chapterList = novelInfo.chapter_list || [];
+        const endingChapterList = novelInfo.ending_chapter_list || [];
+        const allChapters = [...chapterList, ...endingChapterList];
+        const total = allChapters.length;
+        setTotalChapters(total);
+
+        if (total === 0) {
+          setLoading(false);
+          return;
+        }
+
+        const loadedChapters: ChapterDetail[] = [];
+        let completedCount = 0;
+
+        for (const chapter of allChapters) {
+          try {
+            const chapterRes = await fetch(`/api/chapters/${chapter.id}`);
+            
+            if (!chapterRes.ok) {
+              console.warn(`Failed to fetch chapter ${chapter.id}`);
+              continue;
+            }
+            
+            const chapterData = await chapterRes.json();
+            
+            if (!chapterData.error && chapterData.chapter) {
+              loadedChapters.push(chapterData.chapter);
+            }
+          } catch (err) {
+            console.warn(`Failed to load chapter ${chapter.id}:`, err);
+          }
+          
+          completedCount++;
+          setCompletedRequests(completedCount);
+          setProgress((completedCount / total) * 100);
+        }
+
+        setChapters(loadedChapters);
+        setProgress(100);
+        setCompletedRequests(total);
+      } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load book data");
-      }
-    } finally {
-      if (!isCancelledRef.current) {
+      } finally {
         setLoading(false);
-      }
-    }
-  }, [novelId]);
-
-  useEffect(() => {
-    loadData();
-
-    return () => {
-      isCancelledRef.current = true;
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
       }
     };
-  }, [loadData]);
+
+    fetchNovel();
+  }, [novelId]);
 
   if (loading) {
     return (
@@ -169,7 +126,7 @@ export default function ReadPage() {
             <Button variant="outline" onClick={() => router.back()}>
               Go Back
             </Button>
-            <Button onClick={loadData}>
+            <Button onClick={() => window.location.reload()}>
               Retry
             </Button>
           </div>
@@ -200,5 +157,19 @@ export default function ReadPage() {
         onPageChange={setCurrentPage}
       />
     </div>
+  );
+}
+
+export default function ReadPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container py-8">
+          <LoadingProgress progress={0} current={0} total={0} />
+        </div>
+      }
+    >
+      <ReadPageContent />
+    </Suspense>
   );
 }
