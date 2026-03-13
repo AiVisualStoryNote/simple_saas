@@ -100,6 +100,7 @@ export interface BookPage {
   type: PageType;
   pageNumber: number;
   imageUrl?: string;
+  videoUrl?: string;
   textContent?: string;
   chapterId?: number;
   chapterIndex?: number;

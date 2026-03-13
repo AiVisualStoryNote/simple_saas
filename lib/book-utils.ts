@@ -8,6 +8,19 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     (f) => f.file_type === "image" && f.file_name.startsWith("cover_image")
   )?.file_url;
 
+  const introVideo = novel.files?.find(
+    (f) => {
+      const isVideo = f.file_type === "video" && f.file_name.startsWith("cover_video");
+      console.log('[book-utils] Checking intro video:', {
+        file_type: f.file_type,
+        file_name: f.file_name,
+        isVideo
+      });
+      return isVideo;
+    }
+  )?.file_url;
+  console.log('[book-utils] Found intro video:', introVideo);
+
   const nameAudio = novel.files?.find(
     (f) => f.file_type === "audio" && f.file_name.startsWith("name_audio")
   )?.file_url;
@@ -24,7 +37,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
   const chapterMap = new Map<number, ChapterDetail>();
   chapterDetails.forEach((ch) => chapterMap.set(ch.id, ch));
 
-  // Page 1: Cover page (always show)
+  // Page 1: Cover page (always show) - no video for cover
   pages.push({
     type: "cover",
     pageNumber: pageNumber++,
@@ -39,6 +52,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
       type: "introduction",
       pageNumber: pageNumber++,
       imageUrl: coverImage,
+      videoUrl: introVideo,
       textContent: novel.overall_introduction || "",
       audioUrl: introAudio,
     });
@@ -56,6 +70,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
         type: "chapter-title",
         pageNumber: pageNumber++,
         imageUrl: detail.image_file?.file_url,
+        videoUrl: detail.video_file?.file_url,
         textContent: detail.title,
         chapterId: detail.id,
         chapterIndex: detail.chapter_index,
@@ -70,6 +85,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
         type: "paragraph",
         pageNumber: pageNumber++,
         imageUrl: paragraph.image_file?.file_url,
+        videoUrl: paragraph.video_large_file?.file_url,
         textContent: paragraph.content,
         chapterId: detail.id,
         chapterIndex: detail.chapter_index,
@@ -106,6 +122,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
         type: "ending-chapter",
         pageNumber: pageNumber++,
         imageUrl: detail.image_file?.file_url,
+        videoUrl: detail.video_file?.file_url,
         textContent: detail.title,
         chapterId: detail.id,
         chapterIndex: detail.chapter_index,
@@ -121,6 +138,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
         type: "paragraph",
         pageNumber: pageNumber++,
         imageUrl: paragraph.image_file?.file_url,
+        videoUrl: paragraph.video_large_file?.file_url,
         textContent: paragraph.content,
         chapterId: detail.id,
         chapterIndex: detail.chapter_index,

@@ -7,6 +7,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 import { Logo } from "./logo";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
+import { DynamicVideoSwitch } from "./dynamic-video-switch";
 
 interface HeaderProps {
   user: any;
@@ -20,6 +21,7 @@ interface NavItem {
 export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
+  const isReadPage = pathname?.startsWith("/read");
 
   // Main navigation items for generic SaaS
   const mainNavItems: NavItem[] = [
@@ -55,6 +57,7 @@ export default function Header({ user }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
+          {isReadPage && <DynamicVideoSwitch />}
           <ThemeSwitcher />
           {user ? (
             <div className="hidden md:flex items-center gap-2">

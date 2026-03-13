@@ -10,6 +10,7 @@ import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
 import { List, BookOpen } from "lucide-react";
+import { useReadingPreferences } from "@/stores/reading-preferences";
 
 interface DesktopBookReaderProps {
   pages: BookPage[];
@@ -24,8 +25,12 @@ interface DesktopBookReaderProps {
 export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const audioRef = useRef<AudioControllerRef>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const page = pages[currentPage - 1];
+  const { isDynamicVideoEnabled } = useReadingPreferences();
 
   if (!page) {
     return (
@@ -45,6 +50,27 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
   };
 
   const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
+  const shouldShowVideo = isDynamicVideoEnabled && page.videoUrl && page.pageNumber !== 1;
+
+  useEffect(() => {
+    setVideoLoaded(false);
+    setIsVideoPlaying(false);
+  }, [currentPage, page.videoUrl, isDynamicVideoEnabled]);
+
+  useEffect(() => {
+    if (shouldShowVideo && videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [shouldShowVideo, page]);
+
+  const handleVideoCanPlay = () => {
+    setVideoLoaded(true);
+    videoRef.current?.play();
+  };
+
+  const handleVideoPlay = () => {
+    setIsVideoPlaying(true);
+  };
 
   const handleAudioTimeUpdate = (currentTime: number, duration: number, isPlaying: boolean) => {
     setAudioState({ currentTime, duration, isPlaying });
@@ -154,7 +180,27 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
     <div className="flex flex-col h-full">
       <div className="flex-1 flex min-h-0">
         <div className="w-1/2 flex items-center justify-center bg-muted/20 p-4">
-          {page.imageUrl ? (
+          {shouldShowVideo ? (
+            <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
+              <video
+                ref={videoRef}
+                src={page.videoUrl}
+                className={`w-full h-full object-contain transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                playsInline
+                muted
+                loop
+                onCanPlay={handleVideoCanPlay}
+                onPlay={handleVideoPlay}
+              />
+              <Image
+                src={page.imageUrl!}
+                alt="Book image"
+                fill
+                className={`w-full h-full object-contain transition-opacity duration-1000 ${!videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                priority
+              />
+            </div>
+          ) : page.imageUrl ? (
             <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
               <Image
                 src={page.imageUrl}
