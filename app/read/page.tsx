@@ -7,6 +7,8 @@ import { ResponsiveBookReader } from "@/components/reading-room/responsive-book-
 import { Button } from "@/components/ui/button";
 import { Novel, ChapterDetail } from "@/types/book";
 import { buildBookPages } from "@/lib/book-utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check } from "lucide-react";
 
 function ReadPageContent() {
   const router = useRouter();
@@ -21,11 +23,34 @@ function ReadPageContent() {
   const [completedRequests, setCompletedRequests] = useState(0);
   const [totalChapters, setTotalChapters] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAutoReading, setIsAutoReading] = useState(false);
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   const pages = useMemo(() => {
     if (!novel) return [];
     return buildBookPages(novel, chapters);
   }, [novel, chapters]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleStartAutoReading = () => {
+    setIsAutoReading(true);
+  };
+
+  const handleStopAutoReading = () => {
+    setIsAutoReading(false);
+  };
+
+  const handleAutoReadingComplete = () => {
+    setIsAutoReading(false);
+    setShowCompletionDialog(true);
+  };
+
+  const handleCloseCompletionDialog = () => {
+    setShowCompletionDialog(false);
+  };
 
   useEffect(() => {
     if (!novelId) return;
@@ -154,8 +179,57 @@ function ReadPageContent() {
       <ResponsiveBookReader
         pages={pages}
         currentPage={currentPage}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
+        isAutoReading={isAutoReading}
+        onStartAutoReading={handleStartAutoReading}
+        onStopAutoReading={handleStopAutoReading}
+        onAutoReadingComplete={handleAutoReadingComplete}
       />
+
+      <AnimatePresence>
+        {showCompletionDialog && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={handleCloseCompletionDialog}
+            />
+            <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                }}
+                className="bg-background rounded-lg p-6 shadow-xl pointer-events-auto max-w-sm w-full mx-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
+                    <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Reading Complete!</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Congratulations! You have finished reading this book.
+                  </p>
+                  <Button
+                    className="w-full h-12"
+                    onClick={handleCloseCompletionDialog}
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

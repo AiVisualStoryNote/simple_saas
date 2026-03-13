@@ -9,11 +9,15 @@ interface ResponsiveBookReaderProps {
   pages: BookPage[];
   currentPage: number;
   onPageChange: (page: number) => void;
+  isAutoReading?: boolean;
+  onStartAutoReading?: () => void;
+  onStopAutoReading?: () => void;
+  onAutoReadingComplete?: () => void;
 }
 
 const BREAKPOINT = 768;
 
-export function ResponsiveBookReader({ pages, currentPage, onPageChange }: ResponsiveBookReaderProps) {
+export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: ResponsiveBookReaderProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -33,6 +37,10 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange }: Respo
         pages={pages}
         currentPage={currentPage}
         onPageChange={onPageChange}
+        isAutoReading={isAutoReading}
+        onStartAutoReading={onStartAutoReading}
+        onStopAutoReading={onStopAutoReading}
+        onAutoReadingComplete={onAutoReadingComplete}
       />
     );
   }
@@ -42,6 +50,10 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange }: Respo
       pages={pages}
       currentPage={currentPage}
       onPageChange={onPageChange}
+      isAutoReading={isAutoReading}
+      onStartAutoReading={onStartAutoReading}
+      onStopAutoReading={onStopAutoReading}
+      onAutoReadingComplete={onAutoReadingComplete}
     />
   );
 }

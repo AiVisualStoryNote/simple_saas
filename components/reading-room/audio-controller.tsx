@@ -14,10 +14,11 @@ export interface AudioControllerRef {
 interface AudioControllerProps {
   audioUrl?: string;
   onTimeUpdate?: (currentTime: number, duration: number, isPlaying: boolean) => void;
+  onEnded?: () => void;
 }
 
 export const AudioController = forwardRef<AudioControllerRef, AudioControllerProps>(
-  ({ audioUrl, onTimeUpdate }, ref) => {
+  ({ audioUrl, onTimeUpdate, onEnded }, ref) => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +61,9 @@ export const AudioController = forwardRef<AudioControllerRef, AudioControllerPro
       const handleEnded = () => {
         setIsPlaying(false);
         setCurrentTime(0);
+        if (onEnded) {
+          onEnded();
+        }
       };
 
       const handleTimeUpdate = () => {

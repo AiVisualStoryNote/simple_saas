@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
@@ -9,15 +9,19 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List } from "lucide-react";
+import { List, BookOpen } from "lucide-react";
 
 interface DesktopBookReaderProps {
   pages: BookPage[];
   currentPage: number;
   onPageChange: (page: number) => void;
+  isAutoReading?: boolean;
+  onStartAutoReading?: () => void;
+  onStopAutoReading?: () => void;
+  onAutoReadingComplete?: () => void;
 }
 
-export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopBookReaderProps) {
+export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const audioRef = useRef<AudioControllerRef>(null);
@@ -44,6 +48,43 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
 
   const handleAudioTimeUpdate = (currentTime: number, duration: number, isPlaying: boolean) => {
     setAudioState({ currentTime, duration, isPlaying });
+  };
+
+  useEffect(() => {
+    if (isAutoReading && page.audioUrl && audioRef.current) {
+      audioRef.current.play();
+    }
+  }, [currentPage, isAutoReading, page.audioUrl]);
+
+  const handleAudioEnded = () => {
+    if (isAutoReading && currentPage < pages.length) {
+      onPageChange(currentPage + 1);
+    } else if (isAutoReading && currentPage >= pages.length) {
+      if (onStopAutoReading) {
+        onStopAutoReading();
+      }
+      if (onAutoReadingComplete) {
+        onAutoReadingComplete();
+      }
+    }
+  };
+
+  const handleReadButtonClick = async () => {
+    if (isAutoReading) {
+      if (onStopAutoReading) {
+        onStopAutoReading();
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    } else {
+      if (onStartAutoReading) {
+        onStartAutoReading();
+      }
+      if (audioRef.current && page.audioUrl) {
+        await audioRef.current.play();
+      }
+    }
   };
 
   const renderRightContent = () => {
@@ -141,11 +182,22 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
           onPageChange={onPageChange}
         />
         <div className="flex items-center gap-4 px-8 pb-4">
+          {page.audioUrl && (
+            <Button
+              variant={isAutoReading ? "default" : "outline"}
+              size="icon"
+              onClick={handleReadButtonClick}
+              className="h-10 w-10 shrink-0"
+            >
+              <BookOpen className="h-5 w-5" />
+            </Button>
+          )}
           <div className="flex-1">
             <AudioController 
               ref={audioRef}
               audioUrl={page.audioUrl} 
               onTimeUpdate={needsHighlighting ? handleAudioTimeUpdate : undefined}
+              onEnded={handleAudioEnded}
             />
           </div>
           <Button
