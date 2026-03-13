@@ -93,14 +93,16 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
       case "cover":
         return (
           <div className="flex items-center justify-center h-full">
-            <h1 className="text-4xl font-bold text-center px-8 leading-relaxed text-black">{page.textContent}</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center px-4 sm:px-6 lg:px-8 leading-relaxed text-black">
+              {page.textContent}
+            </h1>
           </div>
         );
 
       case "introduction":
       case "paragraph":
         return (
-          <div className="flex items-center justify-center h-full p-8 overflow-hidden">
+          <div className="flex items-center justify-center h-full p-2 sm:p-4 lg:p-6 overflow-hidden">
             <TextHighlighter
               text={page.textContent || ""}
               currentTime={audioState.currentTime}
@@ -114,10 +116,10 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
       case "ending-chapter":
         return (
           <div className="flex items-center justify-center h-full">
-            <h2 className="text-3xl font-semibold text-center px-8 leading-relaxed">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-center px-4 sm:px-6 lg:px-8 leading-relaxed">
               {page.textContent}
               {page.endingType && (
-                <span className="block text-lg font-normal text-muted-foreground mt-2">
+                <span className="block text-sm sm:text-base lg:text-lg font-normal text-muted-foreground mt-2">
                   ({getEndingTypeLabel(page.endingType)})
                 </span>
               )}
@@ -127,16 +129,16 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
 
       case "ending-choice":
         return (
-          <div className="flex flex-col items-center justify-center h-full gap-6 p-8">
-            <h2 className="text-2xl font-semibold text-center">Choose Your Ending</h2>
-            <div className="flex flex-col gap-3 w-full max-w-xs">
+          <div className="flex flex-col items-center justify-center h-full gap-3 sm:gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center">Choose Your Ending</h2>
+            <div className="flex flex-col gap-2 sm:gap-3 w-full max-w-xs">
               {page.endingList?.map((ending) => (
                 <Button
                   key={ending.id}
                   variant="outline"
                   size="lg"
                   onClick={() => handleEndingChoice(ending.id)}
-                  className="w-full h-14 text-lg"
+                  className="w-full h-12 sm:h-14 text-base sm:text-lg"
                 >
                   {getEndingTypeLabel(ending.ending_type)}
                 </Button>
@@ -152,10 +154,10 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex min-h-0 p-4">
-        <div className="flex-1 flex items-center justify-center perspective-1000">
-          <div className="relative w-full max-w-4xl h-full flex">
-            <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-none z-10" />
+      <div className="flex-1 flex min-h-0 p-2 sm:p-3 lg:p-4">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="relative w-full h-full flex items-center justify-center max-w-[95%]">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none z-10 rounded-lg" />
             
             <AnimatePresence mode="wait" custom={flipDirection}>
               <motion.div
@@ -169,16 +171,16 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
                   duration: 0.4,
                   ease: "easeInOut",
                 }}
-                className="flex w-full h-full"
+                className="flex w-full h-full max-w-[900px]"
                 style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
               >
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="relative w-full h-full max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-l-lg shadow-2xl overflow-hidden border-l-4 border-y-4 border-[#8B5CF6]/30">
-                    <div className="absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-[#8B5CF6]/10 to-transparent" />
-                    <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-black/5 to-transparent" />
-                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-l-lg" />
+                <div className="flex-1 flex items-center justify-center min-w-0">
+                  <div className="relative w-full h-full max-h-[60vh] sm:max-h-[65vh] lg:max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-l-lg sm:rounded-l-xl shadow-xl sm:shadow-2xl overflow-hidden border-l-2 sm:border-l-4 border-y-2 sm:border-y-4 border-[#8B5CF6]/20 sm:border-[#8B5CF6]/30">
+                    <div className="absolute inset-y-0 left-0 w-1 sm:w-2 bg-gradient-to-r from-[#8B5CF6]/10 to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-0.5 sm:w-1 bg-gradient-to-l from-black/5 to-transparent" />
+                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-l-lg sm:rounded-l-xl" />
                     
-                    <div className="absolute inset-2">
+                    <div className="absolute inset-1 sm:inset-2">
                       {page.imageUrl ? (
                         <div className="relative w-full h-full">
                           <Image
@@ -191,20 +193,20 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-full">
-                          <p className="text-muted-foreground">No image</p>
+                          <p className="text-muted-foreground text-xs sm:text-sm">No image</p>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="relative w-full h-full max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-r-lg shadow-2xl overflow-hidden border-r-4 border-y-4 border-[#8B5CF6]/30">
-                    <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-black/5 to-transparent" />
-                    <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-[#8B5CF6]/10 to-transparent" />
-                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-r-lg" />
+                <div className="flex-1 flex items-center justify-center min-w-0">
+                  <div className="relative w-full h-full max-h-[60vh] sm:max-h-[65vh] lg:max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-r-lg sm:rounded-r-xl shadow-xl sm:shadow-2xl overflow-hidden border-r-2 sm:border-r-4 border-y-2 sm:border-y-4 border-[#8B5CF6]/20 sm:border-[#8B5CF6]/30">
+                    <div className="absolute inset-y-0 left-0 w-0.5 sm:w-1 bg-gradient-to-r from-black/5 to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-1 sm:w-2 bg-gradient-to-l from-[#8B5CF6]/10 to-transparent" />
+                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-r-lg sm:rounded-r-xl" />
                     
-                    <div className="absolute inset-4 overflow-hidden">
+                    <div className="absolute inset-2 sm:inset-3 lg:inset-4 overflow-hidden">
                       {renderRightContent()}
                     </div>
                   </div>
@@ -217,18 +219,18 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
               size="icon"
               onClick={handlePrevPage}
               disabled={currentPage === 1 || isFlipping}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 h-12 w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
+              className="absolute left-1 sm:left-2 lg:left-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 sm:h-12 sm:w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleNextPage}
               disabled={currentPage === pages.length || isFlipping}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 h-12 w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
+              className="absolute right-1 sm:right-2 lg:right-4 top-1/2 -translate-y-1/2 z-20 h-10 w-10 sm:h-12 sm:w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
             </Button>
           </div>
         </div>
@@ -243,8 +245,8 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
             handlePageChange(page, direction);
           }}
         />
-        <div className="flex items-center gap-4 px-8 pb-4">
-          <div className="flex-1">
+        <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6 lg:px-8 pb-4">
+          <div className="flex-1 min-w-0">
             <AudioController 
               ref={audioRef}
               audioUrl={page.audioUrl} 
