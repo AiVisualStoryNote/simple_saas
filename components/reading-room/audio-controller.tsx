@@ -95,7 +95,7 @@ export const AudioController = forwardRef<AudioControllerRef, AudioControllerPro
         audio.removeEventListener("play", handlePlay);
         audio.removeEventListener("pause", handlePause);
       };
-    }, [audioUrl, onTimeUpdate]);
+    }, [audioUrl, onTimeUpdate, onEnded]);
 
     useEffect(() => {
       if (!audioRef.current || !audioUrl) return;
