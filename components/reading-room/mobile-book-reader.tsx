@@ -220,7 +220,7 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
             src={page.imageUrl}
             alt="Book image"
             fill
-            className="object-cover"
+            className="object-cover animate-scale-loop"
             priority
           />
         ) : (

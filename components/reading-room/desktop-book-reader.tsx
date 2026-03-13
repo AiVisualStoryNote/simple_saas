@@ -201,12 +201,12 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
               />
             </div>
           ) : page.imageUrl ? (
-            <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
+            <div className="relative w-full h-full max-h-[70vh] aspect-[3/4] overflow-hidden">
               <Image
                 src={page.imageUrl}
                 alt="Book image"
                 fill
-                className="object-contain"
+                className="object-contain animate-scale-loop"
                 priority
               />
             </div>
