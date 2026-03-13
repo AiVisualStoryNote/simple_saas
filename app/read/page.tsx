@@ -127,7 +127,7 @@ function ReadPageContent() {
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load book data");
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 500);
       }
     };
 
