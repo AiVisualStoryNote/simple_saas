@@ -64,6 +64,7 @@ function ReadPageContent() {
 
     const fetchNovel = async () => {
       try {
+        setProgress(2);
         const novelRes = await fetch(`/api/novels/${novelId}`);
         
         if (!novelRes.ok) {
@@ -78,6 +79,7 @@ function ReadPageContent() {
 
         const novelInfo: Novel = novelData.novel;
         setNovel(novelInfo);
+        setProgress(10);
 
         const chapterList = novelInfo.chapter_list || [];
         const endingChapterList = novelInfo.ending_chapter_list || [];
@@ -92,26 +94,29 @@ function ReadPageContent() {
 
         const loadedChapters: ChapterDetail[] = [];
         let completedCount = 0;
+        const BATCH_SIZE = 5;
 
-        for (const chapter of allChapters) {
-          try {
-            const chapterRes = await fetch(`/api/chapters/${chapter.id}`);
-            
-            if (!chapterRes.ok) {
-              console.warn(`Failed to fetch chapter ${chapter.id}`);
-              continue;
+        for (let i = 0; i < allChapters.length; i += BATCH_SIZE) {
+          const batch = allChapters.slice(i, i + BATCH_SIZE);
+
+          const batchPromises = batch.map(async (chapter) => {
+            try {
+              const chapterRes = await fetch(`/api/chapters/${chapter.id}`);
+              if (!chapterRes.ok) return null;
+              const chapterData = await chapterRes.json();
+              return chapterData.chapter || null;
+            } catch {
+              throw new Error(`Failed to fetch chapter ${chapter.id}`);
             }
-            
-            const chapterData = await chapterRes.json();
-            
-            if (!chapterData.error && chapterData.chapter) {
-              loadedChapters.push(chapterData.chapter);
-            }
-          } catch (err) {
-            console.warn(`Failed to load chapter ${chapter.id}:`, err);
-          }
-          
-          completedCount++;
+          });
+
+          const batchResults = await Promise.all(batchPromises);
+          const successfulChapters = batchResults.filter(
+            (chapter): chapter is ChapterDetail => chapter !== null
+          );
+          loadedChapters.push(...successfulChapters);
+
+          completedCount += successfulChapters.length;
           setCompletedRequests(completedCount);
           setProgress((completedCount / total) * 100);
         }
