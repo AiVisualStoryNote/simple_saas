@@ -214,6 +214,7 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
             <AudioController 
               ref={audioRef}
               audioUrl={page.audioUrl}
+              hideAudioSlider={true}
               onTimeUpdate={needsHighlighting ? handleAudioTimeUpdate : undefined}
               onEnded={handleAudioEnded}
             />

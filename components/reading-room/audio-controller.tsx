@@ -13,12 +13,13 @@ export interface AudioControllerRef {
 
 interface AudioControllerProps {
   audioUrl?: string;
+  hideAudioSlider?: boolean;
   onTimeUpdate?: (currentTime: number, duration: number, isPlaying: boolean) => void;
   onEnded?: () => void;
 }
 
 export const AudioController = forwardRef<AudioControllerRef, AudioControllerProps>(
-  ({ audioUrl, onTimeUpdate, onEnded }, ref) => {
+  ({ audioUrl, hideAudioSlider = false, onTimeUpdate, onEnded }, ref) => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -213,7 +214,7 @@ export const AudioController = forwardRef<AudioControllerRef, AudioControllerPro
             )}
           </Button>
 
-          <div className="w-20 shrink-0">
+          <div className="w-20 shrink-0" style={{ display: hideAudioSlider ? "none" : "block" }}>
             <Slider
               value={[isMuted ? 0 : volume]}
               max={1}
