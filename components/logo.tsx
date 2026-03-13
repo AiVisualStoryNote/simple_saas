@@ -11,7 +11,7 @@ export function Logo() {
         <Rocket className="w-5 h-5 text-primary" />
       </div>
       <span className="font-bold text-lg bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-        Simple Saas Starter
+        AIVnote
       </span>
     </Link>
   );
