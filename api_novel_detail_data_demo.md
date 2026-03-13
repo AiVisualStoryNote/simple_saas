@@ -14,13 +14,14 @@
         "file_id_list": [
             171,
             379,
-            380
+            380,
+            677
         ],
         "files": [
             {
                 "id": 171,
                 "file_type": "image",
-                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/cover_image_generate_image_95cf0bd3-c135-4f71-92cc-a9259b4fd77b_fe614466.jpeg?sign=1773388890-0270a5b888-0-c23f53b968b0cef00176955e31d7f428bf404c60fbd414eae3de59184593e39a",
+                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/cover_image_generate_image_95cf0bd3-c135-4f71-92cc-a9259b4fd77b_fe614466.jpeg?sign=1773490419-cf7e63e63f-0-dcd8d3a0de172b231f1efef871adef0dd49d66e7b3addd948fbed98e6fac2fee",
                 "file_name": "cover_image_generate_image_95cf0bd3-c135-4f71-92cc-a9259b4fd77b.jpeg",
                 "file_size": 2204826,
                 "mime_type": "image/jpeg",
@@ -31,7 +32,7 @@
             {
                 "id": 379,
                 "file_type": "audio",
-                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/name_audio_tts_b290ae2a-6ce1-4fd0-8302-cc66e3caed46_d90bb971.mp3?sign=1773388890-648eb5d177-0-7b46e14833a25226e57381af19e974ce008090f841bd49181c4202a4ae5d8af5",
+                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/name_audio_tts_b290ae2a-6ce1-4fd0-8302-cc66e3caed46_d90bb971.mp3?sign=1773490419-6128f68ca8-0-8367f4b17729a8b762137ee91f5606414385be7f93e5d29ac2edcf18171b8dbc",
                 "file_name": "name_audio_tts_b290ae2a-6ce1-4fd0-8302-cc66e3caed46.mp3",
                 "file_size": 18093,
                 "mime_type": "audio/mpeg",
@@ -42,13 +43,24 @@
             {
                 "id": 380,
                 "file_type": "audio",
-                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/intro_audio_tts_bd8a64c7-049d-4c75-8812-2818f8b04e78_dd0c52d4.mp3?sign=1773388890-7229f28640-0-1b28c1ff55c95248555611448fe2985ab963ae1067b9e4734aec2e6ce5eebf13",
+                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/intro_audio_tts_bd8a64c7-049d-4c75-8812-2818f8b04e78_dd0c52d4.mp3?sign=1773490419-bb30ca4a7c-0-4c9e78bf63c18e90eb6a992d70a483fd00baa9a6c836aaeccdeff62dfecd6e0d",
                 "file_name": "intro_audio_tts_bd8a64c7-049d-4c75-8812-2818f8b04e78.mp3",
                 "file_size": 431661,
                 "mime_type": "audio/mpeg",
                 "prompt": "",
                 "voice_type_id": null,
                 "created_at": "2026-02-26T23:28:59.924001+08:00"
+            },
+            {
+                "id": 677,
+                "file_type": "video",
+                "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/cover_video_video_generate_cgt-20260313201416-fqwbv_e32f7271.mp4?sign=1773490622-78648e0967-0-af754cbaa3d282bd9cca673711bb0662cd0f83d9e4428274366b70a10c7c4226",
+                "file_name": "cover_video_video_generate_cgt-20260313201416-fqwbv.mp4",
+                "file_size": 10022185,
+                "mime_type": "video/mp4",
+                "prompt": null,
+                "voice_type_id": null,
+                "created_at": "2026-03-13T20:15:51.556992+08:00"
             }
         ],
         "chapter_list": [
@@ -66,7 +78,7 @@
                 "title_audio_file": {
                     "id": 198,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3?sign=1773388909-b1e8367942-0-4bb841803a65a4366ec973120af8f396560bdd0a94d6b9efbfd89f43da0a4171",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3?sign=1773490421-975f04270a-0-d4dda68696c61e51ef4236d88aa73b9bf9ff5e5826a4b54602322554589a8f08",
                     "file_name": "title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -77,7 +89,7 @@
                 "image_file": {
                     "id": 184,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_34d63b63-12f1-42a4-b70b-0519285d305e_bdc9784a.jpeg?sign=1773388909-3f11f4e66c-0-92514c2fb28759f80a955381193f6424953b5a74d088f1990e2ccaa6cf776cd9",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_34d63b63-12f1-42a4-b70b-0519285d305e_bdc9784a.jpeg?sign=1773490421-a1d4901638-0-458b9d5517e183b35a69490080b1d37fde09c1b558c87f8c39b1bc83c2fcd3a5",
                     "file_name": "image_file_id_generate_image_34d63b63-12f1-42a4-b70b-0519285d305e.jpeg",
                     "file_size": 2353821,
                     "mime_type": "image/jpeg",
@@ -88,7 +100,7 @@
                 "video_file": {
                     "id": 381,
                     "file_type": "video",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/video_file_id_video_generate_cgt-20260226233706-vplr5_513e4e0b.mp4?sign=1773388909-60f1d11322-0-bb52c7260b288bfeaff91650f1acf115a529b5d550717be21cbb8b16803f3bb0",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/video_file_id_video_generate_cgt-20260226233706-vplr5_513e4e0b.mp4?sign=1773490421-ef9a135ca9-0-1a36887c7328215b1a141040023b61416f2a64c36a8a044b0087a36f6ecd7a58",
                     "file_name": "video_file_id_video_generate_cgt-20260226233706-vplr5.mp4",
                     "file_size": 18571353,
                     "mime_type": "video/mp4",
@@ -115,7 +127,7 @@
                 "title_audio_file": {
                     "id": 199,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_aff15746.mp3?sign=1773388909-6e23fa51fa-0-b680cec208689b3715cd52fb8893a36a6e6b3705add627470358a1b7c7b78458",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_aff15746.mp3?sign=1773490421-7ddfa14e93-0-88a057ca40e4b9528d43386fa16ccd4852767eb6c24a45a28cce01d303b6a330",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -126,7 +138,7 @@
                 "image_file": {
                     "id": 185,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_f134622c-78a0-4bbf-a6d8-d64c27db1bdc_c0704da7.jpeg?sign=1773388909-ac2e8897aa-0-7c332d6699f0c163fb8cd87e8b54a5130d7bbada719f183178b768426f357100",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_f134622c-78a0-4bbf-a6d8-d64c27db1bdc_c0704da7.jpeg?sign=1773490422-f9f03c9467-0-e618700ec59207898162d78ccebc719e9c0c3f4116d7aecd3603a3ade0d56ac4",
                     "file_name": "image_file_id_generate_image_f134622c-78a0-4bbf-a6d8-d64c27db1bdc.jpeg",
                     "file_size": 2527548,
                     "mime_type": "image/jpeg",
@@ -154,7 +166,7 @@
                 "title_audio_file": {
                     "id": 200,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_9b0bdead.mp3?sign=1773388910-1330749304-0-803c7e3bde57e77f9c08cf1b99e48f424984f1af39f0939b1265ad26de162214",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_9b0bdead.mp3?sign=1773490422-efd12de2cb-0-171d7f87cf7050a7dd093863d1a5eeb8424d67eb43e6ad1b045a822eb0a2ee0f",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -165,7 +177,7 @@
                 "image_file": {
                     "id": 186,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_579d7ce5-a26b-4637-9ee8-e6882220f8e6_9413684e.jpeg?sign=1773388910-9ba02d1f61-0-d5b40fbda2a7eba91dc7ec45f92717b5d5e9f57ddb37cdc9c8f954a1d5622311",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_579d7ce5-a26b-4637-9ee8-e6882220f8e6_9413684e.jpeg?sign=1773490422-d20e29c638-0-39b4d340873a024e07b5516afa63ee40e0d6d2049539a14e4cf87be57a8ab821",
                     "file_name": "image_file_id_generate_image_579d7ce5-a26b-4637-9ee8-e6882220f8e6.jpeg",
                     "file_size": 2404219,
                     "mime_type": "image/jpeg",
@@ -193,7 +205,7 @@
                 "title_audio_file": {
                     "id": 201,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_f4337f02.mp3?sign=1773388910-d4e1417cc4-0-09ba8f1024413a0ee14f37488ec357e9fd013942fb152921d74707a77406291c",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_f4337f02.mp3?sign=1773490422-d52811b73b-0-f7780bd25d7add79d12e81b2a7229b577a04c2c3b75b70021b7a15c2b9c7430a",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -204,7 +216,7 @@
                 "image_file": {
                     "id": 187,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_2ba01941-1e7e-4923-8b33-3d0218a98727_8b3321e9.jpeg?sign=1773388910-c8909fcf62-0-1e8e69c1db1621a7fd495001ac32fccfac65f7c3a850d8224349e18acca4f0b4",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_2ba01941-1e7e-4923-8b33-3d0218a98727_8b3321e9.jpeg?sign=1773490423-72a2f6461a-0-19663cce203a84f7be7b05d68e4ed00fc0d5174ac40144baf3f34fd9885185c2",
                     "file_name": "image_file_id_generate_image_2ba01941-1e7e-4923-8b33-3d0218a98727.jpeg",
                     "file_size": 2296770,
                     "mime_type": "image/jpeg",
@@ -232,7 +244,7 @@
                 "title_audio_file": {
                     "id": 202,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_acbdb8f6.mp3?sign=1773388910-792b8cc576-0-9ae56ed687990d51ea2c98b2b418f6a83f3193e0c45afeea7f52b41953b050a4",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_acbdb8f6.mp3?sign=1773490423-35d8a23504-0-610f55a5b80a7e242dbd5125b64440c54069fe283183f61b2a9e5c4357cd6715",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -243,7 +255,7 @@
                 "image_file": {
                     "id": 188,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_b3addcd9-afc8-451b-8322-1b6f8685f326_5d8fa8eb.jpeg?sign=1773388911-ec910b35cf-0-0e676a3167e28897e57b601801df8fe34d29c24bab03c28ec11a12c4a75e6809",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_b3addcd9-afc8-451b-8322-1b6f8685f326_5d8fa8eb.jpeg?sign=1773490423-d080c8958c-0-6a80790faf88884815e669536f90fb6538fbcd8d0d20aa1a52dbe2e2b82cd6b2",
                     "file_name": "image_file_id_generate_image_b3addcd9-afc8-451b-8322-1b6f8685f326.jpeg",
                     "file_size": 2407908,
                     "mime_type": "image/jpeg",
@@ -271,7 +283,7 @@
                 "title_audio_file": {
                     "id": 203,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_ded04c9a.mp3?sign=1773388911-3c9b20ca1f-0-f709f03526f8eb0e14da014419514057b7cba41e787bb2c6a36280d099ce76e1",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_ded04c9a.mp3?sign=1773490424-e4aa5eea49-0-037512b28b9850629149ed3e712cc7d5810b1aa89e33489c0eb6c8b91cb6d7a8",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -282,7 +294,7 @@
                 "image_file": {
                     "id": 189,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_0ec8628e-ed7f-474a-813c-b5757b550615_0254f6b0.jpeg?sign=1773388911-4677213676-0-e19bd58cd485e4102480dff038a769e6d0e4927fb464105514a97c4c55d659a2",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_0ec8628e-ed7f-474a-813c-b5757b550615_0254f6b0.jpeg?sign=1773490424-6d81f48dd1-0-c9a583711b1889c6921ffb41f33832f45ad73538d563ff5ffeedf4777160f20e",
                     "file_name": "image_file_id_generate_image_0ec8628e-ed7f-474a-813c-b5757b550615.jpeg",
                     "file_size": 2109865,
                     "mime_type": "image/jpeg",
@@ -310,7 +322,7 @@
                 "title_audio_file": {
                     "id": 204,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_54eca36c.mp3?sign=1773388911-e8f3e15928-0-d9f1997c79207f683ba62c1feb4ad2b6fbf6707f1af3d71260cedf106c9a9f92",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_54eca36c.mp3?sign=1773490424-d749786736-0-4907adc25023029c1aacab4c23259c0c9cc5fdbd3a2d171ba97ead53c8c81c54",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -321,7 +333,7 @@
                 "image_file": {
                     "id": 190,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_94074551-b902-4b48-a62b-25572136a56b_5ab4a6f2.jpeg?sign=1773388911-f124d7c1d9-0-f3a9398b7b506a9c6ab3d94a06d476df90df1d0b8c893ea9f7ef7952d42621a1",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_94074551-b902-4b48-a62b-25572136a56b_5ab4a6f2.jpeg?sign=1773490424-150cb5f46f-0-280d1daa2b69e213f30dd9bb6aa36b42475580f7ff5938cb37fa2d17008fe5e5",
                     "file_name": "image_file_id_generate_image_94074551-b902-4b48-a62b-25572136a56b.jpeg",
                     "file_size": 2363081,
                     "mime_type": "image/jpeg",
@@ -349,7 +361,7 @@
                 "title_audio_file": {
                     "id": 205,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_6c595063.mp3?sign=1773388912-cebb36b0d2-0-60e2e5a4a26d83fa9877ab9e9e940e637f1ec435d18cc0b3f64154e1df806092",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_6c595063.mp3?sign=1773490425-d750efddf6-0-65369b410e730e5306afbb22ccb189ebc6ddb285a80f0c67cdbdf3052d54e596",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -360,7 +372,7 @@
                 "image_file": {
                     "id": 191,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_b02c2b2c-ace6-49cd-b9fc-86fa3d7b9334_1a77b24e.jpeg?sign=1773388912-65eae6b0b0-0-6c54a4548dce7eae54cdbb372b9957d212252edb9e3eed0e3a862dccf9851f85",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_b02c2b2c-ace6-49cd-b9fc-86fa3d7b9334_1a77b24e.jpeg?sign=1773490425-08d7545497-0-759711b6a7f6797ccc69d0f42a27af048156ac1735ba5f58a2ec01fc16857ebc",
                     "file_name": "image_file_id_generate_image_b02c2b2c-ace6-49cd-b9fc-86fa3d7b9334.jpeg",
                     "file_size": 2409288,
                     "mime_type": "image/jpeg",
@@ -388,7 +400,7 @@
                 "title_audio_file": {
                     "id": 206,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_0dd33b38.mp3?sign=1773388912-6c673c7609-0-75162874903d5816e8f6b60dac6b19c39b40097f5f4b25d753f7cf75fc429632",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_0dd33b38.mp3?sign=1773490425-b25b8eaf79-0-8f1588d6f8280f572d705fb0fe70031377a52091b0ff9fdab64206f3b132fe40",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -399,7 +411,7 @@
                 "image_file": {
                     "id": 192,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_8b6d4ba2-02e6-422d-a2ce-6363875e0cac_de0a62f4.jpeg?sign=1773388912-0963804d70-0-bcdcdd8f64a05fe2c11736886f8a0c0f5f7d9a49665c762137f0b68fde88b094",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_8b6d4ba2-02e6-422d-a2ce-6363875e0cac_de0a62f4.jpeg?sign=1773490425-d4ca601ba2-0-4fa7aa0013311f831e762109d3f740a8f798cad93b6e0c74a73dd465d56afe52",
                     "file_name": "image_file_id_generate_image_8b6d4ba2-02e6-422d-a2ce-6363875e0cac.jpeg",
                     "file_size": 2213459,
                     "mime_type": "image/jpeg",
@@ -429,7 +441,7 @@
                 "title_audio_file": {
                     "id": 207,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_3d3ca0c9.mp3?sign=1773388913-3db29c07c4-0-77c5baa76103506b9110c5b6d837e7e62b6b8ccb538ca707c1ad11042b6d8aa2",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_3d3ca0c9.mp3?sign=1773490426-182be01719-0-9cdc4c37c1a5d8a0ab7fc74d15e284db4792c168d084941ca4fb04254b430d5b",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -440,7 +452,7 @@
                 "image_file": {
                     "id": 193,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_db2f3ae1-c8e6-4bb9-9efe-b273b5bc537b_e26325a6.jpeg?sign=1773388913-19143fa007-0-0eac310c68d20451cb0d8a52b327c47e1d3ca06cca82a3ad8b28ce9a0193fa64",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_db2f3ae1-c8e6-4bb9-9efe-b273b5bc537b_e26325a6.jpeg?sign=1773490426-f20ca8f7a0-0-f66001b4ec8ddba53a0b629114a0d675f54bc2e6fc8a65030bd7385e709768f9",
                     "file_name": "image_file_id_generate_image_db2f3ae1-c8e6-4bb9-9efe-b273b5bc537b.jpeg",
                     "file_size": 2378562,
                     "mime_type": "image/jpeg",
@@ -468,7 +480,7 @@
                 "title_audio_file": {
                     "id": 208,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_0da6492b.mp3?sign=1773388913-cebcfa10bd-0-07df79b3f57a648e127805e35ca95c0aabb0f087a58822fd106c5b29a48bd115",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5_0da6492b.mp3?sign=1773490426-6bf2e8f513-0-9b3ebbd4f8f11d9805f461a3df213f6f33544031e4f5d298ecbf31948bfc9f4c",
                     "file_name": "title_audio_file_id_title_audio_file_id_tts_1017f70e-9247-4f63-8644-77120b1e121d_05bf04f5.mp3",
                     "file_size": 25389,
                     "mime_type": "audio/mpeg",
@@ -479,7 +491,7 @@
                 "image_file": {
                     "id": 194,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_89df8963-5023-4ee9-bdb4-45b9e4907c8b_bb014775.jpeg?sign=1773388913-9805960cfc-0-17ffee24e3eeda03739a5c4c931275adbb9e426e93b0f5fbda6b3894febeda74",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_89df8963-5023-4ee9-bdb4-45b9e4907c8b_bb014775.jpeg?sign=1773490426-612f2209d1-0-8e1f013245c3835f74b0e0d19ae2d4bc30bfd5241e9c83bebb382ce6ff572716",
                     "file_name": "image_file_id_generate_image_89df8963-5023-4ee9-bdb4-45b9e4907c8b.jpeg",
                     "file_size": 2397918,
                     "mime_type": "image/jpeg",
@@ -507,7 +519,7 @@
                 "title_audio_file": {
                     "id": 196,
                     "file_type": "audio",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_tts_13500f69-c899-47dd-a7c2-6480c89263dd_03ab75f4.mp3?sign=1773388913-267e5c0410-0-1cf0d420c44257f0f5503c4028c9f1af30e79bc5a8bf6c31b010b2fbb29517c7",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/title_audio_file_id_tts_13500f69-c899-47dd-a7c2-6480c89263dd_03ab75f4.mp3?sign=1773490427-4507aab457-0-dbe133404af4dc1af02c188438f345ab33f18d14f89bdd8ca0b42d30f7afcf2b",
                     "file_name": "title_audio_file_id_tts_13500f69-c899-47dd-a7c2-6480c89263dd.mp3",
                     "file_size": 32685,
                     "mime_type": "audio/mpeg",
@@ -518,7 +530,7 @@
                 "image_file": {
                     "id": 195,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_9c2b266a-9634-4bdc-be46-0584dcac5644_8bc727ea.jpeg?sign=1773388914-ab1dbfe476-0-f6ac69cd9625cc8fa7dec2c6f0ca3e14d9e6b925cd103892c20b382e7bb9d297",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/image_file_id_generate_image_9c2b266a-9634-4bdc-be46-0584dcac5644_8bc727ea.jpeg?sign=1773490427-a4ca6d7ef5-0-5079cf289413ed90789e9e5d46c1a99f0492b5284647089fdb910d0c969f5940",
                     "file_name": "image_file_id_generate_image_9c2b266a-9634-4bdc-be46-0584dcac5644.jpeg",
                     "file_size": 2259722,
                     "mime_type": "image/jpeg",
@@ -550,7 +562,7 @@
                 "design_img": {
                     "id": 163,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_1_design_f6af73fd.jpg?sign=1773388914-6afa46f1b7-0-28f751a6a55cd97c97ded2281488315dd8b97243a5fcdf48f81972786a8d5abb",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_1_design_f6af73fd.jpg?sign=1773490427-e8fcb22e94-0-d37049aca6ff214fb2ee69d7db013de6463480399a570fbc49fcfc5cd1608676",
                     "file_name": "novel_32_character_temp_1_design.jpg",
                     "file_size": 1011065,
                     "mime_type": "image/jpeg",
@@ -574,7 +586,7 @@
                 "design_img": {
                     "id": 164,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_2_design_ad3dcc92.jpg?sign=1773388914-9a62448435-0-0ab571536ecdf2f5edf7c041228a6708efbdfc3dc7ee96501c4345bb49f81636",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_2_design_ad3dcc92.jpg?sign=1773490427-00ee7ce7b4-0-61bcda002e7af3a46d85404acc36990eb7ceb4ae1afddf32020c014612b01309",
                     "file_name": "novel_32_character_temp_2_design.jpg",
                     "file_size": 842339,
                     "mime_type": "image/jpeg",
@@ -598,7 +610,7 @@
                 "design_img": {
                     "id": 165,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_3_design_93fd068c.jpg?sign=1773388914-d324f1ca92-0-2a7a1d68a63da355f1b21f4dfef4c165fac3ed5ba6bbaa8dab33c811e1df85b3",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_3_design_93fd068c.jpg?sign=1773490428-c8489be4e4-0-2e0c0406d38e553947674b0f9e31d72538d2cf05d90e0464150a7824a8ad2eb3",
                     "file_name": "novel_32_character_temp_3_design.jpg",
                     "file_size": 695313,
                     "mime_type": "image/jpeg",
@@ -622,7 +634,7 @@
                 "design_img": {
                     "id": 166,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_4_design_1b17676a.jpg?sign=1773388914-432ee554f3-0-af7ccca62747cf77347d2ba1c94aff225610c6d6448d5dcb518c93563183002a",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_4_design_1b17676a.jpg?sign=1773490428-5f6b474e31-0-64f9bf0966176c748e2e203ee200c301941c2745c25da2d41e141fcc89856e35",
                     "file_name": "novel_32_character_temp_4_design.jpg",
                     "file_size": 907274,
                     "mime_type": "image/jpeg",
@@ -646,7 +658,7 @@
                 "design_img": {
                     "id": 167,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_5_design_5a2dacd8.jpg?sign=1773388915-b46cf523da-0-07bee83d6e3f7e64385df9faff919a7d5b906f63ad2b6ea5375a1ab0904c1a39",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_5_design_5a2dacd8.jpg?sign=1773490428-71c8a952f2-0-15e3bb421e04e8fc5589a80dfbdfa54dba0654a18f1f064ef777327ee8a62105",
                     "file_name": "novel_32_character_temp_5_design.jpg",
                     "file_size": 934223,
                     "mime_type": "image/jpeg",
@@ -670,7 +682,7 @@
                 "design_img": {
                     "id": 168,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_6_design_3ede3c76.jpg?sign=1773388915-4ee17d2c3c-0-c147d28637c7d8c82d9bd29c5073d9b69c79d1752b9efc0320c125bb5881c778",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_6_design_3ede3c76.jpg?sign=1773490429-971982de98-0-0da9f81af48e5b992b987ebded779a48377c36f8fc93f49dd886dde830569c05",
                     "file_name": "novel_32_character_temp_6_design.jpg",
                     "file_size": 861752,
                     "mime_type": "image/jpeg",
@@ -694,7 +706,7 @@
                 "design_img": {
                     "id": 169,
                     "file_type": "image",
-                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_7_design_8e8c8dae.jpg?sign=1773388915-2f4410b468-0-89e3a66b736dd96033e5eafda13bcab58fab79fb386181c8cbca56e420347fe0",
+                    "file_url": "https://coze-coding-project.tos.coze.site/coze_storage_7599550310448758835/novel_32_character_temp_7_design_8e8c8dae.jpg?sign=1773490429-5e547840e6-0-f0811084cc36184d296b56822ff39aafa9e77c835d6969b1512f8d9fbd8ceeac",
                     "file_name": "novel_32_character_temp_7_design.jpg",
                     "file_size": 879906,
                     "mime_type": "image/jpeg",
