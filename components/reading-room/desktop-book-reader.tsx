@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
 import { AudioController, AudioControllerRef } from "@/components/reading-room/audio-controller";
@@ -9,7 +10,7 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List } from "lucide-react";
+import { List, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DesktopBookReaderProps {
   pages: BookPage[];
@@ -20,8 +21,14 @@ interface DesktopBookReaderProps {
 export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [flipDirection, setFlipDirection] = useState<"left" | "right">("right");
   const audioRef = useRef<AudioControllerRef>(null);
   const page = pages[currentPage - 1];
+
+  useEffect(() => {
+    setIsFlipping(false);
+  }, [currentPage]);
 
   if (!page) {
     return (
@@ -36,8 +43,17 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
       (p) => p.chapterId === chapterId && p.type === "ending-chapter"
     );
     if (chapterPageIndex !== -1) {
-      onPageChange(chapterPageIndex + 1);
+      handlePageChange(chapterPageIndex + 1, "right");
     }
+  };
+
+  const handlePageChange = (newPage: number, direction: "left" | "right") => {
+    if (isFlipping || newPage === currentPage || newPage < 1 || newPage > pages.length) return;
+    setFlipDirection(direction);
+    setIsFlipping(true);
+    setTimeout(() => {
+      onPageChange(newPage);
+    }, 300);
   };
 
   const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
@@ -46,12 +62,38 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
     setAudioState({ currentTime, duration, isPlaying });
   };
 
+  const handlePrevPage = () => {
+    handlePageChange(currentPage - 1, "left");
+  };
+
+  const handleNextPage = () => {
+    handlePageChange(currentPage + 1, "right");
+  };
+
+  const pageVariants = {
+    enter: (direction: "left" | "right") => ({
+      rotateY: direction === "right" ? 90 : -90,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      rotateY: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: "left" | "right") => ({
+      rotateY: direction === "right" ? -90 : 90,
+      opacity: 0,
+      scale: 0.95,
+    }),
+  };
+
   const renderRightContent = () => {
     switch (page.type) {
       case "cover":
         return (
           <div className="flex items-center justify-center h-full">
-            <h1 className="text-4xl font-bold text-center px-8">{page.textContent}</h1>
+            <h1 className="text-4xl font-bold text-center px-8 leading-relaxed text-black">{page.textContent}</h1>
           </div>
         );
 
@@ -72,7 +114,7 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
       case "ending-chapter":
         return (
           <div className="flex items-center justify-center h-full">
-            <h2 className="text-3xl font-semibold text-center px-8">
+            <h2 className="text-3xl font-semibold text-center px-8 leading-relaxed">
               {page.textContent}
               {page.endingType && (
                 <span className="block text-lg font-normal text-muted-foreground mt-2">
@@ -110,27 +152,85 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex min-h-0">
-        <div className="w-1/2 flex items-center justify-center bg-muted/20 p-4">
-          {page.imageUrl ? (
-            <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
-              <Image
-                src={page.imageUrl}
-                alt="Book image"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full w-full bg-muted/30 rounded-lg">
-              <p className="text-muted-foreground">No image</p>
-            </div>
-          )}
-        </div>
+      <div className="flex-1 flex min-h-0 p-4">
+        <div className="flex-1 flex items-center justify-center perspective-1000">
+          <div className="relative w-full max-w-4xl h-full flex">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-none z-10" />
+            
+            <AnimatePresence mode="wait" custom={flipDirection}>
+              <motion.div
+                key={currentPage}
+                custom={flipDirection}
+                variants={pageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  duration: 0.4,
+                  ease: "easeInOut",
+                }}
+                className="flex w-full h-full"
+                style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+              >
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="relative w-full h-full max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-l-lg shadow-2xl overflow-hidden border-l-4 border-y-4 border-[#8B5CF6]/30">
+                    <div className="absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-[#8B5CF6]/10 to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-black/5 to-transparent" />
+                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-l-lg" />
+                    
+                    <div className="absolute inset-2">
+                      {page.imageUrl ? (
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={page.imageUrl}
+                            alt="Book image"
+                            fill
+                            className="object-contain"
+                            priority
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <p className="text-muted-foreground">No image</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
 
-        <div className="w-1/2 flex items-center justify-center bg-background border-l">
-          {renderRightContent()}
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="relative w-full h-full max-h-[70vh] aspect-[3/4] bg-gradient-to-br from-[#FDFBF7] to-[#F5F3EE] rounded-r-lg shadow-2xl overflow-hidden border-r-4 border-y-4 border-[#8B5CF6]/30">
+                    <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-black/5 to-transparent" />
+                    <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-[#8B5CF6]/10 to-transparent" />
+                    <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-r-lg" />
+                    
+                    <div className="absolute inset-4 overflow-hidden">
+                      {renderRightContent()}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1 || isFlipping}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 h-12 w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNextPage}
+              disabled={currentPage === pages.length || isFlipping}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 h-12 w-12 bg-background/80 hover:bg-background/90 shadow-lg rounded-full"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -138,7 +238,10 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
         <Pagination
           currentPage={currentPage}
           totalPages={pages.length}
-          onPageChange={onPageChange}
+          onPageChange={(page) => {
+            const direction = page > currentPage ? "right" : "left";
+            handlePageChange(page, direction);
+          }}
         />
         <div className="flex items-center gap-4 px-8 pb-4">
           <div className="flex-1">
@@ -163,7 +266,10 @@ export function DesktopBookReader({ pages, currentPage, onPageChange }: DesktopB
         pages={pages}
         isOpen={tocOpen}
         onClose={() => setTocOpen(false)}
-        onNavigate={onPageChange}
+        onNavigate={(pageNum) => {
+          const direction = pageNum > currentPage ? "right" : "left";
+          handlePageChange(pageNum, direction);
+        }}
       />
     </div>
   );

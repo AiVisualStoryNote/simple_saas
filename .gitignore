@@ -49,3 +49,6 @@ pnpm-lock.yaml
 #
 .github
 .vscode
+
+# others
+screenshots

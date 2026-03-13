@@ -86,7 +86,7 @@ export function TextHighlighter({ text, currentTime, duration, isPlaying }: Text
       }}
     >
       <div className="leading-relaxed whitespace-pre-wrap text-xl">
-        <span className="text-yellow-400">{highlightedText}</span>
+        <span className="text-blue-900">{highlightedText}</span>
         <span ref={markerRef} className="text-gray-400">{remainingText}</span>
       </div>
       <style jsx>{`
