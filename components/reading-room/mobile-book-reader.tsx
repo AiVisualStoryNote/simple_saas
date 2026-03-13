@@ -132,9 +132,9 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
       case "chapter-title":
       case "ending-chapter":
         return (
-          <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pt-16 pb-4 px-4">
+          <div className="absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm pt-4 pb-4 px-4">
             <div className="max-h-[20vh] overflow-y-auto scrollbar-hide">
-              <p className="text-white text-lg font-medium text-center">
+              <p className="text-white text-lg font-medium text-center text-xl">
                 {page.textContent}
                 {page.endingType && (
                   <span className="block text-sm font-normal opacity-80 mt-1">

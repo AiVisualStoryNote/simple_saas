@@ -7,9 +7,10 @@ interface TextHighlighterProps {
   currentTime: number;
   duration: number;
   isPlaying: boolean;
+  highlightedClassName?: string;
 }
 
-export function TextHighlighter({ text, currentTime, duration, isPlaying }: TextHighlighterProps) {
+export function TextHighlighter({ text, currentTime, duration, isPlaying, highlightedClassName = "text-yellow-400" }: TextHighlighterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
   const [highlightRatio, setHighlightRatio] = useState(0);
@@ -86,7 +87,7 @@ export function TextHighlighter({ text, currentTime, duration, isPlaying }: Text
       }}
     >
       <div className="leading-relaxed whitespace-pre-wrap text-2xl">
-        <span className="text-yellow-400">{highlightedText}</span>
+        <span className={highlightedClassName}>{highlightedText}</span>
         <span ref={markerRef} className="text-gray-400">{remainingText}</span>
       </div>
       <style jsx>{`

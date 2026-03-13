@@ -105,6 +105,7 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
               currentTime={audioState.currentTime}
               duration={audioState.duration}
               isPlaying={audioState.isPlaying}
+              highlightedClassName="text-primary dark:text-yellow-400"
             />
           </div>
         );
