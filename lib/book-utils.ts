@@ -149,7 +149,7 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     }
   }
 
-  return pages;
+  return pages.map(page => ({ ...page, isShortStory }));
 }
 
 export function getEndingTypeLabel(endingType: number): string {

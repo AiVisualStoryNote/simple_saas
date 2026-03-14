@@ -108,4 +108,5 @@ export interface BookPage {
   audioUrl?: string;
   endingType?: number;
   endingList?: ChapterSummary[];
+  isShortStory?: boolean;
 }

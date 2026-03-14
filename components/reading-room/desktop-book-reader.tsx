@@ -247,14 +247,16 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
               onEnded={handleAudioEnded}
             />
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setTocOpen(true)}
-            className="h-10 w-10 shrink-0"
-          >
-            <List className="h-5 w-5" />
-          </Button>
+          {!page.isShortStory && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTocOpen(true)}
+              className="h-10 w-10 shrink-0"
+            >
+              <List className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
 
