@@ -43,8 +43,17 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
 
   const handleSideButtonClick = (direction: 'prev' | 'next') => {
     resetHideTimer();
-    if (direction === 'prev' && currentPage > 1) {
-      onPageChange(currentPage - 1);
+    if (direction === 'prev') {
+      if (page.type === 'ending-chapter') {
+        const endingChoicePageIndex = pages.findIndex(p => p.type === 'ending-choice');
+        if (endingChoicePageIndex !== -1) {
+          onPageChange(endingChoicePageIndex + 1);
+          return;
+        }
+      }
+      if (currentPage > 1) {
+        onPageChange(currentPage - 1);
+      }
     } else if (direction === 'next' && currentPage < pages.length) {
       onPageChange(currentPage + 1);
     }
