@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { BookPage } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
@@ -9,7 +9,7 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
 
 interface DesktopBookReaderProps {
@@ -34,6 +34,12 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
   const videoRef = useRef<HTMLVideoElement>(null);
   const page = pages[currentPage - 1];
   const { isDynamicVideoEnabled } = useReadingPreferences();
+
+  const [isRandomSelecting, setIsRandomSelecting] = useState(false);
+  const [randomSelectedIndex, setRandomSelectedIndex] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const selectionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const resetHideTimer = () => {
     if (hideTimerRef.current) {
@@ -76,6 +82,12 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
     return () => {
       if (hideTimerRef.current) {
         clearTimeout(hideTimerRef.current);
+      }
+      if (selectionTimerRef.current) {
+        clearTimeout(selectionTimerRef.current);
+      }
+      if (countdownTimerRef.current) {
+        clearInterval(countdownTimerRef.current);
       }
     };
   }, []);
@@ -120,6 +132,55 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
     ? pages.length 
     : (endingChoicePageIndex !== -1 ? endingChoicePageIndex + 1 : pages.length);
 
+  const startRandomSelection = useCallback(() => {
+    if (!page.endingList || page.endingList.length === 0) return;
+
+    setIsRandomSelecting(true);
+    setRandomSelectedIndex(null);
+    setCountdown(null);
+
+    const totalDuration = 5000 + Math.random() * 5000;
+    const totalItems = page.endingList.length;
+    let currentTime = 0;
+    let currentIndex = 0;
+    const baseInterval = 50;
+    const maxInterval = 300;
+
+    const selectNext = () => {
+      currentIndex = (currentIndex + 1) % totalItems;
+      setRandomSelectedIndex(currentIndex);
+      currentTime += baseInterval + (currentTime / totalDuration) * maxInterval;
+
+      if (currentTime < totalDuration) {
+        const nextDelay = baseInterval + (currentTime / totalDuration) * maxInterval;
+        selectionTimerRef.current = setTimeout(selectNext, nextDelay);
+      } else {
+        setRandomSelectedIndex(currentIndex);
+        setIsRandomSelecting(false);
+        
+        setCountdown(3);
+        countdownTimerRef.current = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev === null || prev <= 1) {
+              if (countdownTimerRef.current) {
+                clearInterval(countdownTimerRef.current);
+                countdownTimerRef.current = null;
+              }
+              if (currentIndex !== null && page.endingList && page.endingList[currentIndex]) {
+                handleEndingChoice(page.endingList[currentIndex].id);
+              }
+              setCountdown(null);
+              return null;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    };
+
+    selectionTimerRef.current = setTimeout(selectNext, baseInterval);
+  }, [page.endingList]);
+
   const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
   const shouldShowVideo = isDynamicVideoEnabled && page.videoUrl && page.pageNumber !== 1;
 
@@ -127,6 +188,12 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
     setVideoLoaded(false);
     setIsVideoPlaying(false);
   }, [currentPage, page.videoUrl, isDynamicVideoEnabled]);
+
+  useEffect(() => {
+    if (isAutoReading && page.type === 'ending-choice' && page.endingList && page.endingList.length > 0 && !isRandomSelecting && countdown === null) {
+      startRandomSelection();
+    }
+  }, [isAutoReading, currentPage, page.type, page.endingList, isRandomSelecting, countdown, startRandomSelection]);
 
   useEffect(() => {
     if (shouldShowVideo && videoRef.current) {
@@ -227,17 +294,51 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
           <div className="flex flex-col items-center justify-center h-full gap-6 p-8">
             <h2 className="text-2xl font-semibold text-center">Choose Your Ending</h2>
             <div className="flex flex-col gap-3 w-full max-w-xs">
-              {page.endingList?.map((ending) => (
+              {page.endingList?.map((ending, index) => (
                 <Button
                   key={ending.id}
                   variant="outline"
                   size="lg"
-                  onClick={() => handleEndingChoice(ending.id)}
-                  className="w-full h-14 text-lg"
+                  onClick={() => {
+                    if (countdownTimerRef.current) {
+                      clearInterval(countdownTimerRef.current);
+                      countdownTimerRef.current = null;
+                    }
+                    setCountdown(null);
+                    handleEndingChoice(ending.id);
+                  }}
+                  className={`w-full h-14 text-lg relative transition-all duration-200 ${
+                    randomSelectedIndex === index
+                      ? "ring-2 ring-primary scale-105 bg-primary/10 dark:bg-primary/20 border-primary"
+                      : ""
+                  }`}
                 >
                   {getEndingTypeLabel(ending.ending_type)}
+                  {randomSelectedIndex === index && (
+                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs animate-pulse">
+                      ✓
+                    </span>
+                  )}
                 </Button>
               ))}
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={startRandomSelection}
+                disabled={isRandomSelecting || !page.endingList?.length}
+                className="w-full h-14 text-lg mt-2"
+              >
+                <Shuffle className="w-5 h-5 mr-2" />
+                {isRandomSelecting ? (
+                  countdown !== null ? (
+                    <span className="font-bold">{countdown}</span>
+                  ) : (
+                    "Selecting..."
+                  )
+                ) : (
+                  "Random Ending"
+                )}
+              </Button>
             </div>
           </div>
         );
