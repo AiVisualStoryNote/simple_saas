@@ -9,7 +9,7 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
 
 interface DesktopBookReaderProps {
@@ -28,10 +28,48 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showSideButtons, setShowSideButtons] = useState(false);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<AudioControllerRef>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const page = pages[currentPage - 1];
   const { isDynamicVideoEnabled } = useReadingPreferences();
+
+  const resetHideTimer = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+    hideTimerRef.current = setTimeout(() => {
+      setShowSideButtons(false);
+    }, 10000);
+  };
+
+  const handleMouseEnter = () => {
+    setShowSideButtons(true);
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    resetHideTimer();
+  };
+
+  const handleSideButtonClick = (direction: 'prev' | 'next') => {
+    if (direction === 'prev' && currentPage > 1) {
+      onPageChange(currentPage - 1);
+    } else if (direction === 'next' && currentPage < pages.length) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
 
   if (!page) {
     return (
@@ -202,7 +240,7 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex min-h-0">
+      <div className="flex-1 flex min-h-0 relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <div className="w-1/2 flex items-center justify-center bg-muted/20 p-4">
           {shouldShowVideo ? (
             <div className="relative w-full h-full max-h-[70vh] aspect-[3/4]">
@@ -243,6 +281,31 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
 
         <div className="w-1/2 flex items-center justify-center bg-background border-l">
           {renderRightContent()}
+        </div>
+
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${showSideButtons ? 'opacity-100' : 'opacity-0'}`}>
+          {currentPage > 1 && page.type !== 'ending-choice' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSideButtonClick('prev');
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 pointer-events-auto"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+            </button>
+          )}
+          {currentPage < pages.length && page.type !== 'ending-choice' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSideButtonClick('next');
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 pointer-events-auto"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+            </button>
+          )}
         </div>
       </div>
 
