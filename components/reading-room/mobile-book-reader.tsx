@@ -9,7 +9,7 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
 
 interface MobileBookReaderProps {
@@ -27,7 +27,41 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
   const [selectedEndingId, setSelectedEndingId] = useState<number | null>(null);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [showSideButtons, setShowSideButtons] = useState(true);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<AudioControllerRef>(null);
+
+  const resetHideTimer = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+    setShowSideButtons(true);
+    hideTimerRef.current = setTimeout(() => {
+      setShowSideButtons(false);
+    }, 10000);
+  };
+
+  const handleSideButtonClick = (direction: 'prev' | 'next') => {
+    resetHideTimer();
+    if (direction === 'prev' && currentPage > 1) {
+      onPageChange(currentPage - 1);
+    } else if (direction === 'next' && currentPage < pages.length) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  const handleContentClick = () => {
+    setShowSideButtons(true);
+    resetHideTimer();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
 
   const getLastEndingPageIndex = () => {
     if (!selectedEndingId) return null;
@@ -219,7 +253,7 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative overflow-hidden" onClick={handleContentClick}>
         {shouldShowVideo ? (
           <>
           <video
@@ -254,6 +288,33 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
         )}
 
         {renderOverlayContent()}
+
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${showSideButtons ? 'opacity-100' : 'opacity-0'}`}>
+          <>
+            {currentPage > 1 && page.type !== 'ending-choice' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSideButtonClick('prev');
+                }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 pointer-events-auto"
+              >
+                <ChevronLeft className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+              </button>
+            )}
+            {currentPage < pages.length && page.type !== 'ending-choice' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSideButtonClick('next');
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95 pointer-events-auto"
+              >
+                <ChevronRight className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+              </button>
+            )}
+          </>
+        </div>
       </div>
 
       <div className="bg-background border-t">
