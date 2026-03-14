@@ -1,15 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  isLastEndingPage?: boolean;
+  onBackToEndingChoice?: () => void;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({ currentPage, totalPages, onPageChange, isLastEndingPage, onBackToEndingChoice }: PaginationProps) {
   if (totalPages < 1) return null;
 
   const getVisiblePages = () => {
@@ -82,11 +84,15 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        onClick={() => isLastEndingPage && onBackToEndingChoice ? onBackToEndingChoice() : onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages && !isLastEndingPage}
         className="h-8 w-8"
       >
-        <ChevronRight className="h-4 w-4" />
+        {isLastEndingPage ? (
+          <RotateCcw className="h-4 w-4" />
+        ) : (
+          <ChevronRight className="h-4 w-4" />
+        )}
       </Button>
     </div>
   );

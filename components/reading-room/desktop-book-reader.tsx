@@ -24,6 +24,7 @@ interface DesktopBookReaderProps {
 
 export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
+  const [selectedEndingId, setSelectedEndingId] = useState<number | null>(null);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -41,6 +42,7 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
   }
 
   const handleEndingChoice = (chapterId: number) => {
+    setSelectedEndingId(chapterId);
     const chapterPageIndex = pages.findIndex(
       (p) => p.chapterId === chapterId && p.type === "ending-chapter"
     );
@@ -48,6 +50,28 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
       onPageChange(chapterPageIndex + 1);
     }
   };
+
+  const getLastEndingPageIndex = () => {
+    if (!selectedEndingId) return null;
+    const lastPage = pages
+      .filter(p => p.chapterId === selectedEndingId)
+      .pop();
+    return lastPage?.pageNumber || null;
+  };
+
+  const isLastEndingPage = currentPage === getLastEndingPageIndex();
+
+  const handleBackToEndingChoice = () => {
+    const endingChoicePage = pages.findIndex(p => p.type === 'ending-choice');
+    if (endingChoicePage !== -1) {
+      onPageChange(endingChoicePage + 1);
+    }
+  };
+
+  const endingChoicePageIndex = pages.findIndex(p => p.type === 'ending-choice');
+  const visiblePages = selectedEndingId 
+    ? pages.length 
+    : (endingChoicePageIndex !== -1 ? endingChoicePageIndex + 1 : pages.length);
 
   const needsHighlighting = page.type === "introduction" || page.type === "paragraph";
   const shouldShowVideo = isDynamicVideoEnabled && page.videoUrl && page.pageNumber !== 1;
@@ -225,8 +249,10 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
       <div className="border-t bg-background">
         <Pagination
           currentPage={currentPage}
-          totalPages={pages.length}
+          totalPages={visiblePages}
           onPageChange={onPageChange}
+          isLastEndingPage={isLastEndingPage}
+          onBackToEndingChoice={handleBackToEndingChoice}
         />
         <div className="flex items-center gap-4 px-8 pb-4">
           {page.audioUrl && (
