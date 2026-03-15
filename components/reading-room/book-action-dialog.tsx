@@ -7,6 +7,7 @@ import { Headphones, BookOpen, X, Play, Pause } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Novel as NovelType } from "@/types/book";
+import { IntroTextHighlighter } from "@/components/reading-room/intro-text-highlighter";
 
 interface BookActionDialogProps {
   novel: NovelType | null;
@@ -229,8 +230,14 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
                         </div>
                       )}
                     </div>
-                    <div className="prose max-w-none text-sm text-muted-foreground line-clamp-6 overflow-y-auto max-h-48 pr-2">
-                      {novel.overall_introduction}
+                    <div className="prose max-w-none text-sm text-muted-foreground line-clamp-6 max-h-48">
+                      <IntroTextHighlighter
+                        text={novel.overall_introduction}
+                        currentTime={currentTime}
+                        duration={duration}
+                        isPlaying={isPlaying}
+                        highlightedClassName="text-primary dark:text-primary-foreground"
+                      />
                     </div>
                   </div>
                 )}
@@ -254,7 +261,7 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
                     onClick={handleRead}
                   >
                     <BookOpen className="h-4 w-4" />
-                    开始阅读
+                    Read
                   </Button>
                 </div>
               </div>
