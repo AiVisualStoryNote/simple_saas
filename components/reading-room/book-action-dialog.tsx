@@ -21,6 +21,7 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const introScrollRef = useRef<HTMLDivElement>(null);
 
   const handleRead = () => {
     // Stop audio when starting to read
@@ -230,13 +231,17 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
                         </div>
                       )}
                     </div>
-                    <div className="prose max-w-none text-sm text-muted-foreground line-clamp-6 max-h-48">
+                    <div 
+                      ref={introScrollRef}
+                      className="prose max-w-none text-sm text-muted-foreground max-h-48 overflow-y-auto"
+                    >
                       <IntroTextHighlighter
                         text={novel.overall_introduction}
                         currentTime={currentTime}
                         duration={duration}
                         isPlaying={isPlaying}
                         highlightedClassName="text-primary dark:text-primary-foreground"
+                        scrollContainerRef={introScrollRef}
                       />
                     </div>
                   </div>

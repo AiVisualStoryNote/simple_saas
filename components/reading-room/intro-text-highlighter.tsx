@@ -8,15 +8,23 @@ interface IntroTextHighlighterProps {
   duration: number;
   isPlaying: boolean;
   highlightedClassName?: string;
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function IntroTextHighlighter({ text, currentTime, duration, isPlaying, highlightedClassName = "text-primary" }: IntroTextHighlighterProps) {
+export function IntroTextHighlighter({ text, currentTime, duration, isPlaying, highlightedClassName = "text-primary", scrollContainerRef }: IntroTextHighlighterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const markerRef = useRef<HTMLSpanElement>(null);
   const [highlightRatio, setHighlightRatio] = useState(0);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastScrollTopRef = useRef(0);
+
+  const getScrollContainer = () => {
+    if (scrollContainerRef?.current) {
+      return scrollContainerRef.current;
+    }
+    return containerRef.current;
+  };
 
   useEffect(() => {
     if (duration > 0) {
@@ -26,10 +34,12 @@ export function IntroTextHighlighter({ text, currentTime, duration, isPlaying, h
   }, [currentTime, duration]);
 
   useEffect(() => {
-    if (!containerRef.current || !markerRef.current || isUserScrolling || !isPlaying) return;
+    if (!markerRef.current || isUserScrolling || !isPlaying) return;
 
-    const container = containerRef.current;
+    const container = getScrollContainer();
     const marker = markerRef.current;
+    
+    if (!container || !marker) return;
     
     requestAnimationFrame(() => {
       if (!container || !marker) return;
@@ -80,28 +90,28 @@ export function IntroTextHighlighter({ text, currentTime, duration, isPlaying, h
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="h-full overflow-y-auto pr-2"
+      className={`leading-relaxed whitespace-pre-wrap ${!scrollContainerRef ? 'h-full overflow-y-auto pr-2' : ''}`}
       style={{
         scrollbarWidth: "thin",
         msOverflowStyle: "none",
       }}
     >
-      <div className="leading-relaxed whitespace-pre-wrap">
-        <span className={highlightedClassName}>{highlightedText}</span>
-        <span ref={markerRef}>{remainingText}</span>
-      </div>
-      <style jsx>{`
-        div::-webkit-scrollbar {
-          width: 4px;
-        }
-        div::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        div::-webkit-scrollbar-thumb {
-          background-color: rgba(0, 0, 0, 0.2);
-          border-radius: 2px;
-        }
-      `}</style>
+      <span className={highlightedClassName}>{highlightedText}</span>
+      <span ref={markerRef}>{remainingText}</span>
+      {!scrollContainerRef && (
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            width: 4px;
+          }
+          div::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          div::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+          }
+        `}</style>
+      )}
     </div>
   );
 }
