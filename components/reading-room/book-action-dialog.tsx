@@ -17,6 +17,8 @@ interface BookActionDialogProps {
 export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps) {
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleRead = () => {
@@ -56,6 +58,36 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
 
   const handleAudioEnded = () => {
     setIsPlaying(false);
+    setCurrentTime(0);
+  };
+
+  const handleAudioTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleAudioLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const seekTime = parseFloat(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = seekTime;
+      setCurrentTime(seekTime);
+    }
+  };
+
+  const handleAudioStop = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
   };
 
   // Clean up audio when dialog closes
@@ -64,6 +96,8 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
+        setIsPlaying(false);
+        setCurrentTime(0);
       }
     };
   }, []);
@@ -131,21 +165,68 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
                 {/* Story introduction */}
                 {novel.overall_introduction && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-lg font-medium">Introduction</h4>
+                    <div className="flex items-center gap-3">
+                      <h4 className="text-lg font-medium flex-1">Introduction</h4>
+                      {/* Compact audio controller */}
                       {introAudio && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleAudioPlayPause}
-                          className="h-8 w-8"
-                        >
-                          {isPlaying ? (
-                            <Pause className="h-4 w-4" />
-                          ) : (
-                            <Play className="h-4 w-4" />
-                          )}
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleAudioPlayPause}
+                            className="h-6 w-6"
+                          >
+                            {isPlaying ? (
+                              <Pause className="h-3 w-3" />
+                            ) : (
+                              <Play className="h-3 w-3" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleAudioStop}
+                            className="h-6 w-6"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="6" y="6" width="12" height="12" />
+                            </svg>
+                          </Button>
+                          <div className="w-24 min-w-[60px] flex items-center">
+                            <input
+                              type="range"
+                              min="0"
+                              max={duration || 100}
+                              value={currentTime}
+                              onChange={handleSeek}
+                              className="w-full h-1 bg-muted rounded-full appearance-none cursor-pointer"
+                              style={{
+                                background: `linear-gradient(to right, currentColor ${(currentTime / (duration || 1)) * 100}%, transparent ${(currentTime / (duration || 1)) * 100}%)`
+                              }}
+                            />
+                            <style jsx>{`
+                              input[type="range"]::-webkit-slider-thumb {
+                                appearance: none;
+                                width: 8px;
+                                height: 8px;
+                                border-radius: 50%;
+                                background: currentColor;
+                                cursor: pointer;
+                              }
+                              input[type="range"]::-moz-range-thumb {
+                                width: 8px;
+                                height: 8px;
+                                border-radius: 50%;
+                                background: currentColor;
+                                cursor: pointer;
+                                border: none;
+                              }
+                            `}</style>
+                          </div>
+                          <span className="text-xs text-muted-foreground min-w-[40px] text-right">
+                            {Math.floor(currentTime / 60).toString().padStart(2, '0')}:{Math.floor(currentTime % 60).toString().padStart(2, '0')}
+                          </span>
+                        </div>
                       )}
                     </div>
                     <div className="prose max-w-none text-sm text-muted-foreground line-clamp-6 overflow-y-auto max-h-48 pr-2">
@@ -160,6 +241,8 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
                     ref={audioRef}
                     src={introAudio.file_url}
                     onEnded={handleAudioEnded}
+                    onTimeUpdate={handleAudioTimeUpdate}
+                    onLoadedMetadata={handleAudioLoadedMetadata}
                     className="hidden"
                   />
                 )}
