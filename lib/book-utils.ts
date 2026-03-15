@@ -8,18 +8,17 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     (f) => f.file_type === "image" && f.file_name.startsWith("cover_image")
   )?.file_url;
 
-  const introVideo = novel.files?.find(
-    (f) => {
-      const isVideo = f.file_type === "video" && f.file_name.startsWith("cover_video");
-      console.log('[book-utils] Checking intro video:', {
-        file_type: f.file_type,
-        file_name: f.file_name,
-        isVideo
-      });
-      return isVideo;
-    }
-  )?.file_url;
-  console.log('[book-utils] Found intro video:', introVideo);
+  // const introVideo = novel.files?.find(
+  //   (f) => {
+  //     const isVideo = f.file_type === "video" && f.file_name.startsWith("cover_video");
+  //     console.log('[book-utils] Checking intro video:', {
+  //       file_type: f.file_type,
+  //       file_name: f.file_name,
+  //       isVideo
+  //     });
+  //     return isVideo;
+  //   }
+  // )?.file_url;
 
   const nameAudio = novel.files?.find(
     (f) => f.file_type === "audio" && f.file_name.startsWith("name_audio")
@@ -46,17 +45,17 @@ export function buildBookPages(novel: Novel, chapterDetails: ChapterDetail[]): B
     audioUrl: nameAudio,
   });
 
-  // Page 2: Introduction page (skip in short story mode)
-  if (!isShortStory) {
-    pages.push({
-      type: "introduction",
-      pageNumber: pageNumber++,
-      imageUrl: coverImage,
-      videoUrl: introVideo,
-      textContent: novel.overall_introduction || "",
-      audioUrl: introAudio,
-    });
-  }
+  // // Page 2: Introduction page (skip in short story mode)
+  // if (!isShortStory) {
+  //   pages.push({
+  //     type: "introduction",
+  //     pageNumber: pageNumber++,
+  //     imageUrl: coverImage,
+  //     videoUrl: introVideo,
+  //     textContent: novel.overall_introduction || "",
+  //     audioUrl: introAudio,
+  //   });
+  // }
 
   // Process regular chapters
   for (const chapter of chapterList) {
