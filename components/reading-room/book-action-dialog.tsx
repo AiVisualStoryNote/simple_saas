@@ -104,6 +104,17 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
     };
   }, []);
 
+  // Disable body scroll when dialog is open
+  useEffect(() => {
+    if (open) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && novel && (
