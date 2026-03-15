@@ -8,30 +8,7 @@ import { CategoryFilter } from "@/components/reading-room/category-filter";
 import { BookActionDialog } from "@/components/reading-room/book-action-dialog";
 import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
-interface NovelFile {
-  id: number;
-  file_type: string;
-  file_url: string;
-  file_name: string;
-}
-
-interface Novel {
-  id: number;
-  name: string;
-  category_id: number;
-  status: string;
-  rating: number;
-  word_count: number;
-  created_at: string;
-  updated_at: string;
-  files: NovelFile[];
-}
-
-interface NovelsResponse {
-  novels: Novel[];
-  total: number;
-  error?: string;
-}
+import { Novel as NovelType, NovelFile } from "@/types/book";
 
 interface Category {
   id: number;
@@ -41,10 +18,16 @@ interface Category {
   is_pub: boolean;
 }
 
+interface NovelsResponse {
+  novels: NovelType[];
+  total: number;
+  error?: string;
+}
+
 const PAGE_SIZE = 12;
 
 export default function ReadingRoom() {
-  const [novels, setNovels] = useState<Novel[]>([]);
+  const [novels, setNovels] = useState<NovelType[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +38,7 @@ export default function ReadingRoom() {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
 
-  const [selectedNovel, setSelectedNovel] = useState<Novel | null>(null);
+  const [selectedNovel, setSelectedNovel] = useState<NovelType | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -133,7 +116,7 @@ export default function ReadingRoom() {
     return category?.name || "";
   };
 
-  const handleBookClick = (novel: Novel) => {
+  const handleBookClick = (novel: NovelType) => {
     setSelectedNovel(novel);
     setDialogOpen(true);
   };
@@ -196,7 +179,7 @@ export default function ReadingRoom() {
             {novels.map((novel) => (
               <BookCard 
                 key={novel.id} 
-                novel={novel} 
+                novel={novel as any} 
                 categoryName={getCategoryName(novel.category_id)}
                 onClick={() => handleBookClick(novel)}
               />
