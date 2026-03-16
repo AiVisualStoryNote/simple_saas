@@ -76,9 +76,10 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
-              <div key={index} className="space-y-2">
+              <div key={index} className="space-y-1">
                 <div className="text-4xl font-bold text-primary">{stat.value}</div>
-                <div className="text-sm text-muted-foreground uppercase tracking-wider">{stat.label}</div>
+                <div className="text-sm text-muted-foreground">{stat.labelEn}</div>
+                <div className="text-sm text-muted-foreground">{stat.labelZh}</div>
               </div>
             ))}
           </div>
@@ -89,8 +90,8 @@ export default function Home() {
 }
 
 const stats = [
-  { value: "10x", label: "Faster Development" },
-  { value: "100+", label: "UI Components" },
-  { value: "TS", label: "TypeScript First" },
-  { value: "24/7", label: "Support" },
+  { value: "1000+", labelEn: "Books Available", labelZh: "书籍数量" },
+  { value: "500+", labelEn: "China Market", labelZh: "中国市场" },
+  { value: "50%", labelEn: "AI-Assisted", labelZh: "AI辅助创作" },
+  { value: "50%", labelEn: "Human Created", labelZh: "人工创作" },
 ];
