@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Heart, Users, Globe, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Film, Wand2, Heart } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -40,17 +40,18 @@ export default function AboutPage() {
             className="text-center space-y-6"
           >
             <div className="inline-flex items-center rounded-full px-3 py-1 text-sm bg-primary/10 text-primary mb-4">
-              <span className="mr-2">🇨🇳</span>
-              Connecting Cultures Through Names
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI-Powered Creative Platform
             </div>
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Bridging Cultures with
+              Experience the Future of
               <br />
-              <span className="text-primary">Meaningful Chinese Names</span>
+              <span className="text-primary">AI-Created Stories</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We believe that a name is more than just words - it's a bridge between cultures, 
-              a reflection of identity, and a connection to the rich heritage of Chinese tradition.
+              We believe AI is revolutionizing content creation. Our platform showcases 
+              the endless possibilities of AI-generated stories and videos, bringing 
+              entertainment in ways never before imagined.
             </p>
           </motion.div>
 
@@ -64,44 +65,44 @@ export default function AboutPage() {
             <Card className="border-2 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Film className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Our Goal</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  To bring AI stories to users as a new form of entertainment, 
+                  exploring the infinite possibilities of AI-generated content.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Wand2 className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Our Vision</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  To create a new model for AI work display, making AI-generated 
+                  content accessible to everyone.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Heart className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle>Our Mission</CardTitle>
+                <CardTitle>Our Passion</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  To help people from all backgrounds discover meaningful Chinese names that reflect 
-                  their personality while honoring traditional Chinese naming conventions and cultural significance.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Our Community</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  We've helped thousands of people worldwide discover their perfect Chinese names, 
-                  fostering cultural appreciation and personal connection to Chinese heritage.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Globe className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Global Impact</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  From students studying abroad to business professionals working in China, 
-                  our platform serves people seeking authentic cultural connection worldwide.
+                  A personal project born from love for AI creative works, 
+                  dedicated to exploring new forms of entertainment.
                 </p>
               </CardContent>
             </Card>
@@ -121,21 +122,21 @@ export default function AboutPage() {
               </h3>
               <div className="space-y-6 text-muted-foreground">
                 <p>
-                  Chinese Name Generator was born from a simple observation: in our increasingly 
-                  connected world, many people desire meaningful connections to Chinese culture, 
-                  but finding an authentic Chinese name that truly represents their identity can be challenging.
+                  This platform is a personal project created by an individual developer 
+                  passionate about AI-generated content. What started as an experiment with 
+                  AI storytelling has evolved into a platform dedicated to showcasing the 
+                  creative potential of artificial intelligence.
                 </p>
                 <p>
-                  Traditional Chinese naming is a beautiful art form that considers not just the sound 
-                  of a name, but its meaning, cultural significance, and how it reflects the person's 
-                  character and aspirations. Our advanced AI technology combines this ancient wisdom 
-                  with modern personalization to create names that are both culturally authentic and personally meaningful.
+                  We believe AI-generated stories represent a new frontier in entertainment. 
+                  By combining advanced AI technology with creative storytelling, we can 
+                  offer users unique and engaging content that pushes the boundaries of 
+                  what's possible.
                 </p>
                 <p>
-                  Whether you're a student preparing for study in China, a professional working with 
-                  Chinese colleagues, or simply someone fascinated by Chinese culture, we're here to 
-                  help you discover a name that truly represents who you are while honoring the rich 
-                  traditions of Chinese naming conventions.
+                  Whether you're curious about AI creativity or looking for fresh 
+                  entertainment experiences, our platform offers a window into the 
+                  future of content creation. Join us on this exciting journey!
                 </p>
               </div>
             </div>
@@ -149,7 +150,7 @@ export default function AboutPage() {
             className="space-y-8"
           >
             <div className="text-center">
-              <h3 className="text-3xl font-bold mb-4">Our Values</h3>
+              <h3 className="text-3xl font-bold mb-4">What We Believe</h3>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 These principles guide everything we do
               </p>
@@ -161,10 +162,10 @@ export default function AboutPage() {
                   <span className="text-primary font-bold">1</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Cultural Authenticity</h4>
+                  <h4 className="font-semibold mb-2">Innovation</h4>
                   <p className="text-muted-foreground">
-                    Every name we generate respects traditional Chinese naming conventions 
-                    and cultural significance, ensuring authenticity and appropriateness.
+                    We embrace new AI technologies to push the boundaries of 
+                    what's possible in creative content.
                   </p>
                 </div>
               </div>
@@ -174,10 +175,10 @@ export default function AboutPage() {
                   <span className="text-primary font-bold">2</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Personal Meaning</h4>
+                  <h4 className="font-semibold mb-2">Entertainment First</h4>
                   <p className="text-muted-foreground">
-                    We believe names should reflect who you are. Our AI considers your personality, 
-                    preferences, and individual characteristics to create truly personalized names.
+                    We focus on creating enjoyable experiences that entertain 
+                    and inspire our users.
                   </p>
                 </div>
               </div>
@@ -187,10 +188,10 @@ export default function AboutPage() {
                   <span className="text-primary font-bold">3</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Educational Value</h4>
+                  <h4 className="font-semibold mb-2">Accessibility</h4>
                   <p className="text-muted-foreground">
-                    Beyond just providing names, we help users understand the meaning, 
-                    pronunciation, and cultural context of their Chinese names.
+                    We believe AI creativity should be available to everyone, 
+                    regardless of technical background.
                   </p>
                 </div>
               </div>
@@ -200,10 +201,10 @@ export default function AboutPage() {
                   <span className="text-primary font-bold">4</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Accessibility</h4>
+                  <h4 className="font-semibold mb-2">Continuous Evolution</h4>
                   <p className="text-muted-foreground">
-                    We make Chinese name generation accessible to everyone, regardless of their 
-                    background or familiarity with Chinese culture.
+                    AI technology is ever-changing, and so are we. We're always 
+                    exploring new possibilities.
                   </p>
                 </div>
               </div>
@@ -217,16 +218,23 @@ export default function AboutPage() {
             transition={{ duration: 0.5, delay: 0.8 }}
             className="text-center bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-2xl p-8 md:p-12"
           >
-            <h3 className="text-2xl font-bold mb-4">Ready to Discover Your Chinese Name?</h3>
+            <h3 className="text-2xl font-bold mb-4">Ready to Explore AI Stories?</h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join thousands of others who have found their perfect Chinese name. 
-              Start your cultural journey today with our AI-powered name generator.
+              Dive into our collection of AI-generated stories and videos. 
+              Experience entertainment in a whole new way!
             </p>
-            <Button asChild size="lg" className="font-medium">
-              <Link href="/">
-                Get Started Now
-              </Link>
-            </Button>
+            <div className="flex justify-center gap-4">
+              <Button asChild size="lg" className="font-medium">
+                <Link href="/reading-room?mkt=cn">
+                  中文阅览室
+                </Link>
+              </Button>
+              <Button asChild size="lg" className="font-medium">
+                <Link href="/reading-room?">
+                  Reading room
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>
