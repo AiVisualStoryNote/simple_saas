@@ -10,9 +10,9 @@
  * @returns API result data
  * @throws Throws error if API config is missing or returns error
  */
-export async function callExternalAPI(action: string, params: any = {}) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const apiToken = process.env.API_TOKEN;
+export async function callExternalAPI(action: string, params: any = {}, cn_market: boolean = false) {
+  const apiUrl = cn_market ? process.env.NEXT_PUBLIC_API_URL_CN : process.env.NEXT_PUBLIC_API_URL;
+  const apiToken = cn_market ? process.env.API_TOKEN_CN : process.env.API_TOKEN;
 
   if (!apiUrl || !apiToken) {
     throw new Error('API configuration is missing');

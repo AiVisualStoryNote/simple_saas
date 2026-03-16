@@ -3,6 +3,9 @@ import { callExternalAPI } from '@/lib/api-novels';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    // header 'X-Mkt'
+    const marketHeader = request.headers.get('X-Mkt');
+    const cnMarket = marketHeader === 'cn';
     const { id } = await params;
 
     if (!id || typeof id !== 'string') {
@@ -12,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       );
     }
 
-    const result = await callExternalAPI('get_chapter', { chapter_id: parseInt(id, 10) });
+    const result = await callExternalAPI('get_chapter', { chapter_id: parseInt(id, 10) }, cnMarket);
 
     return NextResponse.json(result);
   } catch (error) {

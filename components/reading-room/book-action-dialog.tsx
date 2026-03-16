@@ -10,12 +10,13 @@ import { Novel as NovelType } from "@/types/book";
 import { IntroTextHighlighter } from "@/components/reading-room/intro-text-highlighter";
 
 interface BookActionDialogProps {
+  mkt?: string | null; // 市场参数，用于API调用(默认值为空，即海外市场)
   novel: NovelType | null;
   open: boolean;
   onClose: () => void;
 }
 
-export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps) {
+export function BookActionDialog({ mkt, novel, open, onClose }: BookActionDialogProps) {
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -30,7 +31,11 @@ export function BookActionDialog({ novel, open, onClose }: BookActionDialogProps
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
     }
-    router.push(`/read?novelId=${novel?.id}`);
+    if (mkt) {
+      router.push(`/read?mkt=${mkt}&novelId=${novel?.id}`);
+    } else {
+      router.push(`/read?novelId=${novel?.id}`);
+    }
     onClose();
   };
 

@@ -49,6 +49,12 @@ export default function Home() {
                   View Demo
                 </Button>
               </Link>
+              <Link href="/reading-room?mkt=cn">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Chinese Reading room
+                </Button>
+              </Link>
               <Link href="/reading-room">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />

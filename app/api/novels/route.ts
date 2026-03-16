@@ -3,6 +3,9 @@ import { callExternalAPI } from '@/lib/api-novels';
 
 export async function GET(request: NextRequest) {
   try {
+    // header 'X-Mkt'
+    const marketHeader = request.headers.get('X-Mkt');
+    const cnMarket = marketHeader === 'cn';
     const searchParams = request.nextUrl.searchParams;
     const skip = parseInt(searchParams.get('skip') || '0', 10);
     const limit = parseInt(searchParams.get('limit') || '10', 10);
@@ -24,7 +27,7 @@ export async function GET(request: NextRequest) {
       params.status = status;
     }
 
-    const result = await callExternalAPI('get_novels', params);
+    const result = await callExternalAPI('get_novels', params, cnMarket);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Failed to fetch novels:', error);

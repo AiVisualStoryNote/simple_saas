@@ -7,6 +7,7 @@ import { BookCard } from "@/components/reading-room/book-card";
 import { CategoryFilter } from "@/components/reading-room/category-filter";
 import { BookActionDialog } from "@/components/reading-room/book-action-dialog";
 import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { request } from "@/lib/request";
 
 import { Novel as NovelType, NovelFile } from "@/types/book";
 
@@ -27,6 +28,9 @@ interface NovelsResponse {
 const PAGE_SIZE = 12;
 
 export default function ReadingRoom() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const mkt = searchParams.get('mkt')
+
   const [novels, setNovels] = useState<NovelType[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -44,10 +48,13 @@ export default function ReadingRoom() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
-        const data = await res.json();
-        if (!data.error && data.categories) {
-          setCategories(data.categories);
+        const res = await request("/api/categories", {  mkt });
+        // const data = await res.json();
+        // if (!data.error && data.categories) {
+        //   setCategories(data.categories);
+        // }
+        if (!res.error && res.data?.categories) {
+          setCategories(res.data.categories);
         }
       } catch (err) {
         console.error("Failed to fetch categories:", err);
@@ -80,14 +87,20 @@ export default function ReadingRoom() {
     params.set("category_id", categoryIds);
 
     try {
-      const res = await fetch(`/api/novels?${params.toString()}`);
-      const data: NovelsResponse = await res.json();
+      const res = await request(`/api/novels?${params.toString()}`, { mkt });
+      // const data: NovelsResponse = await res.json();
 
-      if (data.error) {
-        setError(data.error);
+      // if (data.error) {
+      //   setError(data.error);
+      // } else {
+      //   setNovels(data.novels || []);
+      //   setTotal(data.total || 0);
+      // }
+      if(res.error) {
+        setError(res.error);
       } else {
-        setNovels(data.novels || []);
-        setTotal(data.total || 0);
+        setNovels(res.data?.novels || []);
+        setTotal(res.data?.total || 0);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch books");
@@ -213,6 +226,7 @@ export default function ReadingRoom() {
       )}
 
       <BookActionDialog 
+        mkt={mkt}
         novel={selectedNovel} 
         open={dialogOpen} 
         onClose={handleDialogClose}

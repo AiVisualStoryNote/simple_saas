@@ -6,6 +6,10 @@ export async function GET(request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // header 'X-Mkt'
+    const marketHeader = request.headers.get('X-Mkt');
+    const cnMarket = marketHeader === 'cn';
+
     const { id } = await params;
 
     if (!id || typeof id !== 'string') {
@@ -15,7 +19,7 @@ export async function GET(request: NextRequest,
       );
     }
 
-    const result = await callExternalAPI('get_novel', { novel_id: parseInt(id, 10) });
+    const result = await callExternalAPI('get_novel', { novel_id: parseInt(id, 10) }, cnMarket);
 
     return NextResponse.json({
       novel: result.novel || result

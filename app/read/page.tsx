@@ -9,10 +9,12 @@ import { Novel, ChapterDetail } from "@/types/book";
 import { buildBookPages } from "@/lib/book-utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
+import { request } from "@/lib/request";
 
 function ReadPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const mkt = searchParams.get('mkt');
   const novelId = searchParams.get("novelId");
 
   const [loading, setLoading] = useState(true);
@@ -65,19 +67,23 @@ function ReadPageContent() {
     const fetchNovel = async () => {
       try {
         setProgress(2);
-        const novelRes = await fetch(`/api/novels/${novelId}`);
+        const novelRes = await request(`/api/novels/${novelId}`, { mkt });
         
-        if (!novelRes.ok) {
-          throw new Error(`Failed to fetch novel: ${novelRes.status}`);
-        }
+        // if (!novelRes.ok) {
+        //   throw new Error(`Failed to fetch novel: ${novelRes.status}`);
+        // }
         
-        const novelData = await novelRes.json();
+        // const novelData = await novelRes.json();
 
-        if (novelData.error) {
-          throw new Error(novelData.error);
+        // if (novelData.error) {
+        //   throw new Error(novelData.error);
+        // }
+
+        // const novelInfo: Novel = novelData.novel;
+        if (novelRes.error) {
+          throw new Error(novelRes.error);
         }
-
-        const novelInfo: Novel = novelData.novel;
+        const novelInfo: Novel = novelRes.data?.novel;
         setNovel(novelInfo);
         setProgress(10);
 
@@ -101,10 +107,13 @@ function ReadPageContent() {
 
           const batchPromises = batch.map(async (chapter) => {
             try {
-              const chapterRes = await fetch(`/api/chapters/${chapter.id}`);
-              if (!chapterRes.ok) return null;
-              const chapterData = await chapterRes.json();
-              return chapterData.chapter || null;
+              const chapterRes = await request(`/api/chapters/${chapter.id}`, { mkt });
+              if (chapterRes.error) {
+                throw new Error(chapterRes.error);
+              }
+              // if (!chapterRes.ok) return null;
+              // const chapterData = await chapterRes.json();
+              return chapterRes.data?.chapter || null;
             } catch {
               throw new Error(`Failed to fetch chapter ${chapter.id}`);
             }
