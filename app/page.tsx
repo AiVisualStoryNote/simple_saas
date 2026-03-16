@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Shield, Globe, CheckCircle2, BookOpen } from "lucide-react";
+import { ArrowRight, CheckCircle2, BookOpen } from "lucide-react";
 import { PricingSection } from "@/components/pricing-section";
 
 export default function Home() {
@@ -44,11 +44,6 @@ export default function Home() {
                   Get Started <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link href="#features">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg">
-                  View Demo
-                </Button>
-              </Link>
               <Link href="/reading-room?mkt=cn">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
@@ -72,35 +67,6 @@ export default function Home() {
                 <div className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500"/> No credit card required</div>
                 <div className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500"/> 7-day free trial</div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section id="features" className="py-20 bg-muted/50">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Everything you need</h2>
-            <p className="text-muted-foreground text-lg">Built with the best modern tech stack.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-background p-8 rounded-xl border hover:shadow-lg transition-all"
-              >
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
@@ -136,24 +102,6 @@ export default function Home() {
       <PricingSection />    </div>
   );
 }
-
-const features = [
-  {
-    title: "Next.js 14 App Router",
-    description: "Built on the latest Next.js 14 with Server Components for ultimate performance and SEO.",
-    icon: <Zap className="w-6 h-6" />,
-  },
-  {
-    title: "Supabase Auth & DB",
-    description: "Production-ready authentication and PostgreSQL database setup out of the box.",
-    icon: <Shield className="w-6 h-6" />,
-  },
-  {
-    title: "Global Payments",
-    description: "Integrated Creem.io for handling subscriptions, one-time payments, and credits globally.",
-    icon: <Globe className="w-6 h-6" />,
-  },
-];
 
 const stats = [
   { value: "10x", label: "Faster Development" },

@@ -26,7 +26,6 @@ export default function Header({ user }: HeaderProps) {
   // Main navigation items for generic SaaS
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
-    { label: "Features", href: "/#features" },
     { label: "Pricing", href: "/#pricing" },
   ];
 
