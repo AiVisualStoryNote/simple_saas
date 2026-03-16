@@ -5,9 +5,11 @@ import Link from "next/link";
 
 const footerLinks = [
   {
-    title: "Product",
+    title: "Menu",
     links: [
       { label: "Pricing", href: "/#pricing" },
+      { label: "中文阅览室", href: "/reading-room?mkt=cn" },
+      { label: "Reading Room", href: "/reading-room" },
     ],
   },
   {

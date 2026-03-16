@@ -47,7 +47,7 @@ export default function Home() {
               <Link href="/reading-room">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
-                  English Reading Room
+                  Reading Room
                 </Button>
               </Link>
             </motion.div>
@@ -57,6 +57,11 @@ export default function Home() {
 
       {/* Social Proof / Stats */}
       <section className="py-20 border-y">
+        <div className="relative -top-14 text-center text-xl text-muted-foreground h-0">
+          Target
+          <br />
+          未来目标
+        </div>
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, index) => (
@@ -76,6 +81,6 @@ export default function Home() {
 const stats = [
   { value: "1000+", labelEn: "Books Available", labelZh: "书籍数量" },
   { value: "500+", labelEn: "China Market", labelZh: "中国市场" },
-  { value: "50%", labelEn: "AI-Assisted", labelZh: "AI辅助创作" },
-  { value: "50%", labelEn: "Human Created", labelZh: "人工创作" },
+  { value: "70%", labelEn: "AI-Assisted", labelZh: "AI辅助创作" },
+  { value: "30%", labelEn: "Human Created", labelZh: "人工创作" },
 ];
