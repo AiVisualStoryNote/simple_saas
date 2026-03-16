@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Shield, Eye, Database, Lock, UserCheck, Globe } from "lucide-react";
+import { ArrowLeft, Shield, Eye, Database, Lock, UserCheck, Globe, CreditCard } from "lucide-react";
 
 export default function PrivacyPage() {
   return (
@@ -48,10 +48,10 @@ export default function PrivacyPage() {
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               We are committed to protecting your privacy and being transparent about how we collect, 
-              use, and protect your personal information when you use our Chinese name generation service.
+              use, and protect your personal information when you use our AI-generated stories and videos platform.
             </p>
             <p className="text-sm text-muted-foreground">
-              <strong>Last updated:</strong> January 31, 2025
+              <strong>Last updated:</strong> March 16, 2026
             </p>
           </motion.div>
 
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm">
-                  We clearly explain what data we collect and how we use it to provide you with the best Chinese name generation experience.
+                  We clearly explain what data we collect and how we use it to provide you with the best AI story experience.
                 </p>
               </CardContent>
             </Card>
@@ -122,19 +122,20 @@ export default function PrivacyPage() {
                 <div>
                   <h4 className="font-semibold mb-3">Information You Provide</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• <strong>Personal Details:</strong> English name, gender, birth year (optional)</li>
-                    <li>• <strong>Preferences:</strong> Personality traits and name preferences you share</li>
                     <li>• <strong>Account Information:</strong> Email address when you create an account</li>
-                    <li>• <strong>Generated Names:</strong> Chinese names you generate and save to your profile</li>
+                    <li>• <strong>Preferences:</strong> Your reading preferences and favorite categories</li>
+                    <li>• <strong>Payment Information:</strong> Processed securely through our payment providers (we do not store your card details)</li>
+                    <li>• <strong>Credits Balance:</strong> Your account balance and transaction history</li>
                   </ul>
                 </div>
                 
                 <div>
                   <h4 className="font-semibold mb-3">Information We Collect Automatically</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• <strong>Usage Data:</strong> How you interact with our service</li>
+                    <li>• <strong>Usage Data:</strong> How you interact with our stories and videos</li>
                     <li>• <strong>Device Information:</strong> Browser type, operating system, IP address</li>
                     <li>• <strong>Cookies:</strong> To improve your experience and remember your preferences</li>
+                    <li>• <strong>Browsing History:</strong> Stories you've viewed and reading progress</li>
                   </ul>
                 </div>
               </div>
@@ -155,22 +156,52 @@ export default function PrivacyPage() {
                 <div>
                   <h4 className="font-semibold mb-3">Service Provision</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Generate personalized Chinese names</li>
-                    <li>• Save your generated names and preferences</li>
+                    <li>• Display AI-generated stories and videos</li>
+                    <li>• Track your reading progress and history</li>
+                    <li>• Manage your account and credits balance</li>
                     <li>• Provide customer support</li>
-                    <li>• Process payments for premium features</li>
+                    <li>• Process payments for credits</li>
                   </ul>
                 </div>
                 
                 <div>
                   <h4 className="font-semibold mb-3">Service Improvement</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Analyze service usage to improve functionality</li>
+                    <li>• Analyze usage patterns to improve content</li>
                     <li>• Develop new features and capabilities</li>
                     <li>• Ensure service security and prevent fraud</li>
                     <li>• Send service-related communications</li>
+                    <li>• Personalize your experience</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Payment Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="space-y-8"
+          >
+            <div className="bg-muted/30 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <CreditCard className="h-6 w-6 text-primary" />
+                Payment Information
+              </h3>
+              
+              <div className="space-y-4 text-muted-foreground">
+                <p>
+                  We take payment security seriously. When you purchase credits on our platform:
+                </p>
+                
+                <ul className="space-y-2">
+                  <li>• <strong>Secure Processing:</strong> All payments are processed through secure, PCI-DSS compliant payment providers</li>
+                  <li>• <strong>No Card Storage:</strong> We do not store your credit card or payment card details on our servers</li>
+                  <li>• <strong>Transaction History:</strong> We maintain records of your purchases and credit balance</li>
+                  <li>• <strong>Refunds:</strong> Please refer to our Terms of Service for refund policies</li>
+                </ul>
               </div>
             </div>
           </motion.div>
@@ -221,6 +252,7 @@ export default function PrivacyPage() {
                     <li>• Update or correct your data</li>
                     <li>• Delete your account and data</li>
                     <li>• Download your data</li>
+                    <li>• View your transaction history</li>
                   </ul>
                 </div>
                 
@@ -268,7 +300,7 @@ export default function PrivacyPage() {
                     <h4 className="font-semibold mb-2 text-foreground">Data Retention</h4>
                     <ul className="space-y-1">
                       <li>• Account data: Until account deletion</li>
-                      <li>• Generated names: Until you delete them</li>
+                      <li>• Transaction history: As required by law</li>
                       <li>• Usage logs: Up to 2 years</li>
                       <li>• Marketing data: Until opt-out</li>
                     </ul>
