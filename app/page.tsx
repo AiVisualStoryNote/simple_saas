@@ -84,21 +84,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
-       {/* CTA Section */}
-       <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container px-4 md:px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to build your next big thing?</h2>
-            <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto text-lg">
-                Join thousands of developers who are building faster with Simple Saas Starter Kit.
-            </p>
-            <Link href="/sign-up">
-                <Button size="lg" variant="secondary" className="h-12 px-8 text-lg">
-                    Start Building Now
-                </Button>
-            </Link>
-        </div>
-      </section>
       <PricingSection />    </div>
   );
 }
