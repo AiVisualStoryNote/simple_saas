@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BookCard } from "@/components/reading-room/book-card";
@@ -28,7 +29,7 @@ interface NovelsResponse {
 const PAGE_SIZE = 12;
 
 export default function ReadingRoom() {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   const mkt = searchParams.get('mkt')
 
   const [novels, setNovels] = useState<NovelType[]>([]);
