@@ -21,15 +21,14 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="space-y-4"
             >
-              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                v1.0 is now live
-              </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
-                Ship your SaaS in days, <br className="hidden sm:inline" />
-                not months.
+                Experience AI Masterpieces <br className="hidden sm:inline" />
+                体验 AI 作品
               </h1>
               <p className="text-xl text-muted-foreground max-w-[600px] mx-auto">
-                The ultimate Next.js starter kit with Supabase Auth, Creem Payments, and a production-ready dashboard. save 200+ hours of development time.
+                Welcome to explore our collection of AI-generated stories and videos, bringing you a whole new visual experience
+                <br className="hidden sm:inline" />
+                欢迎探索AI创作的故事和视频，为您带来视觉上的新体验
               </p>
             </motion.div>
 
@@ -39,33 +38,18 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4 w-full justify-center"
             >
-              <Link href="/sign-up">
-                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
-                  Get Started <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
               <Link href="/reading-room?mkt=cn">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
+                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
-                  Chinese Reading room
+                  中文阅览室
                 </Button>
               </Link>
               <Link href="/reading-room">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
-                  Reading room
+                  English Reading Room
                 </Button>
               </Link>
-            </motion.div>
-
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="pt-8 flex items-center justify-center gap-4 text-sm text-muted-foreground"
-            >
-                <div className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500"/> No credit card required</div>
-                <div className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-green-500"/> 7-day free trial</div>
             </motion.div>
           </div>
         </div>
