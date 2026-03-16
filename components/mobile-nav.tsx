@@ -48,11 +48,6 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
               {user.email && (
                 <p className="text-sm text-muted-foreground">{user.email}</p>
               )}
-              {!isDashboard && (
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
-              )}
               <form action={signOutAction} className="w-full">
                 <Button type="submit" variant="outline" className="w-full">
                   Sign out

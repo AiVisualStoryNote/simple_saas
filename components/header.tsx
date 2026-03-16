@@ -66,11 +66,6 @@ export default function Header({ user }: HeaderProps) {
                   {user.email}
                 </span>
               )}
-              {!isDashboard && (
-                <Button asChild size="sm" variant="outline">
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
-              )}
               <form action={signOutAction}>
                 <Button type="submit" variant="outline" size="sm">
                   Sign out
