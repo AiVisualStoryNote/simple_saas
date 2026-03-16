@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, FileText, Scale, AlertTriangle, CheckCircle, XCircle, Users } from "lucide-react";
+import { ArrowLeft, FileText, Scale, AlertTriangle, CheckCircle, XCircle, Users, Sparkles } from "lucide-react";
 
 export default function TermsPage() {
   return (
@@ -47,11 +47,11 @@ export default function TermsPage() {
               Terms of Service
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              These terms govern your use of our Chinese name generation service. 
+              These terms govern your use of our AI-generated stories and videos platform. 
               By using our service, you agree to these terms and conditions.
             </p>
             <p className="text-sm text-muted-foreground">
-              <strong>Last updated:</strong> January 31, 2025
+              <strong>Last updated:</strong> March 16, 2026
             </p>
           </motion.div>
 
@@ -71,7 +71,7 @@ export default function TermsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm">
-                  Use our service to generate Chinese names, save your favorites, and share your generated names with others.
+                  Browse and read AI-generated stories, watch videos, save favorites, and manage your account.
                 </p>
               </CardContent>
             </Card>
@@ -85,7 +85,7 @@ export default function TermsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm">
-                  Misuse our service, violate others' rights, or use generated names for illegal or harmful purposes.
+                  Misuse our content, redistribute without permission, or use AI-generated content for illegal purposes.
                 </p>
               </CardContent>
             </Card>
@@ -99,7 +99,7 @@ export default function TermsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm">
-                  Provide reliable service, protect your privacy, and maintain the quality of our name generation.
+                  Provide quality AI content, protect your privacy, and maintain a safe platform for entertainment.
                 </p>
               </CardContent>
             </Card>
@@ -114,21 +114,20 @@ export default function TermsPage() {
           >
             <div className="bg-muted/30 rounded-2xl p-8">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <FileText className="h-6 w-6 text-primary" />
+                <Sparkles className="h-6 w-6 text-primary" />
                 Our Service
               </h3>
               
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Chinese Name Generator is an AI-powered platform that creates personalized Chinese names based on 
-                  your preferences, personality traits, and cultural considerations. Our service includes:
+                  We provide an AI-powered platform that creates and displays AI-generated stories and videos for entertainment purposes. Our service includes:
                 </p>
                 
                 <ul className="space-y-2">
-                  <li>• <strong>Free Generation:</strong> Limited daily name generation for non-registered users</li>
-                  <li>• <strong>Premium Features:</strong> Unlimited generation, personalized matching, and name saving for registered users</li>
-                  <li>• <strong>Cultural Education:</strong> Detailed meanings, pronunciations, and cultural context for generated names</li>
-                  <li>• <strong>Personal Collections:</strong> Save and manage your favorite generated names</li>
+                  <li>• <strong>AI Stories:</strong> Browse and read AI-generated story content</li>
+                  <li>• <strong>AI Videos:</strong> Watch AI-generated video content</li>
+                  <li>• <strong>Credits System:</strong> Purchase credits to access premium content</li>
+                  <li>• <strong>Personal Collections:</strong> Save and manage your favorite content</li>
                 </ul>
               </div>
             </div>
@@ -148,7 +147,7 @@ export default function TermsPage() {
                 <div>
                   <h4 className="font-semibold mb-3 text-green-700">Acceptable Use</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Use the service for personal, educational, or cultural purposes</li>
+                    <li>• Use the service for personal entertainment purposes</li>
                     <li>• Provide accurate information when creating an account</li>
                     <li>• Respect intellectual property rights</li>
                     <li>• Keep your account credentials secure</li>
@@ -159,10 +158,10 @@ export default function TermsPage() {
                 <div>
                   <h4 className="font-semibold mb-3 text-red-700">Prohibited Activities</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Using generated names for fraudulent purposes</li>
-                    <li>• Attempting to reverse-engineer our algorithms</li>
+                    <li>• Redistributing AI-generated content without permission</li>
+                    <li>• Attempting to extract or copy our AI models</li>
                     <li>• Sharing account credentials with others</li>
-                    <li>• Using automated tools to bulk-generate names</li>
+                    <li>• Using automated tools to scrape or bulk-download content</li>
                     <li>• Violating any applicable laws or regulations</li>
                   </ul>
                 </div>
@@ -178,34 +177,60 @@ export default function TermsPage() {
             className="space-y-8"
           >
             <div className="bg-muted/30 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-6">Intellectual Property and Generated Names</h3>
+              <h3 className="text-2xl font-bold mb-6">Intellectual Property</h3>
               
               <div className="space-y-4 text-muted-foreground">
                 <div>
-                  <h4 className="font-semibold mb-3 text-foreground">Your Rights to Generated Names</h4>
+                  <h4 className="font-semibold mb-3 text-foreground">AI-Generated Content</h4>
                   <p>
-                    You have the right to use any Chinese names generated through our service for personal purposes. 
-                    However, please note that traditional Chinese names are part of cultural heritage and cannot be 
-                    exclusively owned by any individual.
+                    All stories and videos on our platform are AI-generated content. While we strive to create quality content, 
+                    these are creative works produced by artificial intelligence and should be viewed as entertainment only.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-3 text-foreground">Your Rights to Content</h4>
+                  <p>
+                    You may browse and read AI-generated content for personal entertainment. However, you may not 
+                    reproduce, distribute, or commercially exploit any AI-generated content without our explicit permission.
                   </p>
                 </div>
                 
                 <div>
                   <h4 className="font-semibold mb-3 text-foreground">Our Intellectual Property</h4>
                   <p>
-                    The Chinese Name Generator platform, including our AI algorithms, website design, brand elements, 
-                    and proprietary technology, remains our intellectual property. You may not copy, modify, or 
-                    redistribute our platform or technology.
+                    The platform, including our AI algorithms, website design, brand elements, and proprietary technology, 
+                    remains our intellectual property. You may not copy, modify, or redistribute our platform or technology.
                   </p>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* AI Content Disclaimer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="space-y-8"
+          >
+            <div className="bg-muted/30 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <AlertTriangle className="h-6 w-6 text-amber-500" />
+                AI Content Disclaimer
+              </h3>
+              
+              <div className="space-y-4 text-muted-foreground">
+                <p>
+                  <strong>Important:</strong> All content on this platform is generated by artificial intelligence. Please note the following:
+                </p>
                 
-                <div>
-                  <h4 className="font-semibold mb-3 text-foreground">Cultural Respect</h4>
-                  <p>
-                    We encourage respectful use of Chinese names and understanding of their cultural significance. 
-                    Generated names should be used with appreciation for Chinese culture and traditions.
-                  </p>
-                </div>
+                <ul className="space-y-2">
+                  <li>• <strong>Entertainment Only:</strong> AI-generated content is for entertainment purposes only and should not be taken as factual information</li>
+                  <li>• <strong>No Fact-Checking:</strong> Stories may contain inaccuracies or fictional elements. We do not guarantee the accuracy of any content</li>
+                  <li>• <strong>Creative License:</strong> AI generates creative fiction. Any resemblance to real persons, places, or events is purely coincidental</li>
+                  <li>• <strong>User Responsibility:</strong> Users are responsible for ensuring their use of content complies with local laws and regulations</li>
+                </ul>
               </div>
             </div>
           </motion.div>
@@ -218,10 +243,7 @@ export default function TermsPage() {
             className="space-y-8"
           >
             <div className="bg-muted/30 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <AlertTriangle className="h-6 w-6 text-amber-500" />
-                Service Availability and Disclaimers
-              </h3>
+              <h3 className="text-2xl font-bold mb-6">Service Availability and Disclaimers</h3>
               
               <div className="space-y-4 text-muted-foreground">
                 <div>
@@ -233,18 +255,10 @@ export default function TermsPage() {
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold mb-2 text-foreground">AI-Generated Content</h4>
-                  <p>
-                    Our Chinese names are generated by AI technology. While we strive for cultural accuracy and appropriateness, 
-                    we recommend consulting with native speakers or cultural experts for important use cases.
-                  </p>
-                </div>
-                
-                <div>
                   <h4 className="font-semibold mb-2 text-foreground">No Warranties</h4>
                   <p>
-                    Our service is provided "as is" without warranties of any kind. We do not guarantee the suitability 
-                    of generated names for any specific purpose or their acceptance in all cultural contexts.
+                    Our service is provided "as is" without warranties of any kind. We do not guarantee the quality, 
+                    accuracy, or suitability of AI-generated content for any specific purpose.
                   </p>
                 </div>
               </div>
@@ -259,26 +273,26 @@ export default function TermsPage() {
             className="space-y-8"
           >
             <div className="bg-muted/30 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold mb-6">Payment and Subscription Terms</h3>
+              <h3 className="text-2xl font-bold mb-6">Credits and Payment Terms</h3>
               
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
-                  <h4 className="font-semibold mb-3">Premium Subscriptions</h4>
+                  <h4 className="font-semibold mb-3">Purchasing Credits</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Monthly and annual subscription options available</li>
-                    <li>• Automatic renewal unless cancelled</li>
-                    <li>• Access to unlimited name generation</li>
-                    <li>• Premium features and personalization</li>
+                    <li>• Credits are used to access premium content</li>
+                    <li>• Multiple credit packages available for purchase</li>
+                    <li>• Secure payment processing through trusted providers</li>
+                    <li>• Credits are added to your account immediately after purchase</li>
                   </ul>
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold mb-3">Cancellation and Refunds</h4>
+                  <h4 className="font-semibold mb-3">No Refunds Policy</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Cancel anytime through your account settings</li>
-                    <li>• Refunds processed according to our refund policy</li>
-                    <li>• No refunds for partially used subscription periods</li>
-                    <li>• Free trial cancellations take effect immediately</li>
+                    <li>• All credit purchases are final and non-refundable</li>
+                    <li>• Credits are virtual currency with no real monetary value</li>
+                    <li>• Please purchase credits responsibly based on your needs</li>
+                    <li>• No refunds for unused credits</li>
                   </ul>
                 </div>
               </div>
@@ -326,7 +340,7 @@ export default function TermsPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild>
                 <Link href="/">
-                  Start Using Service
+                  Start Exploring
                 </Link>
               </Button>
             </div>
