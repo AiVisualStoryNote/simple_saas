@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callExternalAPI } from '@/lib/api-novels';
 
-// GET - 获取单个小说的详细信息
+// GET - 获取单个小说的所有角色设计信息
 export async function GET(request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest,
       );
     }
 
-    const result = await callExternalAPI('get_novel_tc', { novel_id: parseInt(id, 10) }, cnMarket);
+    const result = await callExternalAPI('get_novel_characters', { novel_id: parseInt(id, 10) }, cnMarket);
 
     return NextResponse.json({
       novel: result.novel || result

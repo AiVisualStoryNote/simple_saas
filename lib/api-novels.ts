@@ -23,6 +23,7 @@ export async function callExternalAPI(action: string, params: any = {}, cn_marke
     headers: {
       'Authorization': `Bearer ${apiToken}`,
       'Content-Type': 'application/json',
+      'X-Wusertoken': 'usertoken', // 一个简单的token验证而已，只需要不为空就行，避免接口很轻易的被直接调用（一个烟雾弹）
     },
     body: JSON.stringify({
       action,
