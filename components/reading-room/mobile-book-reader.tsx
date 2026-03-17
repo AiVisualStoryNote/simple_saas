@@ -258,10 +258,10 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
                 variant="secondary"
                 size="sm"
                 onClick={() => setCharacterDialogOpen(true)}
-                className="gap-2 bg-white/80 hover:bg-white/90"
+                className="gap-2 bg-black/80 text-white hover:bg-white/90"
               >
                 <Users className="h-4 w-4" />
-                {mkt === "cn" ? "角色设计" : "Character"}
+                {mkt === "cn" ? "角色卡" : "Characters"}
               </Button>
             )}
           </div>

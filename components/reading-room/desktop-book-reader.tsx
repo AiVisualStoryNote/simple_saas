@@ -269,7 +269,7 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
                 className="gap-2"
               >
                 <Users className="h-4 w-4" />
-                {mkt === "cn" ? "角色设计" : "Character Designs"}
+                {mkt === "cn" ? "角色卡" : "Characters"}
               </Button>
             )}
           </div>
