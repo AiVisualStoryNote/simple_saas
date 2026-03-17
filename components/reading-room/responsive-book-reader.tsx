@@ -13,11 +13,13 @@ interface ResponsiveBookReaderProps {
   onStartAutoReading?: () => void;
   onStopAutoReading?: () => void;
   onAutoReadingComplete?: () => void;
+  mkt?: string | null;
+  novelId?: string;
 }
 
 const BREAKPOINT = 768;
 
-export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: ResponsiveBookReaderProps) {
+export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId }: ResponsiveBookReaderProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -41,6 +43,8 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoR
         onStartAutoReading={onStartAutoReading}
         onStopAutoReading={onStopAutoReading}
         onAutoReadingComplete={onAutoReadingComplete}
+        mkt={mkt}
+        novelId={novelId}
       />
     );
   }
@@ -54,6 +58,8 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoR
       onStartAutoReading={onStartAutoReading}
       onStopAutoReading={onStopAutoReading}
       onAutoReadingComplete={onAutoReadingComplete}
+      mkt={mkt}
+      novelId={novelId}
     />
   );
 }

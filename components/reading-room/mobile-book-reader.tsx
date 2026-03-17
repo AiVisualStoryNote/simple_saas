@@ -9,8 +9,9 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle, Users } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
+import { CharacterDesignDialog } from "./character-design-dialog";
 
 interface MobileBookReaderProps {
   pages: BookPage[];
@@ -20,10 +21,13 @@ interface MobileBookReaderProps {
   onStartAutoReading?: () => void;
   onStopAutoReading?: () => void;
   onAutoReadingComplete?: () => void;
+  mkt?: string | null;
+  novelId?: string;
 }
 
-export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: MobileBookReaderProps) {
+export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId }: MobileBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
+  const [characterDialogOpen, setCharacterDialogOpen] = useState(false);
   const [selectedEndingId, setSelectedEndingId] = useState<number | null>(null);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -245,10 +249,21 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
     switch (page.type) {
       case "cover":
         return (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
             <h1 className="text-3xl font-bold text-center px-6 py-3 text-white bg-black/50 backdrop-blur-sm rounded-full">
               {page.textContent}
             </h1>
+            {novelId && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setCharacterDialogOpen(true)}
+                className="gap-2 bg-white/80 hover:bg-white/90"
+              >
+                <Users className="h-4 w-4" />
+                {mkt === "cn" ? "角色设计" : "Character"}
+              </Button>
+            )}
           </div>
         );
 
@@ -474,6 +489,15 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
         onClose={() => setTocOpen(false)}
         onNavigate={onPageChange}
       />
+
+      {novelId && (
+        <CharacterDesignDialog
+          novelId={novelId}
+          mkt={mkt ?? null}
+          open={characterDialogOpen}
+          onClose={() => setCharacterDialogOpen(false)}
+        />
+      )}
     </div>
   );
 }

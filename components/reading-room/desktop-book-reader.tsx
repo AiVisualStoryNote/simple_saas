@@ -9,8 +9,9 @@ import { TableOfContentsDrawer } from "@/components/reading-room/table-of-conten
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle, Users } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
+import { CharacterDesignDialog } from "./character-design-dialog";
 
 interface DesktopBookReaderProps {
   pages: BookPage[];
@@ -20,10 +21,13 @@ interface DesktopBookReaderProps {
   onStartAutoReading?: () => void;
   onStopAutoReading?: () => void;
   onAutoReadingComplete?: () => void;
+  mkt?: string | null;
+  novelId?: string;
 }
 
-export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete }: DesktopBookReaderProps) {
+export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId }: DesktopBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
+  const [characterDialogOpen, setCharacterDialogOpen] = useState(false);
   const [selectedEndingId, setSelectedEndingId] = useState<number | null>(null);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -255,8 +259,19 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
     switch (page.type) {
       case "cover":
         return (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full gap-4">
             <h1 className="text-4xl font-bold text-center px-8">{page.textContent}</h1>
+            {novelId && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCharacterDialogOpen(true)}
+                className="gap-2"
+              >
+                <Users className="h-4 w-4" />
+                {mkt === "cn" ? "角色设计" : "Character Designs"}
+              </Button>
+            )}
           </div>
         );
 
@@ -465,6 +480,15 @@ export function DesktopBookReader({ pages, currentPage, onPageChange, isAutoRead
         onClose={() => setTocOpen(false)}
         onNavigate={onPageChange}
       />
+
+      {novelId && (
+        <CharacterDesignDialog
+          novelId={novelId}
+          mkt={mkt ?? null}
+          open={characterDialogOpen}
+          onClose={() => setCharacterDialogOpen(false)}
+        />
+      )}
     </div>
   );
 }

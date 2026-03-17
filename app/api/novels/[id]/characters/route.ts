@@ -22,7 +22,7 @@ export async function GET(request: NextRequest,
     const result = await callExternalAPI('get_novel_characters', { novel_id: parseInt(id, 10) }, cnMarket);
 
     return NextResponse.json({
-      novel: result.novel || result
+      characters: result.characters || []
     });
   } catch (error) {
     console.error('Failed to fetch novel:', error);

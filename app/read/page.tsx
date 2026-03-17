@@ -198,6 +198,8 @@ function ReadPageContent() {
         onStartAutoReading={handleStartAutoReading}
         onStopAutoReading={handleStopAutoReading}
         onAutoReadingComplete={handleAutoReadingComplete}
+        mkt={mkt ?? undefined}
+        novelId={novelId ?? undefined}
       />
 
       <AnimatePresence>
