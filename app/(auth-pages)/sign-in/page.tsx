@@ -88,7 +88,8 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           </SubmitButton>
           <FormMessage message={searchParams} />
         </form>
-        <div className="relative">
+        {/* 暂不支持 其他 登录 方式 */}
+        {/* <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
@@ -97,8 +98,9 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
               Or continue with
             </span>
           </div>
-        </div>
-        <form action={signInWithGoogle}>
+        </div> */}
+        {/* 暂不支持 Google 登录 */}
+        {/* <form action={signInWithGoogle}>
           <Button
             type="submit"
             variant="outline"
@@ -124,7 +126,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
             </svg>
             Sign in with Google
           </Button>
-        </form>
+        </form> */}
         <div className="text-sm text-muted-foreground text-center">
           Don't have an account?{" "}
           <Link

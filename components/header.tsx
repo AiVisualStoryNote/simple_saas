@@ -43,7 +43,7 @@ export default function Header({ user }: HeaderProps) {
         </div>
         
         {/* Centered Navigation */}
-        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
+        {/* <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -53,12 +53,12 @@ export default function Header({ user }: HeaderProps) {
               {item.label}
             </Link>
           ))}
-        </nav>
+        </nav> */}
 
         <div className="flex items-center gap-2">
           {isReadPage && <DynamicVideoSwitch />}
           <ThemeSwitcher />
-          {user ? (
+          {/* {user ? (
             <div className="hidden md:flex items-center gap-2">
               {isDashboard && (
                 <span className="hidden sm:inline text-sm text-muted-foreground">
@@ -80,7 +80,7 @@ export default function Header({ user }: HeaderProps) {
                 <Link href="/sign-up">Sign up</Link>
               </Button>
             </div>
-          )}
+          )} */}
           <MobileNav items={navItems} user={user} isDashboard={isDashboard} />
         </div>
       </div>

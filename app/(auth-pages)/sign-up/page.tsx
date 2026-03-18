@@ -82,7 +82,8 @@ export default async function SignUp(props: {
           </SubmitButton>
           <FormMessage message={searchParams} />
         </form>
-        <div className="relative">
+        {/* 暂不支持 其他 登录 方式 */}
+        {/* <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
@@ -91,8 +92,9 @@ export default async function SignUp(props: {
               Or continue with
             </span>
           </div>
-        </div>
-        <form action={signUpWithGoogle}>
+        </div> */}
+        {/* 暂不支持 Google 登录 */}
+        {/* <form action={signUpWithGoogle}>
           <Button
             type="submit"
             variant="outline"
@@ -118,7 +120,7 @@ export default async function SignUp(props: {
             </svg>
             Sign up with Google
           </Button>
-        </form>
+        </form> */}
         <div className="text-sm text-muted-foreground text-center">
           Already have an account?{" "}
           <Link
