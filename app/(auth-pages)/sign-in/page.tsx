@@ -130,7 +130,7 @@ export default async function Login(props: {
             Sign in with Google
           </Button>
         </form> */}
-        <div className="text-sm text-muted-foreground text-center">
+        <div className="text-sm text-muted-foreground text-center mb-4">
           Don't have an account?{" "}
           <Link
             href="/sign-up"
