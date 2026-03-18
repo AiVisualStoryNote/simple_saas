@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -9,9 +11,10 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Pencil, Check, X } from "lucide-react";
 import Link from "next/link";
 import { signOutAction } from "@/app/actions";
+import { createClient } from "@/utils/supabase/client";
 
 interface MobileNavProps {
   items: { label: string; href: string }[];
@@ -20,8 +23,52 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
+  const [localUser, setLocalUser] = useState(user);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(localUser?.user_metadata?.name || "");
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleEditClick = () => {
+    setEditValue(localUser?.user_metadata?.name || "");
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setEditValue(localUser?.user_metadata?.name || "");
+  };
+
+  const handleConfirmClick = async () => {
+    if (!editValue.trim()) return;
+
+    setIsUpdating(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.updateUser({
+      data: { name: editValue.trim() },
+    });
+    setIsUpdating(false);
+
+    if (!error) {
+      setLocalUser({
+        ...localUser,
+        user_metadata: {
+          ...localUser?.user_metadata,
+          name: editValue.trim(),
+        },
+      });
+      setIsEditing(false);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsEditing(false);
+      setEditValue(localUser?.user_metadata?.name || "");
+    }
+  };
+
   return (
-    <Sheet>
+    <Sheet onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon">
           <Menu className="h-5 w-5" />
@@ -31,9 +78,49 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
       <SheetContent side="left" className="flex flex-col">
         {user ? (
           <div className="pb-4 border-b">
-            <p className="text-lg font-semibold text-foreground">
-              {user.email}
-            </p>
+            {isEditing ? (
+              <div className="flex items-center gap-2">
+                <Input
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  className="h-9"
+                  placeholder="Enter your name"
+                  disabled={isUpdating}
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 shrink-0"
+                  onClick={handleConfirmClick}
+                  disabled={isUpdating}
+                >
+                  <Check className="h-4 w-4 text-green-600" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 shrink-0"
+                  onClick={handleCancelClick}
+                  disabled={isUpdating}
+                >
+                  <X className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-semibold text-foreground flex-1">
+                  {localUser?.user_metadata?.name || localUser?.email}
+                </p>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 shrink-0"
+                  onClick={handleEditClick}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="pb-4 border-b">
