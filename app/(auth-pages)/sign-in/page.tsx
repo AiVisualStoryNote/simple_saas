@@ -3,13 +3,15 @@ import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { encodedRedirect } from "@/utils/utils";
 import { redirect } from "next/navigation";
+import { RegisteredToast } from "@/components/registered-toast";
 
-export default async function Login(props: { searchParams: Promise<Message> }) {
+export default async function Login(props: {
+  searchParams: Promise<Message & { registered?: string }>;
+}) {
   const searchParams = await props.searchParams;
 
   const signInWithGoogle = async () => {
@@ -39,6 +41,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 
   return (
     <>
+      <RegisteredToast registered={searchParams.registered} />
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">
