@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BookPage } from "@/types/book";
+import { BookPage, Novel } from "@/types/book";
 import { DesktopBookReader } from "./desktop-book-reader";
 import { MobileBookReader } from "./mobile-book-reader";
 
@@ -15,11 +15,12 @@ interface ResponsiveBookReaderProps {
   onAutoReadingComplete?: () => void;
   mkt?: string | null;
   novelId?: string;
+  novel?: Novel | null;
 }
 
 const BREAKPOINT = 768;
 
-export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId }: ResponsiveBookReaderProps) {
+export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId, novel }: ResponsiveBookReaderProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoR
         onAutoReadingComplete={onAutoReadingComplete}
         mkt={mkt}
         novelId={novelId}
+        novel={novel}
       />
     );
   }
@@ -60,6 +62,7 @@ export function ResponsiveBookReader({ pages, currentPage, onPageChange, isAutoR
       onAutoReadingComplete={onAutoReadingComplete}
       mkt={mkt}
       novelId={novelId}
+      novel={novel}
     />
   );
 }

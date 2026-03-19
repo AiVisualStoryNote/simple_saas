@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoadingProgress } from "@/components/reading-room/loading-progress";
 import { ResponsiveBookReader } from "@/components/reading-room/responsive-book-reader";
@@ -10,6 +10,7 @@ import { buildBookPages } from "@/lib/book-utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 import { request } from "@/lib/request";
+import { getOrCreateDefaultBookmark, getAnchorBookmark, updateDefaultBookmarkPage, UserBookmark } from "@/lib/bookmark";
 
 function ReadPageContent() {
   const router = useRouter();
@@ -27,6 +28,10 @@ function ReadPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isAutoReading, setIsAutoReading] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+  const [anchorBookmark, setAnchorBookmark] = useState<UserBookmark | null>(null);
+
+  const updateBookmarkTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastUpdatePageRef = useRef<number | null>(null);
 
   const pages = useMemo(() => {
     if (!novel) return [];
@@ -35,6 +40,21 @@ function ReadPageContent() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    
+    if (anchorBookmark?.is_anchor && novelId) {
+      if (updateBookmarkTimerRef.current) {
+        clearTimeout(updateBookmarkTimerRef.current);
+      }
+      
+      if (lastUpdatePageRef.current === page) {
+        return;
+      }
+      
+      updateBookmarkTimerRef.current = setTimeout(async () => {
+        lastUpdatePageRef.current = page;
+        await updateDefaultBookmarkPage(Number(novelId), page);
+      }, 3000);
+    }
   };
 
   const handleStartAutoReading = () => {
@@ -133,6 +153,18 @@ function ReadPageContent() {
         setChapters(loadedChapters);
         setProgress(100);
         setCompletedRequests(total);
+
+        const numNovelId = Number(novelId);
+        const defaultBookmark = await getOrCreateDefaultBookmark(numNovelId);
+        const anchor = await getAnchorBookmark(numNovelId);
+        
+        if (anchor) {
+          setAnchorBookmark(anchor);
+          setCurrentPage(anchor.page_number);
+        } else if (defaultBookmark) {
+          setAnchorBookmark(defaultBookmark);
+          setCurrentPage(defaultBookmark.page_number);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load book data");
       } finally {
@@ -142,6 +174,14 @@ function ReadPageContent() {
 
     fetchNovel();
   }, [novelId]);
+
+  useEffect(() => {
+    return () => {
+      if (updateBookmarkTimerRef.current) {
+        clearTimeout(updateBookmarkTimerRef.current);
+      }
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -200,6 +240,7 @@ function ReadPageContent() {
         onAutoReadingComplete={handleAutoReadingComplete}
         mkt={mkt ?? undefined}
         novelId={novelId ?? undefined}
+        novel={novel ?? undefined}
       />
 
       <AnimatePresence>

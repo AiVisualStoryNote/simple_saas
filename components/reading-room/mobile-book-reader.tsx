@@ -2,16 +2,18 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { BookPage } from "@/types/book";
+import { BookPage, Novel } from "@/types/book";
 import { Pagination } from "@/components/reading-room/pagination";
 import { AudioController, AudioControllerRef } from "@/components/reading-room/audio-controller";
 import { TableOfContentsDrawer } from "@/components/reading-room/table-of-contents-drawer";
 import { TextHighlighter } from "@/components/reading-room/text-highlighter";
 import { Button } from "@/components/ui/button";
 import { getEndingTypeLabel } from "@/lib/book-utils";
-import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle, Users } from "lucide-react";
+import { List, BookOpen, ChevronLeft, ChevronRight, Shuffle, Users, Bookmark } from "lucide-react";
 import { useReadingPreferences } from "@/stores/reading-preferences";
 import { CharacterDesignDialog } from "./character-design-dialog";
+import { BookmarkDrawer } from "./bookmark-drawer";
+import { AddBookmarkDialog } from "./add-bookmark-dialog";
 
 interface MobileBookReaderProps {
   pages: BookPage[];
@@ -23,11 +25,14 @@ interface MobileBookReaderProps {
   onAutoReadingComplete?: () => void;
   mkt?: string | null;
   novelId?: string;
+  novel?: Novel | null;
 }
 
-export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId }: MobileBookReaderProps) {
+export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReading, onStartAutoReading, onStopAutoReading, onAutoReadingComplete, mkt, novelId, novel }: MobileBookReaderProps) {
   const [tocOpen, setTocOpen] = useState(false);
   const [characterDialogOpen, setCharacterDialogOpen] = useState(false);
+  const [bookmarkDrawerOpen, setBookmarkDrawerOpen] = useState(false);
+  const [addBookmarkDialogOpen, setAddBookmarkDialogOpen] = useState(false);
   const [selectedEndingId, setSelectedEndingId] = useState<number | null>(null);
   const [audioState, setAudioState] = useState({ currentTime: 0, duration: 0, isPlaying: false });
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -470,18 +475,55 @@ export function MobileBookReader({ pages, currentPage, onPageChange, isAutoReadi
               onEnded={handleAudioEnded}
             />
           </div>
-          {!page.isShortStory && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setTocOpen(true)}
-              className="h-10 w-10 shrink-0"
-            >
-              <List className="h-5 w-5" />
-            </Button>
+          {novelId && (
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setBookmarkDrawerOpen(true)}
+                className="h-10 w-10 shrink-0"
+                title="Bookmarks"
+              >
+                <Bookmark className="h-5 w-5" />
+              </Button>
+              {!page.isShortStory && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setTocOpen(true)}
+                  className="h-10 w-10 shrink-0"
+                >
+                  <List className="h-5 w-5" />
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>
+
+      {novelId && (
+        <BookmarkDrawer
+          novelId={novelId}
+          novelName={novel?.name}
+          currentPage={currentPage}
+          isOpen={bookmarkDrawerOpen}
+          onClose={() => setBookmarkDrawerOpen(false)}
+          onNavigate={onPageChange}
+          onRefreshBookmarks={() => {}}
+          onAddBookmark={() => setAddBookmarkDialogOpen(true)}
+        />
+      )}
+
+      {novelId && (
+        <AddBookmarkDialog
+          novelId={novelId}
+          novelName={novel?.name}
+          currentPage={currentPage}
+          open={addBookmarkDialogOpen}
+          onClose={() => setAddBookmarkDialogOpen(false)}
+          onSuccess={() => {}}
+        />
+      )}
 
       <TableOfContentsDrawer
         pages={pages}
