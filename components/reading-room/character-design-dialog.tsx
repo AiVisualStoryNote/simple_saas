@@ -176,7 +176,7 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
                             </div>
                           </div>
                           {character.text && (
-                            <p className="text-sm text-muted-foreground line-clamp-2">
+                            <p className="text-sm text-muted-foreground">
                               {character.text}
                             </p>
                           )}
