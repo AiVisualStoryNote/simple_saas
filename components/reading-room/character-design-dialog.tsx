@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Loader2 } from "lucide-react";
+import { X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { request } from "@/lib/request";
 
 interface NovelFile {
@@ -41,14 +41,7 @@ interface CharacterDesignDialogProps {
   onClose: () => void;
 }
 
-// const typeLabels: Record<string, { en: string; cn: string }> = {
-//   protagonist: { en: "Protagonist", cn: "主角" },
-//   supporting: { en: "Supporting Character", cn: "配角" },
-//   antagonist: { en: "Antagonist", cn: "反派" },
-// };
-
 const getLocalizedType = (type: string, isCN: boolean) => {
-  // return typeLabels[type]?.[isCN ? "cn" : "en"] || (isCN ? "角色" : "Character");
   return type;
 };
 
@@ -57,6 +50,12 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const isCN = mkt === "cn";
 
@@ -65,6 +64,13 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
       fetchCharacters();
     }
   }, [open, novelId]);
+
+  useEffect(() => {
+    if (!selectedImage) {
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [selectedImage]);
 
   const fetchCharacters = async () => {
     setLoading(true);
@@ -81,6 +87,58 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    setScale((prev) => Math.min(Math.max(prev + delta, 0.5), 3));
+  };
+
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.25, 3));
+  };
+
+  const handleZoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.25, 0.5));
+  };
+
+  const handleReset = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleDoubleClick = () => {
+    if (scale > 1) {
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
+    } else {
+      setScale(2);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (scale > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && scale > 1) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleClosePreview = () => {
+    setSelectedImage(null);
   };
 
   return (
@@ -120,7 +178,7 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
               <div className="flex-1 overflow-y-auto p-4">
                 {loading ? (
                   <div className="flex items-center justify-center py-20">
-                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   </div>
                 ) : error ? (
                   <div className="text-center py-20 text-red-500">
@@ -195,32 +253,92 @@ export function CharacterDesignDialog({ novelId, mkt, open, onClose }: Character
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-4"
-                onClick={() => setSelectedImage(null)}
+                className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center"
+                onClick={handleClosePreview}
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-4 right-4 h-10 w-10 bg-white/10 hover:bg-white/20"
-                  onClick={() => setSelectedImage(null)}
-                >
-                  <X className="h-5 w-5 text-white" />
-                </Button>
+                <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 bg-white/10 hover:bg-white/20 text-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleZoomOut();
+                    }}
+                  >
+                    <ZoomOut className="h-5 w-5" />
+                  </Button>
+                  <span className="text-white text-sm min-w-[50px] text-center">
+                    {Math.round(scale * 100)}%
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 bg-white/10 hover:bg-white/20 text-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleZoomIn();
+                    }}
+                  >
+                    <ZoomIn className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 bg-white/10 hover:bg-white/20 text-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReset();
+                    }}
+                  >
+                    <RotateCcw className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 bg-white/10 hover:bg-white/20 text-white ml-4"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClosePreview();
+                    }}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
-                  className="relative max-w-full max-h-full"
+                  ref={imageContainerRef}
+                  className={`relative max-w-full max-h-full ${scale > 1 ? 'cursor-grab' : ''} ${isDragging ? 'cursor-grabbing' : ''}`}
+                  style={{
+                    transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                  }}
                   onClick={(e) => e.stopPropagation()}
+                  onWheel={handleWheel}
+                  onDoubleClick={handleDoubleClick}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
                 >
-                  <Image
+                  <img
                     src={selectedImage}
                     alt="Character design"
-                    width={800}
-                    height={600}
-                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                    className="max-w-full max-h-[90vh] object-contain rounded-lg select-none"
+                    style={{
+                      transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                      transformOrigin: 'center center',
+                    }}
+                    draggable={false}
                   />
                 </motion.div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+                  {isCN 
+                    ? "滚轮缩放 • 按钮缩放 • 双击切换 • 拖拽移动"
+                    : "Scroll to zoom • Buttons to zoom • Double-click to toggle • Drag to pan"
+                  }
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
