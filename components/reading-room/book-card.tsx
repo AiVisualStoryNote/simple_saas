@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { Coins } from "lucide-react";
 
 interface NovelFile {
   id: number;
@@ -15,6 +16,7 @@ interface Novel {
   status: string;
   rating: number;
   word_count: number;
+  credits: number;
   created_at: string;
   updated_at: string;
   files: NovelFile[];
@@ -28,6 +30,8 @@ interface BookCardProps {
 
 export function BookCard({ novel, categoryName, onClick }: BookCardProps) {
   const coverImage = novel.files?.find((f) => f.file_type === "image")?.file_url;
+  const credits = novel.credits ?? 0;
+  const isFree = credits === 0;
 
   return (
     <Card 
@@ -52,6 +56,16 @@ export function BookCard({ novel, categoryName, onClick }: BookCardProps) {
             {categoryName}
           </div>
         )}
+        <div className="absolute bottom-2 right-2 px-2 py-1 bg-background/90 backdrop-blur-sm rounded-md text-xs font-medium shadow-sm flex items-center gap-1">
+          {isFree ? (
+            <span className="text-green-500 font-semibold">Free</span>
+          ) : (
+            <>
+              <Coins className="h-3 w-3 text-yellow-500" />
+              <span className="text-foreground">{credits}</span>
+            </>
+          )}
+        </div>
       </div>
       <CardContent className="p-3">
         <h3 className="font-semibold truncate text-sm">{novel.name}</h3>

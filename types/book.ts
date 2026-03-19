@@ -60,6 +60,7 @@ export interface Novel {
   status: string;
   rating: number;
   word_count: number;
+  credits: number;
   created_at: string;
   updated_at: string | null;
   overall_outline?: string;
