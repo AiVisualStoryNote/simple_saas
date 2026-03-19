@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   Character,
   getRandomCharacter,
+  getRandomCharacterFromList,
   getUserUnlockedCharacterIds,
   unlockCharacter,
 } from "@/lib/character";
@@ -63,6 +64,7 @@ export function CharacterDesignDialog({
   const [drawCardLoading, setDrawCardLoading] = useState(false);
   const [resultCharacter, setResultCharacter] = useState<Character | null>(null);
   const [resultIsNewUnlock, setResultIsNewUnlock] = useState<boolean | null>(null);
+  const [consecutiveNoNewCount, setConsecutiveNoNewCount] = useState(0);
 
   const listRef = useRef<HTMLDivElement>(null);
   const animationIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -80,6 +82,7 @@ export function CharacterDesignDialog({
       setResultCharacter(null);
       setSelectedCharacterId(null);
       setResultIsNewUnlock(null);
+      setConsecutiveNoNewCount(0);
     }
   }, [open, novelId]);
 
@@ -166,7 +169,16 @@ export function CharacterDesignDialog({
 
     setDrawCardLoading(true);
 
-    const result = getRandomCharacter(characters);
+    let result;
+    let isGuaranteed = false;
+
+    if (consecutiveNoNewCount >= 2 && unlockedCharacterIds.length < characters.length) {
+      result = getRandomCharacterFromList(characters, unlockedCharacterIds);
+      isGuaranteed = true;
+    } else {
+      result = getRandomCharacter(characters);
+    }
+
     if (!result) {
       toast({
         title: isCN ? "抽卡失败" : "Draw Failed",
@@ -202,6 +214,12 @@ export function CharacterDesignDialog({
 
     const isNew = unlockResult.isNewUnlock ?? false;
     setResultIsNewUnlock(isNew);
+
+    if (isNew || isGuaranteed) {
+      setConsecutiveNoNewCount(0);
+    } else {
+      setConsecutiveNoNewCount(prev => prev + 1);
+    }
     startAnimation(character, index, isNew);
   };
 
@@ -235,16 +253,17 @@ export function CharacterDesignDialog({
           setShowResult(false);
           setDrawCardLoading(false);
           
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              if (listRef.current) {
-                const cardElement = listRef.current.children[finalIndex] as HTMLElement;
-                if (cardElement) {
-                  cardElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-              }
-            });
-          });
+          // 【暂时放弃的功能】滚动到中奖的角色卡片位置（此功能有问题，暂时不知如何解决，先注释掉）
+          // requestAnimationFrame(() => {
+          //   requestAnimationFrame(() => {
+          //     if (listRef.current) {
+          //       const cardElement = listRef.current.children[finalIndex] as HTMLElement;
+          //       if (cardElement) {
+          //         cardElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          //       }
+          //     }
+          //   });
+          // });
         }, 5000);
 
         return;

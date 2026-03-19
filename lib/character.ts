@@ -49,6 +49,27 @@ export function getRandomCharacter(characters: Character[]): { index: number; ch
   };
 }
 
+export function getRandomCharacterFromList(characters: Character[], excludeIds: number[]): { index: number; character: Character } | null {
+  if (!characters || characters.length === 0) {
+    return null;
+  }
+  
+  const availableCharacters = characters.filter(c => !excludeIds.includes(c.id));
+  
+  if (availableCharacters.length === 0) {
+    return null;
+  }
+  
+  const randomIndex = Math.floor(Math.random() * availableCharacters.length);
+  const selectedCharacter = availableCharacters[randomIndex];
+  const originalIndex = characters.findIndex(c => c.id === selectedCharacter.id);
+  
+  return {
+    index: originalIndex,
+    character: selectedCharacter,
+  };
+}
+
 export async function getUserUnlockedCharacterIds(novelId: number): Promise<number[]> {
   const supabase = createClient();
   
