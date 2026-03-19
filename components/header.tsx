@@ -2,12 +2,14 @@
 
 import { signOutAction } from "@/app/actions";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { Logo } from "./logo";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
 import { DynamicVideoSwitch } from "./dynamic-video-switch";
+import { Undo2 } from "lucide-react";
 
 interface HeaderProps {
   user: any;
@@ -20,8 +22,9 @@ interface NavItem {
 
 export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const isDashboard = pathname?.startsWith("/dashboard");
-  const isReadPage = pathname?.startsWith("/read");
+  const isReadPage = pathname?.match(/^\/read($|\?)/) !== null;
 
   // Main navigation items for generic SaaS
   const mainNavItems: NavItem[] = [
@@ -56,6 +59,16 @@ export default function Header({ user }: HeaderProps) {
         </nav> */}
 
         <div className="flex items-center gap-2">
+          {isReadPage && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.back()}
+              className="gap-1"
+            >
+              <Undo2 className="h-4 w-4" />
+            </Button>
+          )}
           {isReadPage && <DynamicVideoSwitch />}
           <ThemeSwitcher />
           {/* {user ? (
