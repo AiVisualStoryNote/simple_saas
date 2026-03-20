@@ -69,7 +69,8 @@ export interface PurchaseBookResult {
 export async function purchaseBook(
   novelId: number,
   bookCredits: number,
-  novelName: string
+  novelName: string,
+  isCN: boolean = false
 ): Promise<PurchaseBookResult> {
   const supabase = createClient();
   
@@ -116,6 +117,7 @@ export async function purchaseBook(
       user_id: user.id,
       novel_id: novelId,
       credits_spent: bookCredits,
+      is_cn: isCN,
       metadata: {
         purchased_at: new Date().toISOString(),
       },

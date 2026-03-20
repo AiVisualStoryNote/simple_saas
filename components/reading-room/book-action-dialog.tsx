@@ -95,7 +95,7 @@ export function BookActionDialog({ mkt, novel, open, onClose }: BookActionDialog
 
     setPurchasing(true);
     try {
-      const result = await purchaseBook(novel.id, bookCredits, novel.name);
+      const result = await purchaseBook(novel.id, bookCredits, novel.name, isCN);
       if (result.success) {
         setHasPurchased(true);
         if (bookCredits > 0) {
