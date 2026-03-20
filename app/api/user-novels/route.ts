@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get('category_id');
     const keyword = searchParams.get('keyword') || '';
 
+    console.log('[keyword] = ', keyword);
+
     const supabase = await createClient();
 
     // 获取当前登录用户信息
@@ -33,11 +35,11 @@ export async function GET(request: NextRequest) {
       novel_ids: bookIds,
       skip,
       limit,
-      keyword,
+      name:keyword,
     };
 
     if (categoryId !== null && categoryId !== undefined) {
-      params.category_id = categoryId;
+      params.category_ids = categoryId;
     }
 
     const result = await callExternalAPI('get_novels_byids', params, cnMarket);

@@ -65,7 +65,7 @@ export function DashboardClient({ credits, recentCreditsHistory, subscription, u
           </TabsContent>
           
           <TabsContent value="en">
-            <PurchasedBooksSection mkt="en" />
+            <PurchasedBooksSection mkt="" />
           </TabsContent>
         </Tabs>
       </div>
