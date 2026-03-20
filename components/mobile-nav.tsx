@@ -133,7 +133,11 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <p className="text-lg font-semibold text-foreground flex-1">
-                    {localUser?.user_metadata?.name || localUser?.email}
+                    <SheetClose asChild>
+                      <Link href="/dashboard">
+                        {localUser?.user_metadata?.name || localUser?.email}
+                      </Link>
+                    </SheetClose>
                   </p>
                   <Button
                     size="icon"
@@ -168,6 +172,7 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
         </SheetHeader>
         <nav className="flex flex-col gap-4 mt-4">
           {items.map((item) => (
+            <SheetClose asChild key={item.href}>
             <Link
               key={item.href}
               href={item.href}
@@ -175,6 +180,7 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
             >
               {item.label}
             </Link>
+            </SheetClose>
           ))}
         </nav>
         <div className="mt-auto pt-4 border-t">

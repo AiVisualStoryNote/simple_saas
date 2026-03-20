@@ -30,13 +30,15 @@ export default function Header({ user }: HeaderProps) {
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
     { label: "Pricing", href: "/#pricing" },
+    { label: "Dashboard", href: "/dashboard" },
   ];
 
   // Dashboard items - empty array as we don't want navigation items in dashboard
   const dashboardItems: NavItem[] = [];
 
   // Choose which navigation items to show
-  const navItems = isDashboard ? dashboardItems : mainNavItems;
+  // const navItems = isDashboard ? dashboardItems : mainNavItems;
+  const navItems = mainNavItems;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

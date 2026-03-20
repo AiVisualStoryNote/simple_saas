@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { SubscriptionStatusCard } from "@/components/dashboard/subscription-status-card";
 import { CreditsBalanceCard } from "@/components/dashboard/credits-balance-card";
 import { getCustomerData } from "@/lib/customer";
+import { KeyRound } from "lucide-react";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -36,6 +38,15 @@ export default async function DashboardPage() {
         <p className="text-muted-foreground">
           Manage your subscription, check your credits, and access your dashboard features.
         </p>
+        <div className="mt-4">
+          <Link 
+            href="/dashboard/reset-password"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary dark:text-white hover:text-primary/80 underline underline-offset-4 transition-colors"
+          >
+            <KeyRound className="scale-[0.7]" />
+            Change Password
+          </Link>
+        </div>
       </div>
 
       {/* Stats Grid */}
