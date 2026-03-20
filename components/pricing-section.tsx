@@ -80,19 +80,25 @@ export function PricingSection({ className }: PricingSectionProps) {
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Simple, Transparent Pricing
+            <br />
+            简单透明的定价模式
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground text-lg">
             Choose the perfect plan for your needs.
+            <br />
+            选择最适合您的计划。
           </p>
         </div>
 
-        <Tabs defaultValue="subscription" className="w-full flex flex-col items-center">
+        <Tabs defaultValue="credits" className="w-full flex flex-col items-center">
           <TabsList className="mb-8">
-            <TabsTrigger value="subscription">Subscriptions</TabsTrigger>
+            {/* 暂时用不到包月包年这种订阅的支付模式 */}
+            {/* <TabsTrigger value="subscription">Subscriptions</TabsTrigger> */}
             <TabsTrigger value="credits">Credit Packs</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="subscription" className="w-full">
+          {/* 暂时用不到包月包年这种订阅的支付模式 */}
+          {/* <TabsContent value="subscription" className="w-full">
             <div className="grid gap-8 lg:grid-cols-3 max-w-6xl mx-auto">
               {SUBSCRIPTION_TIERS.map((tier, index) => (
                 <PricingCard 
@@ -105,7 +111,7 @@ export function PricingSection({ className }: PricingSectionProps) {
                 />
               ))}
             </div>
-          </TabsContent>
+          </TabsContent> */}
           
           <TabsContent value="credits" className="w-full">
             <div className="grid gap-8 lg:grid-cols-3 max-w-6xl mx-auto">
@@ -149,7 +155,7 @@ function PricingCard({
     >
       <Card className={`h-full flex flex-col ${
         tier.featured 
-          ? 'border-primary shadow-lg scale-105 z-10' 
+          ? 'border-primary border-2 shadow-lg z-10' 
           : 'border-border'
       }`}>
         {tier.featured && (
@@ -159,8 +165,12 @@ function PricingCard({
         )}
         
         <CardHeader>
-          <CardTitle className="text-2xl">{tier.name}</CardTitle>
-          <CardDescription>{tier.description}</CardDescription>
+          <CardTitle className="text-2xl">{tier.name}({tier.nameCn})</CardTitle>
+          <CardDescription>
+            {tier.description}
+            {tier.descriptionCn &&<br />}
+            {tier.descriptionCn}
+          </CardDescription>
           <div className="mt-4 flex items-baseline">
             <span className="text-4xl font-bold">{tier.priceMonthly}</span>
             <span className="text-muted-foreground ml-1">
@@ -174,7 +184,11 @@ function PricingCard({
             {tier.features?.map((feature, i) => (
               <li key={i} className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-primary shrink-0" />
-                <span className="text-sm text-muted-foreground">{feature}</span>
+                <span className="text-sm text-muted-foreground">
+                  {feature}
+                  <br />
+                  {tier.featuresCn?.[i]}
+                </span>
               </li>
             ))}
           </ul>
@@ -183,11 +197,11 @@ function PricingCard({
         <CardFooter>
           <Button 
             className="w-full" 
-            variant={tier.featured ? "default" : "outline"}
+            variant="default"
             onClick={() => onPurchase(tier)}
             disabled={isProcessing === tier.id}
           >
-            {isProcessing === tier.id ? "Processing..." : "Get Started"}
+            {isProcessing === tier.id ? "Processing..." : `Get Started (${tier.creditAmount} credits)`}
           </Button>
         </CardFooter>
       </Card>

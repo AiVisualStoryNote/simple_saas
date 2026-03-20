@@ -57,50 +57,66 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
 export const CREDITS_TIERS: ProductTier[] = [
   {
     name: "Basic Package",
-    id: "tier-3-credits",
-    productId: "prod_a197uVwjTQahlPWGGsqNj", // $9 one-time purchase
-    priceMonthly: "$9",
-    description: "3 credits for testing and small-scale projects.",
-    creditAmount: 3,
+    nameCn: "基础套餐",
+    id: "tier-1dollar-credits",
+    productId: "prod_a197uVwjTQahlPWGGsqNj", // $1 one-time purchase
+    priceMonthly: "$1",
+    credits: 20,
+    creditsExtra: 5,
+    creditAmount: 25, // * 充值后所得的【总积分数】（非常重要，千万不可弄错）
+    description: "20 credits",
+    descriptionCn: "20 积分",
     features: [
-      "3 credits for use across all features",
+      "Extra 5 credits bonus (25 credits total)",
       "No expiration date",
-      "Access to standard features",
-      "Community support"
+      "Access to all features",
     ],
-    featured: false,
-    discountCode: "", // Optional discount code
-  },
-  {
-    name: "Standard Package",
-    id: "tier-6-credits",
-    productId: "prod_a197uVwjTQahlPWGGsqNj", // $13 one-time purchase
-    priceMonthly: "$13",
-    description: "6 credits for medium-sized applications.",
-    creditAmount: 6,
-    features: [
-      "6 credits for use across all features",
-      "No expiration date",
-      "Priority processing",
-      "Basic email support"
+    featuresCn: [
+      "赠送5积分（共25积分）",
+      "无过期时间",
+      "可用所有功能",
     ],
     featured: true,
     discountCode: "", // Optional discount code
   },
   {
-    name: "Premium Package",
-    id: "tier-9-credits",
-    productId: "prod_a197uVwjTQahlPWGGsqNj", // $29 one-time purchase
-    priceMonthly: "$29",
-    description: "9 credits for larger applications and production use.",
-    creditAmount: 9,
+    name: "Standard Package",
+    nameCn: "标准套餐",
+    id: "tier-3dollar-credits",
+    productId: "prod_vtoBwDBbNREY58cIaQQNc", // $3 one-time purchase
+    priceMonthly: "$3",
+    credits: 60,
+    creditsExtra: 40,
+    creditAmount: 100, // * 充值后所得的【总积分数】（非常重要，千万不可弄错）
+    description: "60 credits",
+    descriptionCn: "60 积分",
     features: [
-      "9 credits for use across all features",
+      "Extra 40 credits bonus (100 credits total)",
       "No expiration date",
-      "Premium support",
-      "Advanced analytics access"
+      "Access to all features",
+    ],
+    featuresCn: [
+      "赠送40积分（共100积分）",
+      "无过期时间",
+      "可用所有功能",
     ],
     featured: false,
     discountCode: "", // Optional discount code
   },
+  // {
+  //   name: "Premium Package",
+  //   id: "tier-9-credits",
+  //   productId: "prod_a197uVwjTQahlPWGGsqNj", // $29 one-time purchase
+  //   priceMonthly: "$29",
+  //   description: "9 credits for larger applications and production use.",
+  //   creditAmount: 9,
+  //   features: [
+  //     "9 credits for use across all features",
+  //     "No expiration date",
+  //     "Premium support",
+  //     "Advanced analytics access"
+  //   ],
+  //   featured: false,
+  //   discountCode: "", // Optional discount code
+  // },
 ];

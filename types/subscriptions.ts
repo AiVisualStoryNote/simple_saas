@@ -1,11 +1,16 @@
 export interface ProductTier {
   name: string;
+  nameCn?: string;
   id: string;
   productId: string;
   priceMonthly: string;
+  credits?: number;
+  creditsExtra?: number;
   description: string;
+  descriptionCn?: string;
   featured: boolean;
   features?: string[];
+  featuresCn?: string[];
   creditAmount?: number;
   discountCode?: string;
 }
