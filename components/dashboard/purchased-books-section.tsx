@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,8 +55,17 @@ export function PurchasedBooksSection({ mkt }: { mkt: string }) {
   const [keyword, setKeyword] = useState("");
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   
+  const [skip, setSkip] = useState(0);
+  const skipRef = useRef(0);
+  const limit = 10;
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  
   const [selectedBook, setSelectedBook] = useState<PurchasedBook | null>(null);
   const [showCharacterDialog, setShowCharacterDialog] = useState(false);
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -75,11 +84,19 @@ export function PurchasedBooksSection({ mkt }: { mkt: string }) {
     fetchCategories();
   }, [mkt]);
 
-  const fetchBooks = useCallback(async () => {
+  const fetchBooks = useCallback(async (isLoadMore = false) => {
     if (loadingCategories) return;
+    if (isLoadMore && (!hasMore || isLoadingMore)) return;
     
-    setLoading(true);
+    if (isLoadMore) {
+      setIsLoadingMore(true);
+    } else {
+      setLoading(true);
+      skipRef.current = 0;
+    }
+    
     try {
+      const currentSkip = isLoadMore ? skipRef.current : 0;
       const categoryIds = selectedCategoryIds.length > 0 
         ? selectedCategoryIds.join(",") 
         : "";
@@ -87,6 +104,8 @@ export function PurchasedBooksSection({ mkt }: { mkt: string }) {
       const params = {
         keyword: keyword || "",
         category_id: categoryIds,
+        skip: String(currentSkip),
+        limit: String(limit),
       };
       
       const paramsStr = new URLSearchParams(params).toString();
@@ -95,18 +114,53 @@ export function PurchasedBooksSection({ mkt }: { mkt: string }) {
       if (res.error) {
         setError(res.error);
       } else {
-        setBooks(res.data?.novels || []);
+        const newBooks = res.data?.novels || [];
+        if (isLoadMore) {
+          setBooks(prev => [...prev, ...newBooks]);
+          skipRef.current += newBooks.length;
+        } else {
+          setBooks(newBooks);
+          skipRef.current = newBooks.length;
+        }
+        setSkip(skipRef.current);
+        setHasMore(newBooks.length === limit);
       }
     } catch (err) {
       setError("Failed to load purchased books");
     } finally {
-      setLoading(false);
+      if (isLoadMore) {
+        setIsLoadingMore(false);
+      } else {
+        setLoading(false);
+        setIsFirstLoad(false);
+      }
     }
-  }, [mkt, loadingCategories, keyword, selectedCategoryIds]);
+  }, [mkt, loadingCategories, keyword, selectedCategoryIds, hasMore, isLoadingMore]);
 
   useEffect(() => {
     fetchBooks();
-  }, [fetchBooks]);
+  }, [keyword, selectedCategoryIds, loadingCategories]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore && !loading && !isFirstLoad) {
+          fetchBooks(true);
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasMore, isLoadingMore, loading, fetchBooks]);
 
   const handleBookClick = (book: PurchasedBook) => {
     setSelectedBook(book);
@@ -220,6 +274,22 @@ export function PurchasedBooksSection({ mkt }: { mkt: string }) {
           })}
         </div>
       )}
+
+      <div ref={loadMoreRef} className="h-4">
+        {isLoadingMore && (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-sm text-muted-foreground">
+              {mkt === 'cn' ? '加载中...' : 'Loading more...'}
+            </span>
+          </div>
+        )}
+        {!loading && !hasMore && books.length > 0 && (
+          <div className="text-center py-4 text-sm text-muted-foreground">
+            {mkt === 'cn' ? '没有更多了' : 'No more books'}
+          </div>
+        )}
+      </div>
 
       {selectedBook && (
         <CharacterDesignDialog

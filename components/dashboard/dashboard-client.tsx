@@ -19,7 +19,7 @@ export function DashboardClient({ credits, recentCreditsHistory, subscription, u
   const [activeTab, setActiveTab] = useState("cn");
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-6 sm:gap-8 px-4 sm:px-8 container mb-4">
+    <div className="flex-1 w-full flex flex-col gap-6 sm:gap-8 px-4 sm:px-8 container mb-8">
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border rounded-lg p-6 sm:p-8 mt-6 sm:mt-8">
         <h1 className="text-2xl sm:text-3xl font-bold mb-2 break-words">
