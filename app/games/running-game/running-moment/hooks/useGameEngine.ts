@@ -16,8 +16,10 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
   const [distance, setDistance] = useState(0);
   const [coinsCollected, setCoinsCollected] = useState(0);
   const [hp, setHp] = useState(character.hp);
+  const [maxHp, setMaxHp] = useState(character.hp);
   const [playerY, setPlayerY] = useState(GROUND_Y);
   const [hasShield, setHasShield] = useState(false);
+  const [isHurt, setIsHurt] = useState(false);
   const [isInvincible, setIsInvincible] = useState(false);
   const [magnetActive, setMagnetActive] = useState(false);
   const [slowActive, setSlowActive] = useState(false);
@@ -26,6 +28,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
   const distanceRef = useRef(0);
   const coinsRef = useRef(0);
   const hpRef = useRef(character.hp);
+  const maxHpRef = useRef(character.hp);
   const playerYRef = useRef(GROUND_Y);
   const velocityRef = useRef(0);
   const isJumpingRef = useRef(false);
@@ -35,6 +38,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
   const magnetActiveRef = useRef(false);
   const slowActiveRef = useRef(false);
   const damageCooldownRef = useRef(false);
+  const hurtTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const characterRef = useRef(character);
   const onGameOverRef = useRef(onGameOver);
   const animationRef = useRef<number | null>(null);
@@ -57,8 +61,10 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
   useEffect(() => {
     characterRef.current = character;
     hpRef.current = character.hp;
+    maxHpRef.current = character.hp;
     canDoubleJumpRef.current = character.ability === "doubleJump";
     setHp(character.hp);
+    setMaxHp(character.hp);
   }, [character]);
 
   const getDifficultyLevel = (dist: number): DifficultyLevel => {
@@ -188,7 +194,9 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     switch (itemType) {
       case "heart":
         hpRef.current = Math.min(hpRef.current + 1, characterRef.current.hp + 2);
+        maxHpRef.current = Math.max(maxHpRef.current, hpRef.current);
         setHp(hpRef.current);
+        setMaxHp(maxHpRef.current);
         break;
       case "shield":
         hasShieldRef.current = true;
@@ -308,6 +316,14 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
         hpRef.current -= config.damage;
         setHp(hpRef.current);
         obstaclesRef.current = obstaclesRef.current.filter(o => o.id !== obs.id);
+        setIsHurt(true);
+        if (hurtTimeoutRef.current) {
+          clearTimeout(hurtTimeoutRef.current);
+        }
+        hurtTimeoutRef.current = setTimeout(() => {
+          setIsHurt(false);
+          hurtTimeoutRef.current = null;
+        }, 350);
         
         damageCooldownRef.current = true;
         setTimeout(() => {
@@ -361,7 +377,10 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     hasShieldRef.current = hasItem("shield");
     setHasShield(hasShieldRef.current);
     hpRef.current = characterRef.current.hp + (hasItem("heart") ? 1 : 0);
+    maxHpRef.current = hpRef.current;
     setHp(hpRef.current);
+    setMaxHp(maxHpRef.current);
+    setIsHurt(false);
     
     if (hasItem("heart")) {
       useItem("heart");
@@ -403,6 +422,9 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      if (hurtTimeoutRef.current) {
+        clearTimeout(hurtTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -411,8 +433,10 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     distance,
     coinsCollected,
     hp,
+    maxHp,
     playerY,
     hasShield,
+    isHurt,
     isInvincible,
     magnetActive,
     slowActive,

@@ -31,8 +31,10 @@ export default function RunningMomentGame() {
     distance,
     coinsCollected,
     hp,
+    maxHp,
     playerY,
     hasShield,
+    isHurt,
     isInvincible,
     magnetActive,
     slowActive,
@@ -124,8 +126,11 @@ export default function RunningMomentGame() {
             <GameHUD
               distance={distance}
               hp={hp}
+              maxHp={maxHp}
               coins={coinsCollected}
               isZh={isZh}
+              isHurt={isHurt}
+              isInvincible={isInvincible}
               onPause={pauseGame}
             />
           </div>
@@ -147,8 +152,11 @@ export default function RunningMomentGame() {
             <GameHUD
               distance={distance}
               hp={hp}
+              maxHp={maxHp}
               coins={coinsCollected}
               isZh={isZh}
+              isHurt={isHurt}
+              isInvincible={isInvincible}
               onPause={() => {}}
             />
             <PauseMenu
