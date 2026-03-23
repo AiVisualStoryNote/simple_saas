@@ -30,8 +30,10 @@ export function GameCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const distanceRef = useRef(distance);
-  const cloudsRef = useRef<Array<{ x: number; initialX: number; y: number }>>([]);
+  const cloudsRef = useRef<Array<{ x: number; y: number; speed: number; scale: number }>>([]);
   const mountainsRef = useRef<Array<{ x: number; layer: number }>>([]);
+  const elapsedTimeRef = useRef(0);
+  const lastFrameTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     distanceRef.current = distance;
@@ -48,16 +50,21 @@ export function GameCanvas({
     const CANVAS_HEIGHT = 400;
     const GROUND_Y = 350;
 
-    cloudsRef.current = Array.from({ length: 5 }, () => ({
-      x: Math.random() * CANVAS_WIDTH,
-      initialX: Math.random() * CANVAS_WIDTH,
-      y: 30 + Math.random() * 80,
-    }));
+    if (cloudsRef.current.length === 0) {
+      cloudsRef.current = Array.from({ length: 5 }, () => ({
+        x: Math.random() * (CANVAS_WIDTH + 120) - 60,
+        y: 30 + Math.random() * 80,
+        speed: 4 + Math.random() * 6,
+        scale: 0.85 + Math.random() * 0.45,
+      }));
+    }
 
-    mountainsRef.current = Array.from({ length: 8 }, (_, i) => ({
-      x: i * 150,
-      layer: i % 3,
-    }));
+    if (mountainsRef.current.length === 0) {
+      mountainsRef.current = Array.from({ length: 8 }, (_, i) => ({
+        x: i * 150,
+        layer: i % 3,
+      }));
+    }
 
     const drawBackground = () => {
       const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
@@ -77,21 +84,18 @@ export function GameCanvas({
       }
     };
 
-    const drawClouds = (distance: number) => {
+    const drawClouds = (elapsedMs: number) => {
       ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-      cloudsRef.current.forEach((cloud, index) => {
-        const baseX = cloud.initialX || cloud.x;
-        if (!cloud.initialX) {
-          cloud.initialX = cloud.x;
-        }
-        
-        const offset = (distance * 0.05 * (0.5 + index * 0.1)) % (CANVAS_WIDTH + 200);
-        const drawX = (baseX - offset + CANVAS_WIDTH + 200) % (CANVAS_WIDTH + 200);
+      cloudsRef.current.forEach((cloud) => {
+        const travelWidth = CANVAS_WIDTH + 180;
+        const offset = (elapsedMs / 1000) * cloud.speed;
+        const drawX = ((cloud.x - offset) % travelWidth + travelWidth) % travelWidth - 90;
+        const radius = 25 * cloud.scale;
 
         ctx.beginPath();
-        ctx.arc(drawX, cloud.y, 25, 0, Math.PI * 2);
-        ctx.arc(drawX + 20, cloud.y - 10, 20, 0, Math.PI * 2);
-        ctx.arc(drawX + 40, cloud.y, 25, 0, Math.PI * 2);
+        ctx.arc(drawX, cloud.y, radius, 0, Math.PI * 2);
+        ctx.arc(drawX + 20 * cloud.scale, cloud.y - 10 * cloud.scale, 20 * cloud.scale, 0, Math.PI * 2);
+        ctx.arc(drawX + 40 * cloud.scale, cloud.y, radius, 0, Math.PI * 2);
         ctx.fill();
       });
     };
@@ -162,12 +166,19 @@ export function GameCanvas({
       }
     };
 
-    const render = () => {
+    const render = (timestamp: number) => {
+      if (lastFrameTimeRef.current === null) {
+        lastFrameTimeRef.current = timestamp;
+      }
+      const delta = timestamp - lastFrameTimeRef.current;
+      lastFrameTimeRef.current = timestamp;
+      elapsedTimeRef.current += Math.min(delta, 32);
+
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       
       drawBackground();
       drawMountains(distanceRef.current);
-      drawClouds(distanceRef.current);
+      drawClouds(elapsedTimeRef.current);
       drawObstacles();
       drawItems();
       drawCoins();
@@ -176,12 +187,13 @@ export function GameCanvas({
       animationRef.current = requestAnimationFrame(render);
     };
 
-    render();
+    animationRef.current = requestAnimationFrame(render);
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      lastFrameTimeRef.current = null;
     };
   }, [character, obstacles, items, coins, hasShield, isInvincible]);
 
