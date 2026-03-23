@@ -11,6 +11,8 @@ interface GameHUDProps {
 }
 
 export function GameHUD({ distance, hp, coins, isZh, onPause }: GameHUDProps) {
+  const displayHp = Math.max(0, Math.floor(Number(hp) || 0));
+  
   return (
     <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-start">
       <div className="flex flex-col gap-2">
@@ -22,10 +24,10 @@ export function GameHUD({ distance, hp, coins, isZh, onPause }: GameHUDProps) {
 
       <div className="flex gap-3">
         <div className="flex items-center gap-1 bg-black/50 px-3 py-2 rounded-xl">
-          {Array.from({ length: Math.max(0, hp) }).map((_, i) => (
+          {Array.from({ length: displayHp }).map((_, i) => (
             <span key={i} className="text-red-500">❤️</span>
           ))}
-          {Array.from({ length: Math.max(0, 3 - hp) }).map((_, i) => (
+          {Array.from({ length: Math.max(0, 3 - displayHp) }).map((_, i) => (
             <span key={`gray-${i}`} className="text-gray-400">❤️</span>
           ))}
         </div>

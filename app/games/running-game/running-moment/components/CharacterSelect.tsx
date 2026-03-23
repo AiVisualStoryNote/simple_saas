@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CHARACTERS } from "../constants";
 import { Character } from "../types/index";
-import { getProgress } from "../utils/storage";
+import { getProgress, PlayerProgress } from "../utils/storage";
 import { ShoppingCart, Lock, Star } from "lucide-react";
 
 interface CharacterSelectProps {
@@ -18,9 +18,20 @@ const abilityLabels: Record<string, { en: string; cn: string }> = {
   dash: { en: "Dash", cn: "冲刺" },
 };
 
+const defaultProgress: PlayerProgress = {
+  highScore: 0,
+  totalCoins: 0,
+  charactersUnlocked: ["runner"],
+  itemsOwned: [],
+};
+
 export function CharacterSelect({ isZh, onSelect, onOpenShop }: CharacterSelectProps) {
   const [selectedId, setSelectedId] = useState("runner");
-  const progress = getProgress();
+  const [progress, setProgress] = useState<PlayerProgress>(defaultProgress);
+
+  useEffect(() => {
+    setProgress(getProgress());
+  }, []);
 
   const handleSelect = (char: Character) => {
     const isUnlocked = progress.charactersUnlocked.includes(char.id);

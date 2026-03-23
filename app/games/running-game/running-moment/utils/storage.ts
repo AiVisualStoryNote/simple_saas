@@ -1,4 +1,6 @@
-import { PlayerProgress, ItemType } from "../types/index";
+import { PlayerProgress as IPlayerProgress, ItemType } from "../types/index";
+
+export type PlayerProgress = IPlayerProgress;
 
 const STORAGE_KEY = "running_moment_progress";
 

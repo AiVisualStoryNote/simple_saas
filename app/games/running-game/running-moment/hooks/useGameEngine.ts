@@ -17,44 +17,48 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
   const [coinsCollected, setCoinsCollected] = useState(0);
   const [hp, setHp] = useState(character.hp);
   const [playerY, setPlayerY] = useState(GROUND_Y);
-  const [isJumping, setIsJumping] = useState(false);
   const [hasShield, setHasShield] = useState(false);
   const [isInvincible, setIsInvincible] = useState(false);
   const [magnetActive, setMagnetActive] = useState(false);
   const [slowActive, setSlowActive] = useState(false);
-  
-  const obstaclesRef = useRef<Obstacle[]>([]);
-  const itemsRef = useRef<Item[]>([]);
-  const coinsRef = useRef<Coin[]>([]);
-  const lastObstacleTimeRef = useRef(0);
-  const lastItemTimeRef = useRef(0);
-  const lastCoinTimeRef = useRef(0);
-  const animationFrameRef = useRef<number | undefined>(undefined);
+
+  const gameStateRef = useRef(gameState);
+  const distanceRef = useRef(0);
+  const coinsRef = useRef(0);
+  const hpRef = useRef(character.hp);
   const playerYRef = useRef(GROUND_Y);
   const velocityRef = useRef(0);
-  const distanceRef = useRef(0);
   const isJumpingRef = useRef(false);
   const canDoubleJumpRef = useRef(false);
-  const gameStateRef = useRef<GameState>("menu");
   const hasShieldRef = useRef(false);
   const isInvincibleRef = useRef(false);
   const magnetActiveRef = useRef(false);
   const slowActiveRef = useRef(false);
-  const hpRef = useRef(character.hp);
+  const damageCooldownRef = useRef(false);
+  const characterRef = useRef(character);
+  const onGameOverRef = useRef(onGameOver);
+  const animationRef = useRef<number | null>(null);
+
+  const obstaclesRef = useRef<Obstacle[]>([]);
+  const itemsRef = useRef<Item[]>([]);
+  const coinsGameRef = useRef<Coin[]>([]);
+  const lastObstacleTimeRef = useRef(0);
+  const lastItemTimeRef = useRef(0);
+  const lastCoinTimeRef = useRef(0);
 
   useEffect(() => {
     gameStateRef.current = gameState;
   }, [gameState]);
 
   useEffect(() => {
-    playerYRef.current = GROUND_Y;
-    velocityRef.current = 0;
-    isJumpingRef.current = false;
+    onGameOverRef.current = onGameOver;
+  }, [onGameOver]);
+
+  useEffect(() => {
+    characterRef.current = character;
+    hpRef.current = character.hp;
     canDoubleJumpRef.current = character.ability === "doubleJump";
-    hasShieldRef.current = hasItem("shield");
-    setHasShield(hasShieldRef.current);
-    hpRef.current = character.hp + (hasItem("heart") ? 1 : 0);
-    setHp(hpRef.current);
+    setHp(character.hp);
   }, [character]);
 
   const getDifficultyLevel = (dist: number): DifficultyLevel => {
@@ -65,7 +69,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     return 5;
   };
 
-  const spawnObstacle = useCallback(() => {
+  const spawnObstacle = () => {
     const level = getDifficultyLevel(distanceRef.current);
     const settings = DIFFICULTY_SETTINGS[level];
     const type = settings.obstacleTypes[Math.floor(Math.random() * settings.obstacleTypes.length)];
@@ -80,9 +84,9 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       height: config.height,
     };
     obstaclesRef.current.push(obstacle);
-  }, [distance]);
+  };
 
-  const spawnItem = useCallback(() => {
+  const spawnItem = () => {
     const itemTypes: ItemType[] = ["heart", "shield", "lightning", "magnet", "clock"];
     const type = itemTypes[Math.floor(Math.random() * itemTypes.length)];
     
@@ -94,9 +98,9 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       collected: false,
     };
     itemsRef.current.push(item);
-  }, []);
+  };
 
-  const spawnCoin = useCallback(() => {
+  const spawnCoin = () => {
     const patterns = [
       [{ x: 0, y: 0 }, { x: 30, y: -30 }, { x: 60, y: 0 }],
       [{ x: 0, y: 0 }, { x: 30, y: 0 }, { x: 60, y: 0 }],
@@ -111,9 +115,9 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
         y: GROUND_Y - 50 + pos.y,
         collected: false,
       };
-      coinsRef.current.push(coin);
+      coinsGameRef.current.push(coin);
     });
-  }, []);
+  };
 
   const jump = useCallback(() => {
     if (gameStateRef.current !== "playing") return;
@@ -121,20 +125,20 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     if (!isJumpingRef.current) {
       velocityRef.current = JUMP_FORCE;
       isJumpingRef.current = true;
-      canDoubleJumpRef.current = character.ability === "doubleJump";
+      canDoubleJumpRef.current = characterRef.current.ability === "doubleJump";
     } else if (canDoubleJumpRef.current) {
       velocityRef.current = JUMP_FORCE * 0.85;
       canDoubleJumpRef.current = false;
     }
-  }, [character]);
+  }, []);
 
-  const checkCollision = useCallback((playerX: number, playerY: number): { hitObstacle: Obstacle | null; hitItem: Item | null; hitCoin: Coin | null } => {
-    const playerWidth = 40;
-    const playerHeight = 60;
-    const playerLeft = playerX - playerWidth / 2;
-    const playerRight = playerX + playerWidth / 2;
-    const playerTop = playerY - playerHeight;
-    const playerBottom = playerY;
+  const checkCollision = (playerX: number, playerYVal: number): { hitObstacle: Obstacle | null; hitItem: Item | null; hitCoin: Coin | null } => {
+    const playerWidth = 50;
+    const playerHeight = 70;
+    const playerLeft = playerX - playerWidth / 2 + 5;
+    const playerRight = playerX + playerWidth / 2 - 5;
+    const playerTop = playerYVal - playerHeight + 10;
+    const playerBottom = playerYVal - 5;
 
     for (const obstacle of obstaclesRef.current) {
       if (
@@ -160,7 +164,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       }
     }
 
-    for (const coin of coinsRef.current) {
+    for (const coin of coinsGameRef.current) {
       if (coin.collected) continue;
       const coinLeft = coin.x;
       const coinRight = coin.x + 25;
@@ -178,12 +182,12 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     }
 
     return { hitObstacle: null, hitItem: null, hitCoin: null };
-  }, []);
+  };
 
-  const applyItemEffect = useCallback((itemType: ItemType) => {
+  const applyItemEffect = (itemType: ItemType) => {
     switch (itemType) {
       case "heart":
-        hpRef.current = Math.min(hpRef.current + 1, character.hp + 2);
+        hpRef.current = Math.min(hpRef.current + 1, characterRef.current.hp + 2);
         setHp(hpRef.current);
         break;
       case "shield":
@@ -215,14 +219,14 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
         }, 5000);
         break;
     }
-  }, [character]);
+  };
 
-  const gameLoop = useCallback(() => {
+  const gameLoop = () => {
     if (gameStateRef.current !== "playing") return;
 
     const level = getDifficultyLevel(distanceRef.current);
     const settings = DIFFICULTY_SETTINGS[level];
-    let speed = BASE_SPEED * character.speed * settings.speedMultiplier;
+    let speed = BASE_SPEED * characterRef.current.speed * settings.speedMultiplier;
     
     if (slowActiveRef.current) {
       speed *= 0.5;
@@ -238,7 +242,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       playerYRef.current = GROUND_Y;
       velocityRef.current = 0;
       isJumpingRef.current = false;
-      canDoubleJumpRef.current = character.ability === "doubleJump";
+      canDoubleJumpRef.current = characterRef.current.ability === "doubleJump";
     }
     
     setPlayerY(playerYRef.current);
@@ -280,7 +284,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
       return item.x > -50;
     });
 
-    coinsRef.current = coinsRef.current.filter(coin => {
+    coinsGameRef.current = coinsGameRef.current.filter(coin => {
       coin.x -= moveSpeed;
       if (magnetActiveRef.current) {
         if (coin.x > 50 && coin.x < 400) {
@@ -292,7 +296,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
 
     const collision = checkCollision(100, playerYRef.current);
     
-    if (collision.hitObstacle && !isInvincibleRef.current) {
+    if (collision.hitObstacle && !isInvincibleRef.current && !damageCooldownRef.current) {
       const obs = collision.hitObstacle;
       const config = OBSTACLE_CONFIG[obs.type];
       
@@ -305,13 +309,18 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
         setHp(hpRef.current);
         obstaclesRef.current = obstaclesRef.current.filter(o => o.id !== obs.id);
         
+        damageCooldownRef.current = true;
+        setTimeout(() => {
+          damageCooldownRef.current = false;
+        }, 500);
+        
         if (hpRef.current <= 0) {
           const finalDistance = Math.floor(distanceRef.current);
-          const earnedCoins = Math.floor(finalDistance / 100) * COIN_REWARD_PER_100M + coinsCollected;
+          const earnedCoins = Math.floor(finalDistance / 100) * COIN_REWARD_PER_100M + coinsRef.current;
           addCoins(earnedCoins);
           const isNewRecord = updateHighScore(finalDistance);
           setGameState("gameover");
-          onGameOver(finalDistance, earnedCoins, isNewRecord);
+          onGameOverRef.current(finalDistance, earnedCoins, isNewRecord);
           return;
         }
       }
@@ -325,21 +334,23 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
 
     if (collision.hitCoin) {
       const coin = collision.hitCoin;
-      setCoinsCollected(prev => prev + 1);
-      coinsRef.current = coinsRef.current.filter(c => c.id !== coin.id);
+      coinsRef.current += 1;
+      setCoinsCollected(coinsRef.current);
+      coinsGameRef.current = coinsGameRef.current.filter(c => c.id !== coin.id);
     }
 
-    animationFrameRef.current = requestAnimationFrame(gameLoop);
-  }, [character, spawnObstacle, spawnItem, spawnCoin, checkCollision, applyItemEffect, coinsCollected, onGameOver]);
+    animationRef.current = requestAnimationFrame(gameLoop);
+  };
 
   const startGame = useCallback(() => {
     obstaclesRef.current = [];
     itemsRef.current = [];
-    coinsRef.current = [];
+    coinsGameRef.current = [];
     lastObstacleTimeRef.current = Date.now();
     lastItemTimeRef.current = Date.now();
     lastCoinTimeRef.current = Date.now();
     distanceRef.current = 0;
+    coinsRef.current = 0;
     setDistance(0);
     setCoinsCollected(0);
     playerYRef.current = GROUND_Y;
@@ -349,7 +360,7 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     
     hasShieldRef.current = hasItem("shield");
     setHasShield(hasShieldRef.current);
-    hpRef.current = character.hp + (hasItem("heart") ? 1 : 0);
+    hpRef.current = characterRef.current.hp + (hasItem("heart") ? 1 : 0);
     setHp(hpRef.current);
     
     if (hasItem("heart")) {
@@ -362,33 +373,35 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     setGameState("playing");
     
     setTimeout(() => {
-      animationFrameRef.current = requestAnimationFrame(gameLoop);
+      animationRef.current = requestAnimationFrame(gameLoop);
     }, 100);
-  }, [character, gameLoop]);
+  }, []);
 
   const pauseGame = useCallback(() => {
     setGameState("paused");
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
   }, []);
 
   const resumeGame = useCallback(() => {
     setGameState("playing");
-    animationFrameRef.current = requestAnimationFrame(gameLoop);
-  }, [gameLoop]);
+    animationRef.current = requestAnimationFrame(gameLoop);
+  }, []);
 
   const goToMenu = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
     setGameState("menu");
   }, []);
 
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);
@@ -399,15 +412,14 @@ export function useGameEngine({ characterId, isZh, onGameOver }: UseGameEnginePr
     coinsCollected,
     hp,
     playerY,
-    isJumping,
     hasShield,
     isInvincible,
     magnetActive,
     slowActive,
     obstacles: obstaclesRef.current,
     items: itemsRef.current,
-    coins: coinsRef.current,
-    character,
+    coins: coinsGameRef.current,
+    character: characterRef.current,
     jump,
     startGame,
     pauseGame,

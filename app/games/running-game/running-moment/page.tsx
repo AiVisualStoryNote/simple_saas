@@ -119,7 +119,7 @@ export default function RunningMomentGame() {
               coins={coins}
               hasShield={hasShield}
               isInvincible={isInvincible}
-              isZh={isZh}
+              distance={distance}
             />
             <GameHUD
               distance={distance}
@@ -142,7 +142,7 @@ export default function RunningMomentGame() {
               coins={coins}
               hasShield={hasShield}
               isInvincible={isInvincible}
-              isZh={isZh}
+              distance={distance}
             />
             <GameHUD
               distance={distance}
@@ -174,7 +174,7 @@ export default function RunningMomentGame() {
               coins={[]}
               hasShield={false}
               isInvincible={false}
-              isZh={isZh}
+              distance={distance}
             />
             <GameOver
               distance={distance}
