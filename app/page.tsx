@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, BookOpen } from "lucide-react";
+import { Gamepad2, BookOpen, BookOpenText } from "lucide-react";
 import { PricingSection } from "@/components/pricing-section";
 
 export default function Home() {
@@ -38,6 +38,12 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4 w-full justify-center"
             >
+              <Link href="/games/running-game/runtime">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
+                  <Gamepad2 className="w-4 h-4" />
+                  Game Center
+                </Button>
+              </Link>
               <Link href="/reading-room?mkt=cn">
                 <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <BookOpen className="w-4 h-4" />
@@ -45,8 +51,8 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/reading-room">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
-                  <BookOpen className="w-4 h-4" />
+                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2 bg-purple-700 hover:bg-purple-600 dark:hover:bg-purple-800">
+                  <BookOpenText className="w-4 h-4" />
                   Reading Room
                 </Button>
               </Link>
