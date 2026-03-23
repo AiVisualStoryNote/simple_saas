@@ -1,8 +1,23 @@
+export interface CharacterSprite {
+  src: string;
+  startXPercent: number;
+  startYPercent: number;
+  endXPercent: number;
+  endYPercent: number;
+  rowEndXPercent: number;
+  frameStepXPercent: number;
+  frameStepYPercent: number;
+  frameDurationMs: number;
+  renderWidth: number;
+  renderHeight: number;
+}
+
 export interface Character {
   id: string;
   name: string;
   nameCn: string;
   icon: string;
+  sprite?: CharacterSprite;
   hp: number;
   speed: number;
   unlockCost: number;

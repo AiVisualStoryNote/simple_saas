@@ -1,8 +1,9 @@
-import { PlayerProgress as IPlayerProgress, ItemType } from "../types/index";
+import { CharacterSprite, PlayerProgress as IPlayerProgress, ItemType } from "../types/index";
 
 export type PlayerProgress = IPlayerProgress;
 
 const STORAGE_KEY = "running_moment_progress";
+const SPRITE_DEBUG_STORAGE_KEY = "running_moment_sprite_debug";
 
 const DEFAULT_PROGRESS: PlayerProgress = {
   highScore: 0,
@@ -95,4 +96,33 @@ export function useItem(itemType: ItemType): boolean {
     return true;
   }
   return false;
+}
+
+export function getSpriteDebugOverrides(): Record<string, CharacterSprite> {
+  if (typeof window === "undefined") return {};
+
+  const stored = localStorage.getItem(SPRITE_DEBUG_STORAGE_KEY);
+  if (!stored) return {};
+
+  try {
+    return JSON.parse(stored) as Record<string, CharacterSprite>;
+  } catch {
+    return {};
+  }
+}
+
+export function saveSpriteDebugOverride(characterId: string, sprite: CharacterSprite): void {
+  if (typeof window === "undefined") return;
+
+  const overrides = getSpriteDebugOverrides();
+  overrides[characterId] = sprite;
+  localStorage.setItem(SPRITE_DEBUG_STORAGE_KEY, JSON.stringify(overrides));
+}
+
+export function clearSpriteDebugOverride(characterId: string): void {
+  if (typeof window === "undefined") return;
+
+  const overrides = getSpriteDebugOverrides();
+  delete overrides[characterId];
+  localStorage.setItem(SPRITE_DEBUG_STORAGE_KEY, JSON.stringify(overrides));
 }

@@ -9,8 +9,11 @@ import { GameHUD } from "./components/GameHUD";
 import { GameOver } from "./components/GameOver";
 import { Shop } from "./components/Shop";
 import { PauseMenu } from "./components/PauseMenu";
-import { getProgress } from "./utils/storage";
-import { GROUND_Y } from "./constants";
+import { SpriteDebugPanel } from "./components/SpriteDebugPanel";
+import { clearSpriteDebugOverride, getProgress, getSpriteDebugOverrides, saveSpriteDebugOverride } from "./utils/storage";
+import { CHARACTERS, GROUND_Y } from "./constants";
+import { CharacterSprite } from "./types/index";
+import { clampSpriteConfig } from "./utils/sprite";
 
 export default function RunningMomentGame() {
   const searchParams = useSearchParams();
@@ -20,6 +23,8 @@ export default function RunningMomentGame() {
   const [selectedCharacterId, setSelectedCharacterId] = useState("runner");
   const [showShop, setShowShop] = useState(false);
   const [highScore, setHighScore] = useState(0);
+  const [spriteOverrides, setSpriteOverrides] = useState<Record<string, CharacterSprite>>({});
+  const [showDebugOverlay, setShowDebugOverlay] = useState(false);
 
   const handleGameOver = useCallback((distance: number, coins: number, isNewRecord: boolean) => {
     const progress = getProgress();
@@ -56,6 +61,7 @@ export default function RunningMomentGame() {
   useEffect(() => {
     const progress = getProgress();
     setHighScore(progress.highScore);
+    setSpriteOverrides(getSpriteDebugOverrides());
   }, []);
 
   useEffect(() => {
@@ -85,8 +91,42 @@ export default function RunningMomentGame() {
     }
   };
 
+  const activeSpriteOverride = spriteOverrides[character.id] ?? null;
+  const defaultSprite = CHARACTERS.find((item) => item.id === character.id)?.sprite ?? null;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-200 to-green-200 flex items-center justify-center p-4">
+      <SpriteDebugPanel
+        character={character}
+        sprite={activeSpriteOverride ?? character.sprite ?? null}
+        defaultSprite={defaultSprite}
+        isZh={isZh}
+        showDebugOverlay={showDebugOverlay}
+        onChange={(sprite) => {
+          setSpriteOverrides((current) => ({
+            ...current,
+            [character.id]: clampSpriteConfig(sprite),
+          }));
+        }}
+        onSave={(sprite) => {
+          const safeSprite = clampSpriteConfig(sprite);
+          saveSpriteDebugOverride(character.id, safeSprite);
+          setSpriteOverrides((current) => ({
+            ...current,
+            [character.id]: safeSprite,
+          }));
+        }}
+        onReset={() => {
+          clearSpriteDebugOverride(character.id);
+          setSpriteOverrides((current) => {
+            const next = { ...current };
+            delete next[character.id];
+            return next;
+          });
+        }}
+        onToggleDebugOverlay={setShowDebugOverlay}
+      />
+
       <div className="relative w-[800px] max-w-full">
         {gameState === "menu" && (
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl">
@@ -122,6 +162,9 @@ export default function RunningMomentGame() {
               hasShield={hasShield}
               isInvincible={isInvincible}
               distance={distance}
+              gameState={gameState}
+              spriteOverride={activeSpriteOverride}
+              showDebugOverlay={showDebugOverlay}
             />
             <GameHUD
               distance={distance}
@@ -148,6 +191,9 @@ export default function RunningMomentGame() {
               hasShield={hasShield}
               isInvincible={isInvincible}
               distance={distance}
+              gameState={gameState}
+              spriteOverride={activeSpriteOverride}
+              showDebugOverlay={showDebugOverlay}
             />
             <GameHUD
               distance={distance}
@@ -183,6 +229,9 @@ export default function RunningMomentGame() {
               hasShield={false}
               isInvincible={false}
               distance={distance}
+              gameState={gameState}
+              spriteOverride={activeSpriteOverride}
+              showDebugOverlay={showDebugOverlay}
             />
             <GameOver
               distance={distance}

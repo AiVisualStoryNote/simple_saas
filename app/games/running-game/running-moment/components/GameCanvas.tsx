@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Obstacle, Item, Coin, Character } from "../types/index";
+import { Obstacle, Item, Coin, Character, CharacterSprite, GameState } from "../types/index";
 import { OBSTACLE_CONFIG, ITEM_CONFIG } from "../constants";
+import { clampSpriteConfig, getSpriteFrameSource, getSpriteRenderSize, resolveCharacterSprite } from "../utils/sprite";
 
 interface GameCanvasProps {
   playerX: number;
@@ -14,6 +15,9 @@ interface GameCanvasProps {
   hasShield: boolean;
   isInvincible: boolean;
   distance: number;
+  gameState: GameState;
+  spriteOverride?: CharacterSprite | null;
+  showDebugOverlay?: boolean;
 }
 
 export function GameCanvas({
@@ -26,18 +30,108 @@ export function GameCanvas({
   hasShield,
   isInvincible,
   distance,
+  gameState,
+  spriteOverride,
+  showDebugOverlay = false,
 }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const distanceRef = useRef(distance);
+  const playerYRef = useRef(playerY);
+  const characterRef = useRef(character);
+  const obstaclesRef = useRef(obstacles);
+  const itemsRef = useRef(items);
+  const coinsRef = useRef(coins);
+  const hasShieldRef = useRef(hasShield);
+  const isInvincibleRef = useRef(isInvincible);
+  const gameStateRef = useRef(gameState);
+  const previousGameStateRef = useRef<GameState>(gameState);
   const cloudsRef = useRef<Array<{ x: number; y: number; speed: number; scale: number }>>([]);
   const mountainsRef = useRef<Array<{ x: number; layer: number }>>([]);
   const elapsedTimeRef = useRef(0);
   const lastFrameTimeRef = useRef<number | null>(null);
+  const playerAnimationTimeRef = useRef(0);
+  const playerSpriteRef = useRef<HTMLImageElement | null>(null);
+  const isSpriteReadyRef = useRef(false);
+  const spriteOverrideRef = useRef<CharacterSprite | null>(spriteOverride ?? null);
 
   useEffect(() => {
     distanceRef.current = distance;
   }, [distance]);
+
+  useEffect(() => {
+    playerYRef.current = playerY;
+  }, [playerY]);
+
+  useEffect(() => {
+    characterRef.current = character;
+  }, [character]);
+
+  useEffect(() => {
+    spriteOverrideRef.current = spriteOverride ?? null;
+  }, [spriteOverride]);
+
+  useEffect(() => {
+    obstaclesRef.current = obstacles;
+  }, [obstacles]);
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  useEffect(() => {
+    coinsRef.current = coins;
+  }, [coins]);
+
+  useEffect(() => {
+    hasShieldRef.current = hasShield;
+  }, [hasShield]);
+
+  useEffect(() => {
+    isInvincibleRef.current = isInvincible;
+  }, [isInvincible]);
+
+  useEffect(() => {
+    const previousGameState = previousGameStateRef.current;
+    gameStateRef.current = gameState;
+
+    if (gameState === "playing" && (previousGameState === "menu" || previousGameState === "gameover")) {
+      playerAnimationTimeRef.current = 0;
+      elapsedTimeRef.current = 0;
+      lastFrameTimeRef.current = null;
+    }
+
+    previousGameStateRef.current = gameState;
+  }, [gameState]);
+
+  useEffect(() => {
+    const sprite = resolveCharacterSprite(character, spriteOverride ?? null);
+    if (!sprite) {
+      playerSpriteRef.current = null;
+      isSpriteReadyRef.current = false;
+      return;
+    }
+
+    const image = new Image();
+    let isActive = true;
+
+    isSpriteReadyRef.current = false;
+    image.onload = () => {
+      if (!isActive) return;
+      playerSpriteRef.current = image;
+      isSpriteReadyRef.current = true;
+    };
+    image.onerror = () => {
+      if (!isActive) return;
+      playerSpriteRef.current = null;
+      isSpriteReadyRef.current = false;
+    };
+    image.src = sprite.src;
+
+    return () => {
+      isActive = false;
+    };
+  }, [character, spriteOverride]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -118,7 +212,7 @@ export function GameCanvas({
     };
 
     const drawObstacles = () => {
-      obstacles.forEach((obs) => {
+      obstaclesRef.current.forEach((obs) => {
         const config = OBSTACLE_CONFIG[obs.type];
         ctx.font = "30px Arial";
         ctx.textAlign = "center";
@@ -127,7 +221,7 @@ export function GameCanvas({
     };
 
     const drawItems = () => {
-      items.forEach((item) => {
+      itemsRef.current.forEach((item) => {
         if (item.collected) return;
         const config = ITEM_CONFIG[item.type];
         
@@ -138,7 +232,7 @@ export function GameCanvas({
     };
 
     const drawCoins = () => {
-      coins.forEach((coin) => {
+      coinsRef.current.forEach((coin) => {
         if (coin.collected) return;
         
         ctx.font = "20px Arial";
@@ -148,21 +242,105 @@ export function GameCanvas({
     };
 
     const drawPlayer = () => {
-      ctx.font = "40px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "bottom";
-      
-      let playerEmoji = character.icon;
-      if (isInvincible) {
+      const currentCharacter = characterRef.current;
+      const sprite = resolveCharacterSprite(currentCharacter, spriteOverrideRef.current);
+      const spriteImage = playerSpriteRef.current;
+      const baselineY = playerYRef.current;
+      let playerBounds = {
+        x: playerX - 20,
+        y: baselineY - 40,
+        width: 40,
+        height: 40,
+      };
+      let drawBox: { x: number; y: number; width: number; height: number } | null = null;
+
+      if (isInvincibleRef.current) {
         ctx.globalAlpha = 0.6 + Math.sin(Date.now() * 0.01) * 0.4;
       }
-      
-      ctx.fillText(playerEmoji, playerX, playerY);
+
+      if (sprite && spriteImage && isSpriteReadyRef.current) {
+        const safeSprite = clampSpriteConfig(sprite);
+        const frameIndex = Math.floor(playerAnimationTimeRef.current / safeSprite.frameDurationMs);
+        const frame = getSpriteFrameSource(
+          safeSprite,
+          frameIndex,
+          spriteImage.naturalWidth,
+          spriteImage.naturalHeight,
+        );
+        const renderSize = getSpriteRenderSize(safeSprite);
+        const targetHeight = renderSize.height;
+        const targetWidth = renderSize.width;
+        const drawX = playerX - targetWidth / 2;
+        const drawY = baselineY - targetHeight;
+
+        ctx.drawImage(
+          spriteImage,
+          frame.sourceX,
+          frame.sourceY,
+          frame.sourceWidth,
+          frame.sourceHeight,
+          drawX,
+          drawY,
+          targetWidth,
+          targetHeight,
+        );
+
+        playerBounds = {
+          x: drawX,
+          y: drawY,
+          width: targetWidth,
+          height: targetHeight,
+        };
+        drawBox = playerBounds;
+      } else {
+        ctx.font = "40px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(currentCharacter.icon, playerX, baselineY);
+      }
+
       ctx.globalAlpha = 1;
 
-      if (hasShield) {
+      if (showDebugOverlay) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(220, 38, 38, 0.95)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, baselineY);
+        ctx.lineTo(CANVAS_WIDTH, baselineY);
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(37, 99, 235, 0.9)";
+        ctx.setLineDash([6, 4]);
+        ctx.strokeRect(playerBounds.x, playerBounds.y, playerBounds.width, playerBounds.height);
+        ctx.beginPath();
+        ctx.moveTo(playerX, 0);
+        ctx.lineTo(playerX, CANVAS_HEIGHT);
+        ctx.stroke();
+
+        if (drawBox) {
+          ctx.strokeStyle = "rgba(16, 185, 129, 0.95)";
+          ctx.setLineDash([]);
+          ctx.strokeRect(drawBox.x, drawBox.y, drawBox.width, drawBox.height);
+        }
+
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.fillRect(14, 14, 216, 64);
+        ctx.fillStyle = "#fff";
+        ctx.font = "12px monospace";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(`baselineY: ${Math.round(baselineY)}`, 24, 26);
+        ctx.fillText(`bounds: ${Math.round(playerBounds.width)} x ${Math.round(playerBounds.height)}`, 24, 44);
+        ctx.fillText(`centerX: ${Math.round(playerX)}`, 24, 62);
+        ctx.restore();
+      }
+
+      if (hasShieldRef.current) {
         ctx.font = "30px Arial";
-        ctx.fillText("🛡️", playerX + 25, playerY - 20);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("🛡️", playerBounds.x + playerBounds.width - 2, playerBounds.y + 10);
       }
     };
 
@@ -172,7 +350,12 @@ export function GameCanvas({
       }
       const delta = timestamp - lastFrameTimeRef.current;
       lastFrameTimeRef.current = timestamp;
-      elapsedTimeRef.current += Math.min(delta, 32);
+      const clampedDelta = Math.min(delta, 32);
+
+      if (gameStateRef.current === "playing") {
+        elapsedTimeRef.current += clampedDelta;
+        playerAnimationTimeRef.current += clampedDelta;
+      }
 
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       
@@ -195,7 +378,7 @@ export function GameCanvas({
       }
       lastFrameTimeRef.current = null;
     };
-  }, [character, obstacles, items, coins, hasShield, isInvincible]);
+  }, [playerX]);
 
   return (
     <div className="relative">

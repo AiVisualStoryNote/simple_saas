@@ -1,0 +1,11 @@
+Place the uploaded runner sprite sheet at:
+/Users/microl/Desktop/projectsWorkspace/simple_saas/public/games/running-game/running-moment/runner-sprite.png
+
+Expected sheet layout:
+- 8 columns
+- 36 frames used
+- frame size: 174 x 161
+- character crop inside each frame: 117 x 161
+- horizontal crop offset: 29 px
+
+The game canvas already loads this exact path and will fall back to the emoji runner if the file is missing or fails to load.
