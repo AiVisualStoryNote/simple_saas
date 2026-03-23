@@ -38,7 +38,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4 w-full justify-center"
             >
-              <Link href="/games/running-game/runtime">
+              <Link href="/games">
                 <Button size="lg" variant="secondary" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
                   <Gamepad2 className="w-4 h-4" />
                   Game Center
