@@ -41,8 +41,8 @@ export function clampSpriteConfig(sprite: CharacterSprite): CharacterSprite {
 export function getSpriteSheetMetrics(sprite: CharacterSprite) {
   const frameWidthPercent = Math.max(0.1, sprite.endXPercent - sprite.startXPercent);
   const frameHeightPercent = Math.max(0.1, sprite.endYPercent - sprite.startYPercent);
-  const columns = Math.max(1, Math.floor((sprite.rowEndXPercent - sprite.startXPercent) / sprite.frameStepXPercent) + 1);
-  const rows = Math.max(1, Math.floor((100 - sprite.endYPercent) / sprite.frameStepYPercent) + 1);
+  const columns = Math.max(1, Math.ceil(frameWidthPercent / sprite.frameStepXPercent - 0.001));
+  const rows = Math.max(1, Math.ceil(frameHeightPercent / sprite.frameStepYPercent - 0.001));
   const frameCount = Math.max(1, columns * rows);
 
   return {

@@ -20,7 +20,7 @@ export const CHARACTERS: Character[] = [
       renderHeight: 52,
     },
     hp: 3,
-    speed: 1.0,
+    speed: 10.0,
     unlockCost: 0,
     isDefault: true,
     ability: "none",
