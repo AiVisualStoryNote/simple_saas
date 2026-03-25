@@ -7,7 +7,8 @@ import { gameConfig as aircraftWarConfig } from "@/app/games/aircraft-war/game-c
 import { gameConfig as minesweeperConfig } from "@/app/games/minesweeper/game-config";
 import { gameConfig as ticTacToeConfig } from "@/app/games/tic-tac-toe/game-config";
 import { gameConfig as runShootConfig } from "@/app/games/run-shoot/game-config";
-import { GameConfig } from "@/app/games/run-shoot/game-config";
+import { gameConfig as colorSortConfig } from "@/app/games/color-sort/game-config";
+import { GameConfig } from "@/app/games/color-sort/game-config";
 
 const games: GameConfig[] = [
   runningMomentConfig,
@@ -19,6 +20,7 @@ const games: GameConfig[] = [
   minesweeperConfig,
   ticTacToeConfig,
   runShootConfig,
+  colorSortConfig,
 ];
 
 export function getAllGames(): GameConfig[] {
