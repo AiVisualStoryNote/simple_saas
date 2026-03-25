@@ -65,12 +65,15 @@ export default function ReadingRoom() {
   }, []);
 
   const fetchNovels = useCallback(async () => {
-    if (categories.length === 0) {
-      return;
-    }
-
     setLoading(true);
     setError(null);
+
+    if (categories.length === 0) {
+      setNovels([]);
+      setTotal(0);
+      setLoading(false);
+      return;
+    }
 
     const skip = (page - 1) * PAGE_SIZE;
     const params = new URLSearchParams({
