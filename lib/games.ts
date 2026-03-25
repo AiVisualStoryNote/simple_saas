@@ -4,7 +4,8 @@ import { gameConfig as snakeConfig } from "@/app/games/snake/game-config";
 import { gameConfig as flappyBirdConfig } from "@/app/games/flappy-bird/game-config";
 import { gameConfig as game2048Config } from "@/app/games/game-2048/game-config";
 import { gameConfig as aircraftWarConfig } from "@/app/games/aircraft-war/game-config";
-import { GameConfig } from "@/app/games/aircraft-war/game-config";
+import { gameConfig as minesweeperConfig } from "@/app/games/minesweeper/game-config";
+import { GameConfig } from "@/app/games/minesweeper/game-config";
 
 const games: GameConfig[] = [
   runningMomentConfig,
@@ -13,6 +14,7 @@ const games: GameConfig[] = [
   flappyBirdConfig,
   game2048Config,
   aircraftWarConfig,
+  minesweeperConfig,
 ];
 
 export function getAllGames(): GameConfig[] {
