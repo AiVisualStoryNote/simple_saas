@@ -8,24 +8,24 @@ export interface GameConfig {
   icon: string;
   coverImage: string;
   color: string;
-  difficulty: string;
+  difficulty: 'easy' | 'medium' | 'hard';
   duration: string;
   minPlayers: number;
-  maxPlayers: 1;
+  maxPlayers: number;
 }
 
 export const gameConfig: GameConfig = {
   id: "flappy-bird",
   name: "Flappy Bird",
-  nameCn: "像素小鸟",
-  description: "The famous flappy bird game! Tap to flap your wings and avoid pipes!",
-  descriptionCn: "著名的像素小鸟游戏！点击/空格煽动翅膀，躲避管道！",
+  nameCn: "Flappy Bird",
+  description: "Tap to flap and avoid the pipes!",
+  descriptionCn: "点击屏幕让小鸟飞翔，躲避管道！",
   route: "/games/flappy-bird",
-  icon: "🐤",
+  icon: "🐦",
   coverImage: "",
-  color: "#FADC5D",
+  color: "#F4D03F",
   difficulty: "medium",
-  duration: "1-5 min",
+  duration: "1-3 min",
   minPlayers: 1,
   maxPlayers: 1,
 };

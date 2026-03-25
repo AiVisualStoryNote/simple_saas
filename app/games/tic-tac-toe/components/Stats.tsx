@@ -1,6 +1,6 @@
 "use client";
 
-import { GameStats } from "../../constants";
+import { GameStats } from "../types";
 
 interface StatsProps {
   stats: GameStats;

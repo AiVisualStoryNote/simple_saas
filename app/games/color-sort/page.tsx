@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameBoard } from "../components/GameBoard";
-import { StatusBar } from "../components/StatusBar";
-import { WinOverlay } from "../components/WinOverlay";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameBoard } from "./components/GameBoard";
+import { StatusBar } from "./components/StatusBar";
+import { WinOverlay } from "./components/WinOverlay";
 
 export default function ColorSortGame() {
   const searchParams = useSearchParams();

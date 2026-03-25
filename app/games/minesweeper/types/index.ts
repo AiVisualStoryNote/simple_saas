@@ -18,7 +18,14 @@ export interface GameConfig {
 }
 
 export const DIFFICULTY = {
-  easy: { rows: 9, cols: 9, mines: 10 },
-  medium: { rows: 16, cols: 16, mines: 40 },
-  hard: { rows: 16, cols: 30, mines: 99 },
+  easy: { name: "easy" as const, rows: 9, cols: 9, mines: 10 },
+  medium: { name: "medium" as const, rows: 16, cols: 16, mines: 40 },
+  hard: { name: "hard" as const, rows: 16, cols: 30, mines: 99 },
 };
+
+export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+
+export interface Difficulty {
+  name: DifficultyLevel;
+  config: GameConfig;
+}

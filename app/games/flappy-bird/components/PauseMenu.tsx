@@ -1,5 +1,7 @@
 "use client";
 
+import { Play, Home, RefreshCw } from "lucide-react";
+
 interface PauseMenuProps {
   onResume: () => void;
   onRestart: () => void;
@@ -8,27 +10,35 @@ interface PauseMenuProps {
 
 export function PauseMenu({ onResume, onRestart, onMenu }: PauseMenuProps) {
   return (
-    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center rounded-xl">
-      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl w-80">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">⏸️ 暂停</h2>
-        <div className="space-y-3">
+    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+      <div className="bg-gradient-to-b from-blue-600 to-blue-800 p-8 rounded-3xl text-center shadow-2xl">
+        <h2 className="text-3xl font-bold text-white mb-6">
+          Paused
+        </h2>
+
+        <div className="space-y-4">
           <button
             onClick={onResume}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-green-500 hover:bg-green-400 text-white font-bold transition-colors"
           >
-            ▶️ 继续游戏
+            <Play className="h-5 w-5" />
+            Resume
           </button>
+          
           <button
             onClick={onRestart}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold transition-colors"
           >
-            🔄 重新开始
+            <RefreshCw className="h-5 w-5" />
+            Restart
           </button>
+          
           <button
             onClick={onMenu}
-            className="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-white/20 hover:bg-white/30 text-white font-medium transition-colors"
           >
-            🏠 返回菜单
+            <Home className="h-5 w-5" />
+            Menu
           </button>
         </div>
       </div>

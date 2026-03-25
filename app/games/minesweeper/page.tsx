@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameGrid } from "../components/Grid";
-import { StatusBar } from "../components/StatusBar";
-import { GameResult } from "../components/GameResult";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameGrid } from "./components/Grid";
+import { StatusBar } from "./components/StatusBar";
+import { GameResult } from "./components/GameResult";
 
 export default function MinesweeperGame() {
   const searchParams = useSearchParams();

@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { Direction } from "../types";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameGrid } from "../components/Grid";
-import { ScoreBoard } from "../components/ScoreBoard";
-import { GameOverOverlay } from "../components/GameOverOverlay";
-import { BG_COLOR } from "../constants";
-import { getBestScore } from "../utils/storage";
+import { Direction } from "./types";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameGrid } from "./components/Grid";
+import { ScoreBoard } from "./components/ScoreBoard";
+import { GameOverOverlay } from "./components/GameOverOverlay";
+import { BG_COLOR } from "./constants";
+import { getBestScore } from "./utils/storage";
 
 export default function Game2048() {
   const searchParams = useSearchParams();

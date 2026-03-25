@@ -1,7 +1,6 @@
 "use client";
 
-import { CellValue } from "../types";
-import { GameStats } from "../../constants";
+import { CellValue, GameStats } from "../types";
 
 interface GameResultProps {
   winner: CellValue;

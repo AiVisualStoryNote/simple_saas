@@ -1,43 +1,32 @@
 "use client";
 
-import { Trophy, RefreshCw, Home, Medal } from "lucide-react";
+import { Trophy, RefreshCw, Home } from "lucide-react";
 
 interface GameOverProps {
   score: number;
   highScore: number;
-  isNewRecord: boolean;
+  isWin: boolean;
   onRestart: () => void;
   onMenu: () => void;
 }
 
-export function GameOver({ score, highScore, isNewRecord, onRestart, onMenu }: GameOverProps) {
+export function GameOver({ score, highScore, isWin, onRestart, onMenu }: GameOverProps) {
   return (
     <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-      <div className="bg-gradient-to-b from-yellow-600 to-yellow-800 p-8 rounded-3xl text-center max-w-md w-full mx-4 shadow-2xl">
+      <div className="bg-gradient-to-b from-orange-600 to-orange-800 p-8 rounded-3xl text-center max-w-md w-full mx-4 shadow-2xl">
         <div className="flex justify-center mb-4">
-          {isNewRecord ? (
-            <Trophy className="h-20 w-20 text-yellow-300 animate-bounce" />
-          ) : (
-            <Medal className="h-20 w-20 text-gray-300" />
-          )}
+          <Trophy className={`h-20 w-20 ${isWin ? "text-yellow-300 animate-bounce" : "text-gray-300"}`} />
         </div>
 
         <h2 className="text-3xl font-bold text-white mb-2">
-          {isNewRecord ? "New Record!" : "Game Over"}
+          {isWin ? "You Win!" : "Game Over"}
         </h2>
-
-        {isNewRecord && (
-          <p className="text-yellow-200 font-medium mb-4">
-            Congratulations!
-          </p>
-        )}
 
         <div className="bg-white/10 rounded-2xl p-6 mb-6 space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-white/80">Score</span>
             <span className="text-3xl font-bold text-white">{score}</span>
           </div>
-
           <div className="border-t border-white/20 pt-4">
             <div className="flex justify-between items-center">
               <span className="text-white/80">Best</span>
@@ -54,13 +43,12 @@ export function GameOver({ score, highScore, isNewRecord, onRestart, onMenu }: G
             <Home className="h-5 w-5" />
             Menu
           </button>
-          
           <button
             onClick={onRestart}
             className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold transition-colors"
           >
             <RefreshCw className="h-5 w-5" />
-            Retry
+            Try Again
           </button>
         </div>
       </div>

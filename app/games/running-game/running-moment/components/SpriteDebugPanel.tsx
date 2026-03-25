@@ -196,7 +196,7 @@ export function SpriteDebugPanel({
 
       {isOpen && (
         <div className="flex h-[calc(100vh-5.5rem)] max-h-[calc(100vh-5.5rem)] flex-col overflow-hidden rounded-3xl border border-white/60 bg-white/95 p-4 shadow-2xl backdrop-blur">
-          <div className="mb-4 flex items-start justify-between gap-3">
+          <div className="mb-3 flex items-start justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-slate-900">
                 {isZh ? "角色帧图调试" : "Sprite Tuning"}
@@ -230,19 +230,8 @@ export function SpriteDebugPanel({
             </div>
           </div>
 
-          <div className="shrink-0 space-y-3">
+          <div className="shrink-0 space-y-2">
             <SpritePreviewCanvas sprite={safeSprite} frameIndex={activeFrame} isPlaying={isPlaying} />
-
-            <div className="rounded-2xl bg-slate-100 p-3">
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                SRC
-              </label>
-              <input
-                value={safeSprite.src}
-                onChange={(e) => onChange({ ...safeSprite, src: e.target.value })}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
-              />
-            </div>
 
             <div className="rounded-2xl bg-slate-100 p-3">
               <div className="mb-3 flex items-center justify-between">
@@ -276,8 +265,19 @@ export function SpriteDebugPanel({
             </div>
           </div>
 
-          <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="mt-3 min-h-0 flex-1 overflow-y-auto pr-1">
             <div className="space-y-4">
+              <div className="rounded-2xl bg-slate-100 p-3">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  SRC
+                </label>
+                <input
+                  value={safeSprite.src}
+                  onChange={(e) => onChange({ ...safeSprite, src: e.target.value })}
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                />
+              </div>
+
               {fieldGroups.map((group) => (
                 <div key={group.titleEn} className="rounded-2xl border border-slate-200 bg-white p-3">
                   <div className="mb-3">

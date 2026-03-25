@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { Board } from "../components/Board";
-import { Stats } from "../components/Stats";
-import { GameResult } from "../components/GameResult";
-import { CellValue } from "../types";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { Board } from "./components/Board";
+import { Stats } from "./components/Stats";
+import { GameResult } from "./components/GameResult";
+import { CellValue } from "./types";
 
 export default function TicTacToeGame() {
   const searchParams = useSearchParams();

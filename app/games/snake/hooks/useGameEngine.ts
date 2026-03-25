@@ -20,11 +20,12 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
   const [speed, setSpeed] = useState(GAME_CONFIG.initialSpeed);
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
+  const lastTimeRef = useRef<number>(0);
 
   // 生成随机食物
   const generateFood = useCallback((currentSnake: Position[]): Position => {
-    let newFood;
-    let onSnake;
+    let newFood: Position;
+    let onSnake: boolean;
     do {
       newFood = {
         x: Math.floor(Math.random() * GAME_CONFIG.cellCount),
@@ -162,7 +163,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     if (gameLoopRef.current) {
       gameLoopRef.current = setTimeout(gameLoop, speed);
     }
-  }, [gameState, nextDirection, direction, food, score, highColor, speed, highScore, generateFood, onGameOver]);
+  }, [gameState, nextDirection, direction, food, score, speed, highScore, generateFood, onGameOver]);
 
   // 启动游戏循环
   useEffect(() => {

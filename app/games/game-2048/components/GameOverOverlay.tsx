@@ -1,6 +1,6 @@
 "use client";
 
-import { GameState } from "../../types";
+import { GameState } from "../types";
 
 interface GameOverOverlayProps {
   gameState: GameState;
@@ -19,13 +19,13 @@ export function GameOverOverlay({
   onRestart,
   onContinue,
 }: GameOverOverlayProps) {
-  if (gameState !== "win" && gameState !== "gameover") return null;
+  if (gameState !== "won" && gameState !== "gameover") return null;
 
   return (
     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center rounded-xl">
       <div className="bg-white/95 p-8 rounded-2xl shadow-2xl w-80 text-center">
         <h2 className="text-3xl font-bold mb-2">
-          {gameState === "win" ? "🎉 恭喜！" : "游戏结束"}
+          {gameState === "won" ? "🎉 恭喜！" : "游戏结束"}
         </h2>
         {isNewBest && (
           <div className="text-yellow-600 font-bold text-lg mb-4 animate-bounce">
@@ -43,7 +43,7 @@ export function GameOverOverlay({
           </div>
         </div>
         <div className="space-y-3">
-          {gameState === "win" && (
+          {gameState === "won" && (
             <button
               onClick={onContinue}
               className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"

@@ -1,20 +1,22 @@
-export type GameState = "menu" | "playing" | "paused" | "gameover";
+export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export type GameStatus = 'idle' | 'playing' | 'paused' | 'gameover';
+
+export type GameState = 'idle' | 'playing' | 'paused' | 'gameover';
+
+export interface Bird {
+  x: number;
+  y: number;
+  velocity: number;
+}
 
 export interface Pipe {
   x: number;
-  topHeight: number;
+  gapY: number;
   passed: boolean;
-}
-
-export interface GameConfig {
-  canvasWidth: number;
-  canvasHeight: number;
-  birdX: number;
-  birdRadius: number;
-  gravity: number;
-  jumpForce: number;
-  pipeWidth: number;
-  pipeGap: number;
-  pipeSpeed: number;
-  pipeSpawnInterval: number;
 }

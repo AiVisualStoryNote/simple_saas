@@ -5,9 +5,9 @@ let nextId = 0;
 
 export function createEmptyGrid(): Grid {
   const grid: Grid = [];
-  for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
+  for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
     grid[row] = [];
-    for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+    for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
       grid[row][col] = null;
     }
   }
@@ -26,8 +26,8 @@ export function createCell(row: number, col: number, value: number): Cell {
 
 export function addRandomCell(grid: Grid): Grid {
   const emptyCells: { row: number; col: number }[] = [];
-  for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
-    for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+  for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
+    for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
       if (!grid[row][col]) {
         emptyCells.push({ row, col });
       }
@@ -51,11 +51,9 @@ export function initGame(): Grid {
 }
 
 function mergeRow(row: (Cell | null)[]): (Cell | null)[] {
-  // 移除空格
   let filled = row.filter(cell => cell !== null) as Cell[];
   if (filled.length === 0) return row;
 
-  // 合并相同相邻单元格
   for (let i = 0; i < filled.length - 1; i++) {
     if (filled[i].value === filled[i + 1].value) {
       filled[i] = { ...filled[i], value: filled[i].value * 2, merged: true };
@@ -63,12 +61,10 @@ function mergeRow(row: (Cell | null)[]): (Cell | null)[] {
     }
   }
 
-  // 再次移除空格
   filled = filled.filter(cell => cell !== null);
 
-  // 补空格
-  while (filled.length < GAME_CONFIG.gridSize) {
-    filled.push(null);
+  while (filled.length < GAME_CONFIG.GRID_SIZE) {
+    filled.push(null as unknown as Cell);
   }
 
   return filled;
@@ -76,9 +72,9 @@ function mergeRow(row: (Cell | null)[]): (Cell | null)[] {
 
 function transpose(grid: Grid): Grid {
   const newGrid: Grid = [];
-  for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+  for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
     newGrid[col] = [];
-    for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
+    for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
       newGrid[col][row] = grid[row][col];
     }
   }
@@ -93,7 +89,6 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
   let newGrid = grid.map(row => [...row]);
   let scoreGained = 0;
 
-  // 重置 merged 状态
   newGrid.forEach(row => {
     row.forEach(cell => {
       if (cell) cell.merged = false;
@@ -102,7 +97,7 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
 
   switch (direction) {
     case "left":
-      for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
+      for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
         const mergedRow = mergeRow(newGrid[row]);
         mergedRow.forEach((cell, col) => {
           if (cell) {
@@ -117,7 +112,7 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
 
     case "right":
       newGrid = reverse(newGrid);
-      for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
+      for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
         const mergedRow = mergeRow(newGrid[row]);
         mergedRow.forEach((cell, col) => {
           if (cell) {
@@ -141,7 +136,7 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
 
     case "up":
       newGrid = transpose(newGrid);
-      for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+      for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
         const mergedRow = mergeRow(newGrid[col]);
         mergedRow.forEach((cell, row) => {
           if (cell) {
@@ -166,7 +161,7 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
     case "down":
       newGrid = transpose(newGrid);
       newGrid = reverse(newGrid);
-      for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+      for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
         const mergedRow = mergeRow(newGrid[col]);
         mergedRow.forEach((cell, row) => {
           if (cell) {
@@ -190,7 +185,6 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
       break;
   }
 
-  // 检查是否有移动
   const moved = JSON.stringify(grid) !== JSON.stringify(newGrid);
 
   if (moved) {
@@ -201,20 +195,18 @@ export function move(grid: Grid, direction: Direction): { grid: Grid; moved: boo
 }
 
 export function isGameOver(grid: Grid): boolean {
-  // 还有空格
-  for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
-    for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+  for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
+    for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
       if (!grid[row][col]) return false;
     }
   }
 
-  // 还有相邻相同可以合并
-  for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
-    for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+  for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
+    for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
       const value = grid[row][col]?.value;
       if (value) {
-        if (row < GAME_CONFIG.gridSize - 1 && grid[row + 1][col]?.value === value) return false;
-        if (col < GAME_CONFIG.gridSize - 1 && grid[row][col + 1]?.value === value) return false;
+        if (row < GAME_CONFIG.GRID_SIZE - 1 && grid[row + 1][col]?.value === value) return false;
+        if (col < GAME_CONFIG.GRID_SIZE - 1 && grid[row][col + 1]?.value === value) return false;
       }
     }
   }
@@ -223,8 +215,8 @@ export function isGameOver(grid: Grid): boolean {
 }
 
 export function hasWon(grid: Grid): boolean {
-  for (let row = 0; row < GAME_CONFIG.gridSize; row++) {
-    for (let col = 0; col < GAME_CONFIG.gridSize; col++) {
+  for (let row = 0; row < GAME_CONFIG.GRID_SIZE; row++) {
+    for (let col = 0; col < GAME_CONFIG.GRID_SIZE; col++) {
       if (grid[row][col]?.value === 2048) return true;
     }
   }

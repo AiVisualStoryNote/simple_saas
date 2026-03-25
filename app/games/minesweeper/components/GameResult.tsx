@@ -1,6 +1,6 @@
 "use client";
 
-import { Difficulty } from "../../types";
+import { Difficulty } from "../types";
 
 interface GameResultProps {
   won: boolean;

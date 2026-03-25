@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameCanvas } from "../components/GameCanvas";
-import { GameHUD } from "../components/GameHUD";
-import { GameOver } from "../components/GameOver";
-import { PauseMenu } from "../components/PauseMenu";
-import { Direction } from "../types";
-import { getHighScore } from "../utils/storage";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameCanvas } from "./components/GameCanvas";
+import { GameHUD } from "./components/GameHUD";
+import { GameOver } from "./components/GameOver";
+import { PauseMenu } from "./components/PauseMenu";
+import { Direction } from "./types";
+import { getHighScore } from "./utils/storage";
 
 export default function SnakeGame() {
   const searchParams = useSearchParams();

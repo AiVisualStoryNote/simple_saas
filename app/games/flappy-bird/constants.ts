@@ -1,25 +1,18 @@
-import { GameConfig } from "./types";
-
-export const GAME_CONFIG: GameConfig = {
-  canvasWidth: 800,
-  canvasHeight: 600,
-  birdX: 150,
-  birdRadius: 18,
-  gravity: 0.5,
-  jumpForce: -10,
-  pipeWidth: 80,
-  pipeGap: 200,
-  pipeSpeed: 3,
-  pipeSpawnInterval: 1500,
+export const GAME_CONFIG = {
+  CANVAS_WIDTH: 400,
+  CANVAS_HEIGHT: 600,
+  BIRD_SIZE: 34,
+  GRAVITY: 0.5,
+  JUMP_FORCE: -8,
+  PIPE_WIDTH: 60,
+  PIPE_GAP: 180,
+  PIPE_SPEED: 3,
+  MIN_PIPE_INTERVAL: 1500,
+  MAX_PIPE_INTERVAL: 2500,
+  PIPE_SPAWN_CHANCE: 0.02,
 };
 
-export const COLORS = {
-  background: "linear-gradient(180deg, #71C5CF 0%, #87CEEB 100%)",
-  bird: "#FADC5D",
-  pipe: "#4CAF50",
-  pipeBorder: "#2E7D32",
-  ground: "#D4A574",
-  text: "#2C3E50",
-};
-
-export const STORAGE_KEY = "flappy-bird-high-score";
+export const BIRD_START_X = 80;
+export const BIRD_START_Y = 300;
+export const PIPE_SPAWN_X = 400;
+export const GROUND_HEIGHT = 80;

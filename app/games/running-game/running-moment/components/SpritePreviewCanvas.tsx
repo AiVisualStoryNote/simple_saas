@@ -66,7 +66,7 @@ export function SpritePreviewCanvas({ sprite, frameIndex, isPlaying }: SpritePre
     };
 
     const drawGuides = (renderWidth: number, renderHeight: number) => {
-      const baselineY = height - 30;
+      const baselineY = height - 16;
       const centerX = width / 2;
 
       ctx.strokeStyle = "rgba(220, 38, 38, 0.85)";
@@ -116,7 +116,7 @@ export function SpritePreviewCanvas({ sprite, frameIndex, isPlaying }: SpritePre
         imageRef.current.naturalWidth,
         imageRef.current.naturalHeight,
       );
-      const baselineY = height - 30;
+      const baselineY = height - 16;
       const drawX = width / 2 - renderWidth / 2;
       const drawY = baselineY - renderHeight;
 
@@ -133,11 +133,11 @@ export function SpritePreviewCanvas({ sprite, frameIndex, isPlaying }: SpritePre
       );
 
       ctx.fillStyle = "rgba(17, 24, 39, 0.8)";
-      ctx.fillRect(12, 12, 220, 54);
+      ctx.fillRect(10, 8, 180, 40);
       ctx.fillStyle = "#fff";
-      ctx.font = "12px monospace";
-      ctx.fillText(`frame ${frame.frameIndex + 1}/${metrics.frameCount}`, 20, 32);
-      ctx.fillText(`${isPlaying ? "playing" : "paused"}  ${safeSprite.frameDurationMs} ms`, 20, 50);
+      ctx.font = "11px monospace";
+      ctx.fillText(`frame ${frame.frameIndex + 1}/${metrics.frameCount}`, 18, 24);
+      ctx.fillText(`${isPlaying ? "play" : "pause"} ${safeSprite.frameDurationMs}ms`, 18, 38);
     };
 
     render();
@@ -157,8 +157,8 @@ export function SpritePreviewCanvas({ sprite, frameIndex, isPlaying }: SpritePre
     <canvas
       ref={canvasRef}
       width={520}
-      height={120}
-      className="h-[120px] w-full rounded-2xl border border-black/10 bg-white shadow-inner"
+      height={96}
+      className="h-[96px] w-full rounded-2xl border border-black/10 bg-white shadow-inner"
     />
   );
 }

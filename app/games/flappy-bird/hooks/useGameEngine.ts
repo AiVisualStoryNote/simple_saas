@@ -2,16 +2,16 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { GameState, Pipe } from "../types";
-import { GAME_CONFIG } from "../constants";
-import { getHighScore, saveHighScore } from "../utils/storage";
+import { GAME_CONFIG, BIRD_START_X, BIRD_START_Y } from "../constants";
+import { getHighScore, setHighScore as saveHighScore } from "../utils/storage";
 
 interface UseGameEngineProps {
   onGameOver: (score: number, isNewRecord: boolean) => void;
 }
 
 export function useGameEngine({ onGameOver }: UseGameEngineProps) {
-  const [gameState, setGameState] = useState<GameState>("menu");
-  const [birdY, setBirdY] = useState(GAME_CONFIG.canvasHeight / 2);
+  const [gameState, setGameState] = useState<GameState>("idle");
+  const [birdY, setBirdY] = useState(BIRD_START_Y);
   const [birdVelocity, setBirdVelocity] = useState(0);
   const [birdRotation, setBirdRotation] = useState(0);
   const [pipes, setPipes] = useState<Pipe[]>([]);
@@ -21,167 +21,171 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
   const animationRef = useRef<number | null>(null);
   const lastPipeTimeRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
+  const birdYRef = useRef(BIRD_START_Y);
+  const birdVelocityRef = useRef(0);
+  const pipesRef = useRef<Pipe[]>([]);
+  const scoreRef = useRef(0);
+  const gameStateRef = useRef<GameState>("idle");
+  const highScoreRef = useRef(0);
 
-  // 生成新管道
-  const generatePipe = useCallback(() => {
-    const minHeight = 80;
-    const maxHeight = GAME_CONFIG.canvasHeight - GAME_CONFIG.pipeGap - minHeight;
-    const topHeight = minHeight + Math.random() * (maxHeight - minHeight);
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
 
-    setPipes(prev => [
-      ...prev,
-      {
-        x: GAME_CONFIG.canvasWidth,
-        topHeight,
-        passed: false,
-      },
-    ]);
+  useEffect(() => {
+    setHighScore(getHighScore());
+    highScoreRef.current = getHighScore();
   }, []);
 
-  // 开始游戏
+  const generatePipe = useCallback(() => {
+    const { CANVAS_HEIGHT } = GAME_CONFIG;
+    const minHeight = 80;
+    const maxHeight = CANVAS_HEIGHT - GAME_CONFIG.PIPE_GAP - minHeight - 80;
+    const gapY = minHeight + Math.random() * (maxHeight - minHeight);
+
+    return {
+      x: GAME_CONFIG.CANVAS_WIDTH,
+      gapY,
+      passed: false,
+    };
+  }, []);
+
   const startGame = useCallback(() => {
-    setBirdY(GAME_CONFIG.canvasHeight / 2);
+    setBirdY(BIRD_START_Y);
     setBirdVelocity(0);
     setBirdRotation(0);
     setPipes([]);
     setScore(0);
-    setGameState("playing");
-    setHighScore(getHighScore());
+    scoreRef.current = 0;
+    birdYRef.current = BIRD_START_Y;
+    birdVelocityRef.current = 0;
+    pipesRef.current = [];
     lastPipeTimeRef.current = performance.now();
+    lastTimeRef.current = performance.now();
+    setGameState("playing");
   }, []);
 
-  // 跳跃
   const jump = useCallback(() => {
-    if (gameState !== "playing") return;
-    setBirdVelocity(GAME_CONFIG.jumpForce);
-  }, [gameState]);
+    if (gameStateRef.current !== "playing") return;
+    birdVelocityRef.current = GAME_CONFIG.JUMP_FORCE;
+    setBirdVelocity(GAME_CONFIG.JUMP_FORCE);
+  }, []);
 
-  // 暂停游戏
   const pauseGame = useCallback(() => {
     setGameState("paused");
   }, []);
 
-  // 继续游戏
   const resumeGame = useCallback(() => {
     setGameState("playing");
     lastTimeRef.current = performance.now();
     lastPipeTimeRef.current = performance.now();
-    animationRef.current = requestAnimationFrame(gameLoop);
+    animationRef.current = requestAnimationFrame(gameLoopRef.current);
   }, []);
 
-  // 返回菜单
   const goToMenu = useCallback(() => {
-    setGameState("menu");
+    setGameState("idle");
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     }
   }, []);
 
-  // 检查碰撞
-  const checkCollision = useCallback((): boolean => {
-    const birdLeft = GAME_CONFIG.birdX - GAME_CONFIG.birdRadius;
-    const birdRight = GAME_CONFIG.birdX + GAME_CONFIG.birdRadius;
-    const birdTop = birdY - GAME_CONFIG.birdRadius;
-    const birdBottom = birdY + GAME_CONFIG.birdRadius;
+  const checkCollision = useCallback((birdYPos: number): boolean => {
+    const { CANVAS_HEIGHT, BIRD_SIZE } = GAME_CONFIG;
+    const birdRadius = BIRD_SIZE / 2;
 
-    // 撞地面或天花板
-    if (birdBottom >= GAME_CONFIG.canvasHeight || birdTop <= 0) {
+    if (birdYPos + birdRadius >= CANVAS_HEIGHT || birdYPos - birdRadius <= 0) {
       return true;
     }
 
-    // 撞管道
-    for (const pipe of pipes) {
+    for (const pipe of pipesRef.current) {
+      const pipeLeft = pipe.x;
+      const pipeRight = pipe.x + GAME_CONFIG.PIPE_WIDTH;
+
       if (
-        birdRight >= pipe.x &&
-        birdLeft <= pipe.x + GAME_CONFIG.pipeWidth
+        BIRD_START_X + birdRadius >= pipeLeft &&
+        BIRD_START_X - birdRadius <= pipeRight
       ) {
-        // 撞上方管道或下方管道
-        if (birdTop <= pipe.topHeight || birdBottom >= pipe.topHeight + GAME_CONFIG.pipeGap) {
+        const gapTop = pipe.gapY - GAME_CONFIG.PIPE_GAP / 2;
+        const gapBottom = pipe.gapY + GAME_CONFIG.PIPE_GAP / 2;
+
+        if (birdYPos - birdRadius <= gapTop || birdYPos + birdRadius >= gapBottom) {
           return true;
         }
       }
     }
 
     return false;
-  }, [birdY, pipes]);
+  }, []);
 
-  // 游戏循环
-  const gameLoop = useCallback((timestamp: number) => {
-    if (gameState !== "playing") return;
+  const gameLoopRef = useRef<(timestamp: number) => void>((timestamp: number) => {
+    if (gameStateRef.current !== "playing") return;
 
     const deltaTime = timestamp - (lastTimeRef.current || timestamp);
     lastTimeRef.current = timestamp;
 
-    // 更新鸟的位置
-    setBirdY(prev => prev + birdVelocity);
-    setBirdVelocity(prev => prev + GAME_CONFIG.gravity);
-    setBirdRotation((birdVelocity / GAME_CONFIG.jumpForce) * 30);
+    birdVelocityRef.current += GAME_CONFIG.GRAVITY;
+    birdYRef.current += birdVelocityRef.current;
+    setBirdY(birdYRef.current);
+    setBirdVelocity(birdVelocityRef.current);
+    setBirdRotation((birdVelocityRef.current / GAME_CONFIG.JUMP_FORCE) * 30);
 
-    // 生成新管道
-    if (timestamp - lastPipeTimeRef.current >= GAME_CONFIG.pipeSpawnInterval) {
-      generatePipe();
-      lastPipeTimeRef.current = timestamp;
+    if (timestamp - lastPipeTimeRef.current >= GAME_CONFIG.MIN_PIPE_INTERVAL) {
+      if (Math.random() < GAME_CONFIG.PIPE_SPAWN_CHANCE || pipesRef.current.length === 0) {
+        const newPipe = generatePipe();
+        pipesRef.current = [...pipesRef.current, newPipe];
+        setPipes([...pipesRef.current]);
+        lastPipeTimeRef.current = timestamp;
+      }
     }
 
-    // 更新管道位置
-    setPipes(prev => {
-      const newPipes = prev
-        .map(pipe => ({
-          ...pipe,
-          x: pipe.x - GAME_CONFIG.pipeSpeed,
-        }))
-        .filter(pipe => pipe.x + GAME_CONFIG.pipeWidth > 0);
+    pipesRef.current = pipesRef.current
+      .map(pipe => ({ ...pipe, x: pipe.x - GAME_CONFIG.PIPE_SPEED }))
+      .filter(pipe => pipe.x + GAME_CONFIG.PIPE_WIDTH > 0);
 
-      // 计分
-      newPipes.forEach(pipe => {
-        if (!pipe.passed && pipe.x + GAME_CONFIG.pipeWidth < GAME_CONFIG.birdX) {
-          pipe.passed = true;
-          setScore(prev => prev + 1);
-        }
-      });
-
-      return newPipes;
+    pipesRef.current.forEach(pipe => {
+      if (!pipe.passed && pipe.x + GAME_CONFIG.PIPE_WIDTH < BIRD_START_X) {
+        pipe.passed = true;
+        scoreRef.current += 1;
+        setScore(scoreRef.current);
+      }
     });
 
-    // 检查碰撞
-    if (checkCollision()) {
+    setPipes([...pipesRef.current]);
+
+    if (checkCollision(birdYRef.current)) {
+      gameStateRef.current = "gameover";
       setGameState("gameover");
-      const isNewRecord = score > highScore;
+      const isNewRecord = scoreRef.current > highScoreRef.current;
       if (isNewRecord) {
-        saveHighScore(score);
-        setHighScore(score);
+        saveHighScore(scoreRef.current);
+        highScoreRef.current = scoreRef.current;
+        setHighScore(scoreRef.current);
       }
-      onGameOver(score, isNewRecord);
+      onGameOver(scoreRef.current, isNewRecord);
       return;
     }
 
-    animationRef.current = requestAnimationFrame(gameLoop);
-  }, [gameState, birdVelocity, birdY, score, highScore, pipes, generatePipe, checkCollision, onGameOver]);
+    animationRef.current = requestAnimationFrame(gameLoopRef.current);
+  });
 
-  // 启动循环
   useEffect(() => {
     if (gameState === "playing") {
-      animationRef.current = requestAnimationFrame(gameLoop);
+      lastTimeRef.current = performance.now();
+      animationRef.current = requestAnimationFrame(gameLoopRef.current);
     }
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [gameState, gameLoop]);
-
-  // 加载最高分
-  useEffect(() => {
-    setHighScore(getHighScore());
-  }, []);
+  }, [gameState]);
 
   return {
     gameState,
     score,
     highScore,
     birdY,
-    birdVelocity,
     birdRotation,
     pipes,
     startGame,

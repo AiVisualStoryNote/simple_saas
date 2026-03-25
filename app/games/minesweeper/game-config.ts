@@ -8,7 +8,7 @@ export interface GameConfig {
   icon: string;
   coverImage: string;
   color: string;
-  difficulty: string;
+  difficulty: 'easy' | 'medium' | 'hard';
   duration: string;
   minPlayers: number;
   maxPlayers: number;

@@ -37,7 +37,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     setScore(prev => prev + result.scoreGained);
 
     if (hasWon(result.grid)) {
-      setGameState("win");
+      setGameState("won");
       return;
     }
 

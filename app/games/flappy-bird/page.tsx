@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameCanvas } from "../components/GameCanvas";
-import { GameHUD } from "../components/GameHUD";
-import { GameOver } from "../components/GameOver";
-import { PauseMenu } from "../components/PauseMenu";
-import { getHighScore } from "../utils/storage";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameCanvas } from "./components/GameCanvas";
+import { GameHUD } from "./components/GameHUD";
+import { GameOver } from "./components/GameOver";
+import { PauseMenu } from "./components/PauseMenu";
+import { getHighScore } from "./utils/storage";
 
 export default function FlappyBirdGame() {
   const searchParams = useSearchParams();
@@ -73,7 +73,7 @@ export default function FlappyBirdGame() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-400 to-sky-200 flex items-center justify-center p-4">
       <div className="relative w-[800px] max-w-full" onClick={handleCanvasClick}>
-        {gameState === "menu" && (
+        {gameState === "idle" && (
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl text-center">
             <div className="mb-6">
               <h1 className="text-5xl font-bold mb-3">
@@ -106,7 +106,7 @@ export default function FlappyBirdGame() {
           </div>
         )}
 
-        {gameState !== "menu" && (
+        {gameState !== "idle" && (
           <>
             <GameCanvas
               birdY={birdY}

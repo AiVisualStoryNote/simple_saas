@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Tube } from "../types";
+import { Tube, GameState } from "../types";
 import { DEFAULT_CONFIG } from "../constants";
 import { generateGame, canMove, move, checkWin } from "../utils/game-logic";
 
