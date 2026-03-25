@@ -6,7 +6,8 @@ import { gameConfig as game2048Config } from "@/app/games/game-2048/game-config"
 import { gameConfig as aircraftWarConfig } from "@/app/games/aircraft-war/game-config";
 import { gameConfig as minesweeperConfig } from "@/app/games/minesweeper/game-config";
 import { gameConfig as ticTacToeConfig } from "@/app/games/tic-tac-toe/game-config";
-import { GameConfig } from "@/app/games/tic-tac-toe/game-config";
+import { gameConfig as runShootConfig } from "@/app/games/run-shoot/game-config";
+import { GameConfig } from "@/app/games/run-shoot/game-config";
 
 const games: GameConfig[] = [
   runningMomentConfig,
@@ -17,6 +18,7 @@ const games: GameConfig[] = [
   aircraftWarConfig,
   minesweeperConfig,
   ticTacToeConfig,
+  runShootConfig,
 ];
 
 export function getAllGames(): GameConfig[] {
