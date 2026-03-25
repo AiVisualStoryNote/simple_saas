@@ -21,7 +21,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
 
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 生成随机食物位置
+  // 生成随机食物
   const generateFood = useCallback((currentSnake: Position[]): Position => {
     let newFood;
     let onSnake;
@@ -60,7 +60,9 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
   // 继续游戏
   const resumeGame = useCallback(() => {
     setGameState("playing");
-  }, []);
+    lastTimeRef.current = performance.now();
+    gameLoopRef.current = setTimeout(gameLoop, speed);
+  }, [speed]);
 
   // 返回菜单
   const goToMenu = useCallback(() => {
@@ -89,8 +91,9 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
   const gameLoop = useCallback(() => {
     if (gameState !== "playing") return;
 
+    setDirection(nextDirection);
+
     setSnake(prevSnake => {
-      setDirection(nextDirection);
       const head = prevSnake[0];
       const newHead = { ...head };
 
@@ -159,7 +162,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     if (gameLoopRef.current) {
       gameLoopRef.current = setTimeout(gameLoop, speed);
     }
-  }, [gameState, nextDirection, food, score, highScore, speed, generateFood, onGameOver]);
+  }, [gameState, nextDirection, direction, food, score, highColor, speed, highScore, generateFood, onGameOver]);
 
   // 启动游戏循环
   useEffect(() => {
@@ -184,6 +187,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     highScore,
     snake,
     food,
+    direction,
     startGame,
     pauseGame,
     resumeGame,

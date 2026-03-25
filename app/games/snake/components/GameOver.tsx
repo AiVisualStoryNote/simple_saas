@@ -19,11 +19,11 @@ export function GameOver({ score, highScore, isNewRecord, onRestart, onMenu }: G
           </div>
         )}
         <div className="space-y-3 mb-6">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <span className="text-gray-300">本次分数</span>
             <span className="text-2xl font-bold text-green-400">{score}</span>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between">
             <span className="text-gray-300">最高分数</span>
             <span className="text-2xl font-bold text-yellow-400">{highScore}</span>
           </div>
