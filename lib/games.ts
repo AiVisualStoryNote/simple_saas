@@ -8,7 +8,9 @@ import { gameConfig as minesweeperConfig } from "@/app/games/minesweeper/game-co
 import { gameConfig as ticTacToeConfig } from "@/app/games/tic-tac-toe/game-config";
 import { gameConfig as runShootConfig } from "@/app/games/run-shoot/game-config";
 import { gameConfig as colorSortConfig } from "@/app/games/color-sort/game-config";
-import { GameConfig } from "@/app/games/color-sort/game-config";
+import { gameConfig as sortWatermelonConfig } from "@/app/games/sort-watermelon/game-config";
+import { gameConfig as classicLinkConfig } from "@/app/games/classic-link/game-config";
+import { GameConfig } from "@/app/games/classic-link/game-config";
 
 const games: GameConfig[] = [
   runningMomentConfig,
@@ -21,12 +23,8 @@ const games: GameConfig[] = [
   ticTacToeConfig,
   runShootConfig,
   colorSortConfig,
+  sortWatermelonConfig,
+  classicLinkConfig,
 ];
 
-export function getAllGames(): GameConfig[] {
-  return games;
-}
-
-export function getGameById(id: string): GameConfig | undefined {
-  return games.find(game => game.id === id);
-}
+export default games;
