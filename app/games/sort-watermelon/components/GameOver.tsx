@@ -1,5 +1,3 @@
-"use client";
-
 interface GameOverProps {
   score: number;
   bestScore: number;
@@ -10,36 +8,28 @@ interface GameOverProps {
 
 export function GameOver({ score, bestScore, isNewBest, onRestart, onMenu }: GameOverProps) {
   return (
-    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center rounded-xl">
-      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl w-80">
-        <h2 className="text-3xl font-bold text-center mb-2">游戏结束</h2>
+    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm rounded-xl flex items-center justify-center z-10">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-2xl max-w-[280px] w-full">
+        <h2 className="text-3xl font-bold mb-2 text-red-500">游戏结束</h2>
         {isNewBest && (
-          <div className="text-center text-orange-500 font-bold text-lg mb-4 animate-bounce">
-            🏆 新纪录！🏆
-          </div>
+          <div className="text-yellow-500 font-bold text-lg mb-3">🎉 新纪录！</div>
         )}
-        <div className="space-y-2 mb-6">
-          <div className="flex justify-between">
-            <span className="text-gray-600">分数</span>
-            <span className="text-xl font-bold text-orange-500">{score}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">最高分</span>
-            <span className="text-xl font-bold text-gray-600">{bestScore}</span>
-          </div>
+        <div className="space-y-2 mb-6 text-gray-700 dark:text-gray-300">
+          <p className="text-lg">本局得分: <span className="font-bold text-xl">{score}</span></p>
+          <p className="text-gray-500">最高得分: <span className="font-bold">{bestScore}</span></p>
         </div>
         <div className="space-y-3">
           <button
             onClick={onRestart}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-4 rounded-full hover:from-green-600 hover:to-emerald-600 transition-transform active:scale-95"
           >
             🔄 再来一局
           </button>
           <button
             onClick={onMenu}
-            className="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-colors"
+            className="w-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-3 px-4 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors active:scale-95"
           >
-            🏠 返回菜单
+            🏠 返回游戏中心
           </button>
         </div>
       </div>

@@ -10,6 +10,14 @@ import { gameConfig as runShootConfig } from "@/app/games/run-shoot/game-config"
 import { gameConfig as colorSortConfig } from "@/app/games/color-sort/game-config";
 import { gameConfig as sortWatermelonConfig } from "@/app/games/sort-watermelon/game-config";
 import { gameConfig as classicLinkConfig } from "@/app/games/classic-link/game-config";
+import { gameConfig as rockPaperScissorsConfig } from "@/app/games/rock-paper-scissors/game-config";
+import { gameConfig as tetrisConfig } from "@/app/games/tetris/game-config";
+import { gameConfig as pianoTilesConfig } from "@/app/games/piano-tiles/game-config";
+import { gameConfig as gobangConfig } from "@/app/games/gobang/game-config";
+import { gameConfig as sudokuConfig } from "@/app/games/sudoku/game-config";
+import { gameConfig as breakoutConfig } from "@/app/games/breakout/game-config";
+import { gameConfig as sokobanConfig } from "@/app/games/sokoban/game-config";
+import { gameConfig as memoryMatchConfig } from "@/app/games/memory-match/game-config";
 import { GameConfig } from "@/app/games/classic-link/game-config";
 
 const games: GameConfig[] = [
@@ -25,6 +33,14 @@ const games: GameConfig[] = [
   colorSortConfig,
   sortWatermelonConfig,
   classicLinkConfig,
+  rockPaperScissorsConfig,
+  tetrisConfig,
+  pianoTilesConfig,
+  gobangConfig,
+  sudokuConfig,
+  breakoutConfig,
+  sokobanConfig,
+  memoryMatchConfig,
 ];
 
 export default games;
