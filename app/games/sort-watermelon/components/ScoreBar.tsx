@@ -3,7 +3,7 @@
 interface ScoreBarProps {
   score: number;
   bestScore: number;
-  onNewGame: () => void;
+  onNewGame?: () => void;
 }
 
 export function ScoreBar({ score, bestScore, onNewGame }: ScoreBarProps) {
@@ -19,12 +19,14 @@ export function ScoreBar({ score, bestScore, onNewGame }: ScoreBarProps) {
           <div className="text-xl font-bold text-gray-600">{bestScore}</div>
         </div>
       </div>
-      <button
-        onClick={onNewGame}
-        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold"
-      >
-        🔄 新游戏
-      </button>
+      {onNewGame && (
+        <button
+          onClick={onNewGame}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold"
+        >
+          🔄 新游戏
+        </button>
+      )}
     </div>
   );
 }

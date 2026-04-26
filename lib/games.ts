@@ -44,3 +44,11 @@ const games: GameConfig[] = [
 ];
 
 export default games;
+
+export function getAllGames(): GameConfig[] {
+  return games;
+}
+
+export function getGameById(id: string): GameConfig | undefined {
+  return games.find(game => game.id === id);
+}

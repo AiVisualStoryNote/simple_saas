@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Cell, GameConfig, GameState } from "../types";
-import { createEmptyGrid, placeMines, revealCell, checkWin, toggleFlag } from "../utils/game-logic";
+import { createEmptyGrid, placeMines, revealCell, toggleFlag } from "../utils/game-logic";
 import { DEFAULT_CONFIG } from "../constants";
 import { getBestScore, saveBestScore } from "../utils/storage";
 
@@ -31,8 +31,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     const newGrid = [...grid];
 
     if (firstClick) {
-      // 第一次点击不踩雷
-      const minesPlaced = placeMines(newGrid, config, x, y);
+      const minesPlaced = placeMines(newGrid, DEFAULT_CONFIG, x, y);
       setGrid(minesPlaced);
       setFirstClick(false);
       return;
@@ -42,7 +41,6 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
     if (cell.opened || cell.hasLink) return;
 
     if (cell.isMine) {
-      // 游戏结束
       setGameState("lost");
       const isNewBest = score > bestScore;
       if (isNewBest) {
@@ -53,7 +51,7 @@ export function useGameEngine({ onGameOver }: UseGameEngineProps) {
       return;
     }
 
-    const { revealed: newGrid2, gamewon } = revealCell(newGrid, x, y, config);
+    const { revealed: newGrid2, gamewon } = revealCell(newGrid, x, y, DEFAULT_CONFIG);
     setGrid(newGrid2);
     setScore(prev => prev + 1);
 

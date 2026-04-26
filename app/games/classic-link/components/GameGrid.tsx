@@ -30,7 +30,7 @@ export function GameGrid({ grid, onCellClick, onCellToggle }: GameGridProps) {
             }}
           />
         ))
-      }
-    />
+      )}
+    </div>
   );
 }

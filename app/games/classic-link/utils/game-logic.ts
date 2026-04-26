@@ -5,7 +5,7 @@ export function createEmptyGrid(config: GameConfig): Cell[][] {
   for (let y = 0; y < config.rows; y++) {
     grid[y] = [];
     for (let x = 0; x < config.cols; x++) {
-      grid[y][x] = { x, y, opened: false, hasLink: false, isMine: false };
+      grid[y][x] = { x, y, opened: false, hasLink: false, isMine: false, neighborMines: 0 };
     }
   }
   return grid;
@@ -13,14 +13,12 @@ export function createEmptyGrid(config: GameConfig): Cell[][] {
 
 export function placeMines(grid: Cell[][], config: GameConfig, firstX: number, firstY: number): Cell[][] {
   let minesPlaced = 0;
-  const totalCells = config.rows * config.cols;
   const minePositions = new Set<string>();
 
   while (minesPlaced < config.mines) {
     const x = Math.floor(Math.random() * config.cols);
     const y = Math.floor(Math.random() * config.rows);
-    
-    // 不要第一个点放雷
+
     if (x === firstX && y === firstY) continue;
     const key = `${x},${y}`;
     if (!minePositions.has(key)) {
@@ -30,7 +28,6 @@ export function placeMines(grid: Cell[][], config: GameConfig, firstX: number, f
     }
   }
 
-  // 计算相邻雷数
   for (let y = 0; y < config.rows; y++) {
     for (let x = 0; x < config.cols; x++) {
       if (!grid[y][x].isMine) {
@@ -45,6 +42,7 @@ export function placeMines(grid: Cell[][], config: GameConfig, firstX: number, f
             }
           }
         }
+        grid[y][x].neighborMines = count;
         grid[y][x].hasLink = count > 0;
       }
     }
@@ -60,12 +58,11 @@ export function revealCell(grid: Cell[][], x: number, y: number, config: GameCon
   }
 
   cell.opened = true;
-  
-  // 如果已经赢了
+
   let remaining = config.rows * config.cols - config.mines;
-  for (let y = 0; y < config.rows; y++) {
-    for (let x = 0; x < config.cols; x++) {
-      if (!grid[y][x].opened) remaining--;
+  for (let r = 0; r < config.rows; r++) {
+    for (let c = 0; c < config.cols; c++) {
+      if (!grid[r][c].opened) remaining--;
     }
   }
 
@@ -73,7 +70,6 @@ export function revealCell(grid: Cell[][], x: number, y: number, config: GameCon
     return { revealed: grid, gamewon: true };
   }
 
-  // 如果没有相邻雷，递归翻开
   if (!cell.hasLink) {
     for (let dy = -1; dy <= 1; dy++) {
       for (let dx = -1; dx <= 1; dx++) {
@@ -89,18 +85,6 @@ export function revealCell(grid: Cell[][], x: number, y: number, config: GameCon
   }
 
   return { revealed: grid, gamewon: false };
-}
-
-export function checkWin(grid: Cell[][], config: GameConfig): boolean {
-  let unrevealed = 0;
-  for (let y = 0; y < config.rows; y++) {
-    for (let x = 0; x < config.cols; x++) {
-      if (!grid[y][x].opened && !grid[y][x].isMine) {
-        unrevealed++;
-      }
-    }
-  }
-  return unrevealed === 0;
 }
 
 export function toggleFlag(grid: Cell[][], x: number, y: number): Cell[][] {

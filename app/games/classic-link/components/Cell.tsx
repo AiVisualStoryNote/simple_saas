@@ -1,11 +1,11 @@
 "use client";
 
-import { Cell } from "../types";
+import { Cell as CellType } from "../types";
 
 interface CellProps {
-  cell: Cell;
+  cell: CellType;
   onClick: () => void;
-  onToggleFlag: () => void;
+  onToggleFlag: (e: React.MouseEvent) => void;
 }
 
 const getTextColor = (neighbors: number) => {
@@ -20,7 +20,7 @@ const getTextColor = (neighbors: number) => {
     "text-black",
     "text-gray-600",
   ];
-  return colors[neighbors];
+  return colors[neighbors] || "text-gray-600";
 };
 
 export function Cell({ cell, onClick, onToggleFlag }: CellProps) {
@@ -32,27 +32,37 @@ export function Cell({ cell, onClick, onToggleFlag }: CellProps) {
           onClick={onClick}
           onContextMenu={(e) => {
             e.preventDefault();
-            onToggleFlag();
+            onToggleFlag(e);
           }}
         >
           💣
         </div>
       );
     }
-    if (cell.hasLink && cell.neighbor > 0) {
+    if (cell.hasLink && cell.neighborMines > 0) {
       return (
         <div
-          className={`w-8 h-8 bg-gray-100 border-2 border-gray-400 rounded flex items-center justify-center font-bold ${getTextColor(cell.neighbor)} cursor-pointer`}
+          className={`w-8 h-8 bg-gray-100 border-2 border-gray-400 rounded flex items-center justify-center font-bold ${getTextColor(cell.neighborMines)} cursor-pointer`}
           onClick={onClick}
           onContextMenu={(e) => {
             e.preventDefault();
-            onToggleFlag();
+            onToggleFlag(e);
           }}
         >
-          {cell.neighbor}
+          {cell.neighborMines}
         </div>
       );
     }
+    return (
+      <div
+        className="w-8 h-8 bg-gray-100 border-2 border-gray-400 rounded flex items-center justify-center cursor-pointer"
+        onClick={onClick}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          onToggleFlag(e);
+        }}
+      />
+    );
   }
 
   return (
@@ -63,16 +73,10 @@ export function Cell({ cell, onClick, onToggleFlag }: CellProps) {
       onClick={onClick}
       onContextMenu={(e) => {
         e.preventDefault();
-        onToggleFlag();
+        onToggleFlag(e);
       }}
     >
-      {cell.hasLink && !cell.opened && (
-        cell.isMine
-          ? "🚩"
-          : cell.hasLink
-            ? "🚩"
-            : null
-      )}
-    );
-  }
+      {cell.hasLink && !cell.opened && (cell.isMine ? "🚩" : "🚩")}
+    </div>
+  );
 }

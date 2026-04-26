@@ -1,18 +1,33 @@
-import { GameConfig } from "../types";
+export interface GameConfig {
+  id: string;
+  name: string;
+  nameCn: string;
+  description: string;
+  descriptionCn: string;
+  route: string;
+  icon: string;
+  coverImage: string;
+  color: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  duration: string;
+  minPlayers: number;
+  maxPlayers: number;
+}
 
-export const gameConfig: GameConfig = {
+const gameConfig: GameConfig = {
   id: "sokoban",
-  name: {
-    en: "Sokoban",
-    zh: "推箱子",
-  },
-  description: {
-    en: "Classic puzzle game - push boxes to goals",
-    zh: "经典推箱子益智游戏，把箱子推到目标位置",
-  },
-  image: "/games/sokoban.png",
-  category: "puzzle",
+  name: "Sokoban",
+  nameCn: "推箱子",
+  description: "Classic puzzle game - push boxes to goals",
+  descriptionCn: "经典推箱子益智游戏，把箱子推到目标位置",
+  route: "/games/sokoban",
+  icon: "📦",
+  coverImage: "",
+  color: "#F59E0B",
   difficulty: "hard",
+  duration: "10-30 min",
+  minPlayers: 1,
+  maxPlayers: 1,
 };
 
-export { gameConfig as default };
+export { gameConfig };

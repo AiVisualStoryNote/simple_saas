@@ -6,6 +6,7 @@ export interface Cell {
   opened: boolean;
   hasLink: boolean;
   isMine: boolean;
+  neighborMines: number;
 }
 
 export interface GameConfig {

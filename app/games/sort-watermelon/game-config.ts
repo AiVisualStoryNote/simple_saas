@@ -1,18 +1,33 @@
-import { GameConfig } from "../types";
+export interface GameConfig {
+  id: string;
+  name: string;
+  nameCn: string;
+  description: string;
+  descriptionCn: string;
+  route: string;
+  icon: string;
+  coverImage: string;
+  color: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  duration: string;
+  minPlayers: number;
+  maxPlayers: number;
+}
 
-export const gameConfig: GameConfig = {
+const gameConfig: GameConfig = {
   id: "sort-watermelon",
-  name: {
-    en: "Merge Watermelon",
-    zh: "合成大西瓜",
-  },
-  description: {
-    en: "Viral merge puzzle game - combine fruits to make a big watermelon",
-    zh: "网红爆款合成益智游戏，合并水果合成大西瓜",
-  },
-  image: "/games/sort-watermelon.png",
-  category: "puzzle",
+  name: "Merge Watermelon",
+  nameCn: "合成大西瓜",
+  description: "Viral merge puzzle game - combine fruits to make a big watermelon",
+  descriptionCn: "网红爆款合成益智游戏，合并水果合成大西瓜",
+  route: "/games/sort-watermelon",
+  icon: "🍉",
+  coverImage: "",
+  color: "#22C55E",
   difficulty: "easy",
+  duration: "5-15 min",
+  minPlayers: 1,
+  maxPlayers: 1,
 };
 
-export { gameConfig as default };
+export { gameConfig };

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Board } from "./components/Board";
-import { levels } from "./levels/levels";
+import { levels, levelsBoxCount } from "./levels/levels";
 
 type Cell = 'empty' | 'wall' | 'box' | 'goal' | 'player' | 'box-on-goal' | 'player-on-goal';
 type Direction = 'up' | 'down' | 'left' | 'right';
@@ -21,17 +21,21 @@ export default function SokobanGame() {
   const [gameWon, setGameWon] = useState(false);
 
   const level = levels[currentLevel];
-  const totalBoxes = level.boxCount;
+  const totalBoxes = levelsBoxCount[currentLevel];
 
   const initLevel = (levelIndex: number) => {
     const data = levels[levelIndex].map(row => [...row]);
     let player = { x: 0, y: 0 };
     let boxesDone = 0;
+    let totalBoxes = 0;
 
     for (let y = 0; y < data.length; y++) {
       for (let x = 0; x < data[y].length; x++) {
         if (data[y][x] === 'player' || data[y][x] === 'player-on-goal') {
           player = { x, y };
+        }
+        if (data[y][x] === 'box' || data[y][x] === 'box-on-goal') {
+          totalBoxes++;
         }
         if (data[y][x] === 'box-on-goal') {
           boxesDone++;

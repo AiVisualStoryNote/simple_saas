@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useGameEngine } from "../hooks/useGameEngine";
-import { GameGrid } from "../components/GameGrid";
-import { StatusBar } from "../components/StatusBar";
-import { GameOver } from "../components/GameOver";
-import { DEFAULT_CONFIG } from "../constants";
+import { useGameEngine } from "./hooks/useGameEngine";
+import { GameGrid } from "./components/GameGrid";
+import { StatusBar } from "./components/StatusBar";
+import { GameOver } from "./components/GameOver";
+import { DEFAULT_CONFIG } from "./constants";
 
 export default function ClassicLinkGame() {
   const searchParams = useSearchParams();
@@ -98,5 +98,6 @@ export default function ClassicLinkGame() {
           </div>
         )}
       </div>
-    );
-  }
+    </div>
+  );
+}
