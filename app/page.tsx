@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, BookOpen, BookOpenText } from "lucide-react";
+import { Gamepad2, BookOpen, BookOpenText, Film } from "lucide-react";
 import { PricingSection } from "@/components/pricing-section";
 
 export default function Home() {
@@ -54,6 +54,18 @@ export default function Home() {
                 <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2 bg-purple-700 hover:bg-purple-600 dark:hover:bg-purple-800">
                   <BookOpenText className="w-4 h-4" />
                   Reading Room
+                </Button>
+              </Link>
+              <Link href="/theater/cn">
+                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2">
+                  <Film className="w-4 h-4" />
+                  中文剧场
+                </Button>
+              </Link>
+              <Link href="/theater">
+                <Button size="lg" className="w-full sm:w-auto h-12 px-8 text-lg gap-2 bg-purple-700 hover:bg-purple-600 dark:hover:bg-purple-800">
+                  <Film className="w-4 h-4" />
+                  International Theater
                 </Button>
               </Link>
             </motion.div>
