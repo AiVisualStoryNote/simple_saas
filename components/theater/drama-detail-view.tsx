@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EpisodeList } from "./episode-list";
 import { PurchaseConfirmDialog } from "./purchase-confirm-dialog";
@@ -15,11 +15,15 @@ interface DramaDetailViewProps {
 }
 
 export function DramaDetailView({ dramaId }: DramaDetailViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const episodeParam = searchParams.get('episode');
+
   const [drama, setDrama] = useState<DramaDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedEpisode, setSelectedEpisode] = useState<DramaEpisodeWithPrice | null>(null);
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<number | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
 
@@ -29,32 +33,9 @@ export function DramaDetailView({ dramaId }: DramaDetailViewProps) {
   const [showPurchaseDialog, setShowPurchaseDialog] = useState(false);
   const [purchaseTarget, setPurchaseTarget] = useState<DramaEpisodeWithPrice | null>(null);
 
-  const fetchDrama = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const [isInitializing, setIsInitializing] = useState(true);
 
-    try {
-      const result = await getDramaDetail(dramaId);
-      if (result.error) {
-        setError(result.error);
-      } else if (result.drama) {
-        setDrama(result.drama);
-
-        if (result.drama.episodes.length > 0 && !selectedEpisode) {
-          const firstEpisode = result.drama.episodes[0];
-          setSelectedEpisode(firstEpisode);
-
-          if (firstEpisode.price === 0 || firstEpisode.is_purchased) {
-            loadVideo(firstEpisode);
-          }
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch drama');
-    } finally {
-      setLoading(false);
-    }
-  }, [dramaId]);
+  const selectedEpisode = drama?.episodes.find(e => e.id === selectedEpisodeId) || null;
 
   const loadVideo = async (episode: DramaEpisodeWithPrice) => {
     if (!episode.composite_video_key) return;
@@ -85,17 +66,66 @@ export function DramaDetailView({ dramaId }: DramaDetailViewProps) {
     }
   };
 
+  const fetchDrama = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await getDramaDetail(dramaId);
+      if (result.error) {
+        setError(result.error);
+      } else if (result.drama) {
+        setDrama(result.drama);
+        setIsInitializing(true);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch drama');
+    } finally {
+      setLoading(false);
+    }
+  }, [dramaId]);
+
   useEffect(() => {
     fetchDrama();
     fetchCredits();
   }, [fetchDrama]);
 
+  useEffect(() => {
+    if (!drama || !isInitializing) return;
+
+    let episodeToSelect: DramaEpisodeWithPrice | null = null;
+
+    if (episodeParam) {
+      const episodeId = parseInt(episodeParam, 10);
+      if (!isNaN(episodeId)) {
+        episodeToSelect = drama.episodes.find(e => e.id === episodeId) || null;
+      }
+    }
+
+    if (!episodeToSelect && drama.episodes.length > 0) {
+      episodeToSelect = drama.episodes[0];
+    }
+
+    if (episodeToSelect) {
+      setSelectedEpisodeId(episodeToSelect.id);
+      if (episodeToSelect.price === 0 || episodeToSelect.is_purchased) {
+        loadVideo(episodeToSelect);
+      }
+    }
+
+    setIsInitializing(false);
+  }, [drama, isInitializing, episodeParam]);
+
   const handleEpisodeSelect = (episode: DramaEpisodeWithPrice) => {
-    setSelectedEpisode(episode);
-    setVideoUrl(null);
+    setSelectedEpisodeId(episode.id);
+
+    const newUrl = `/theater/${dramaId}?episode=${episode.id}`;
+    router.push(newUrl, { scroll: false });
 
     if (episode.price === 0 || episode.is_purchased) {
       loadVideo(episode);
+    } else {
+      setVideoUrl(null);
     }
   };
 
@@ -117,15 +147,14 @@ export function DramaDetailView({ dramaId }: DramaDetailViewProps) {
 
     if (result.success) {
       await fetchDrama();
-      await fetchCredits();
 
-      if (purchaseTarget.price === 0) {
-        const updatedEpisode = drama.episodes.find(e => e.id === purchaseTarget.id);
-        if (updatedEpisode) {
-          setSelectedEpisode({ ...updatedEpisode, is_purchased: true });
-          loadVideo({ ...updatedEpisode, is_purchased: true });
-        }
+      const updatedEpisode = drama.episodes.find(e => e.id === purchaseTarget.id);
+      if (updatedEpisode && (purchaseTarget.price === 0 || purchaseTarget.is_purchased)) {
+        setSelectedEpisodeId(purchaseTarget.id);
+        loadVideo({ ...updatedEpisode, is_purchased: true });
       }
+
+      await fetchCredits();
     } else {
       throw new Error(result.error || 'Purchase failed');
     }
